@@ -12,7 +12,6 @@
             aspect-ratio: 1920 / 1080;
             background: url('ambiente.jpg') no-repeat center center;
             background-size: contain;
-            /* Garante que tudo dentro fique contido */
             overflow: hidden; 
         }
         
@@ -21,7 +20,7 @@
             top: 0; left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* Fundo */
+            z-index: 1;
         }
 
         .bolinha {
@@ -31,7 +30,6 @@
             border: 2px solid white; z-index: 100;
         }
 
-        /* Forçando estilo fixo no topo de tudo */
         .conector {
             position: absolute; 
             width: 100px; 
@@ -82,9 +80,10 @@
         if (indiceAtual >= cabos.length) return;
         const c = cabos[indiceAtual];
         
-        // Define display apenas aqui
-        conFase2.style.display = (c.nome === "FASE_2") ? "block" : "none";
-        conNeutro.style.display = (c.nome === "NEUTRO_2") ? "block" : "none";
+        // A lógica de "resetar" (display = none) foi removida.
+        // O conector só é ativado se for a vez dele.
+        if (c.nome === "FASE_2") conFase2.style.display = "block";
+        if (c.nome === "NEUTRO_2") conNeutro.style.display = "block";
         
         b1.style.display = "block";
         b1.style.backgroundColor = c.cor;
@@ -118,8 +117,7 @@
             };
             if (++frame > c.total) {
                 clearInterval(intv);
-                conFase2.style.display = "none";
-                conNeutro.style.display = "none";
+                // NADA AQUI esconde os conectores. Eles ficam na tela permanentemente.
                 cabosConcluidos.push(c);
                 indiceAtual++;
                 setTimeout(iniciarCabo, 500); 
