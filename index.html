@@ -8,7 +8,8 @@
             position: relative;
             width: 800px;
             height: 600px;
-            background: url('ambiente.png') no-repeat;
+            /* Fundo alterado para ambiente.jpg */
+            background: url('ambiente.jpg') no-repeat;
             margin: 0 auto;
             border: 1px solid #ccc;
         }
@@ -82,8 +83,7 @@
             let frame = 1;
             let intervalo = setInterval(() => {
                 let img = new Image();
-                // Ajuste o caminho abaixo conforme sua estrutura de pastas real
-                img.src = `imagens/${c.nome}/quadro${formatarNumero(frame)}.png`;
+                img.src = `${c.nome}/quadro${formatarNumero(frame)}.png`;
                 img.onload = () => {
                     ctx.drawImage(img, 0, 0);
                 };
@@ -97,7 +97,6 @@
             }, 50);
         }
 
-        // Inicia o processo
         iniciarCabo();
     </script>
 </body>
