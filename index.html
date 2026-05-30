@@ -4,51 +4,20 @@
     <meta charset="UTF-8">
     <style>
         body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        
-        #game-container {
-            position: relative;
-            width: 90vw;
-            max-width: 1920px;
-            aspect-ratio: 1920 / 1080;
-            background: url('ambiente.jpg') no-repeat center center;
-            background-size: contain;
-            overflow: hidden; 
-        }
-        
-        canvas {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .bolinha {
-            width: 2%; aspect-ratio: 1/1;
-            border-radius: 50%; position: absolute;
-            cursor: pointer; display: none;
-            border: 2px solid white; z-index: 1000;
-        }
-
-        .conector {
-            position: absolute; 
-            width: 100px; 
-            z-index: 999 !important; 
-            display: none;
-        }
+        #game-container { position: relative; width: 90vw; max-width: 1920px; aspect-ratio: 1920 / 1080; background: url('ambiente.jpg') no-repeat center center; background-size: contain; overflow: hidden; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .bolinha { width: 2%; aspect-ratio: 1/1; border-radius: 50%; position: absolute; cursor: pointer; display: none; border: 2px solid white; z-index: 1000; }
+        .conector { position: absolute; width: 100px; z-index: 999 !important; display: none; }
     </style>
 </head>
 <body>
-
 <div id="game-container">
     <img id="derivacao_fase2" class="conector" src="con_derivacao.png" style="top: 13.3%; left: 71%;">
     <img id="derivacao_neutro" class="conector" src="con_derivacao.png" style="top: 10.2%; left: 91.5%;">
-    
     <canvas id="canvasCabo" width="1920" height="1080"></canvas>
     <div id="bolinha1" class="bolinha"></div>
     <div id="bolinha2" class="bolinha"></div>
 </div>
-
 <script>
     const cabos = [
         { nome: "FASE_REDE", total: 64, b1: {x: 26, y: 38}, b2: {x: 97.5, y: 15}, cor: "red" },
@@ -58,60 +27,46 @@
         { nome: "NEUTRO_2", total: 15, b1: {x: 92, y: 14}, b2: {x: 89.5, y: 58}, cor: "blue" }
     ];
 
-    let indiceAtual = 0;
-    let cabosConcluidos = [];
-    const canvas = document.getElementById('canvasCabo');
-    const ctx = canvas.getContext('2d');
+    let indiceAtual = 0, cabosConcluidos = [], cacheImagens = {};
+    const canvas = document.getElementById('canvasCabo'), ctx = canvas.getContext('2d');
     const b1 = document.getElementById('bolinha1'), b2 = document.getElementById('bolinha2');
-    
-    const conFase2 = document.getElementById("derivacao_fase2");
-    const conNeutro = document.getElementById("derivacao_neutro");
+    const conFase2 = document.getElementById("derivacao_fase2"), conNeutro = document.getElementById("derivacao_neutro");
 
-    // Função unificada que resolve o "shake" e o travamento
+    // PRÉ-CARREGAMENTO: Carrega todas as imagens na memória antes de usar
+    function preCarregar() {
+        cabos.forEach(c => {
+            cacheImagens[c.nome] = [];
+            for (let i = 1; i <= c.total; i++) {
+                let img = new Image();
+                img.src = `${c.nome}/quadro${i.toString().padStart(4, '0')}.png`;
+                cacheImagens[c.nome][i] = img;
+            }
+        });
+    }
+
     function renderizar(frameAnimacao, caboAnimado) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Desenha todos os cabos já finalizados
-        cabosConcluidos.forEach(c => {
-            let img = new Image();
-            img.src = `${c.nome}/quadro${c.total.toString().padStart(4, '0')}.png`;
-            ctx.drawImage(img, 0, 0);
-        });
-
-        // Desenha o frame da animação atual
+        cabosConcluidos.forEach(c => ctx.drawImage(cacheImagens[c.nome][c.total], 0, 0));
         if (caboAnimado && frameAnimacao > 0) {
-            let img = new Image();
-            img.src = `${caboAnimado.nome}/quadro${frameAnimacao.toString().padStart(4, '0')}.png`;
-            ctx.drawImage(img, 0, 0);
+            ctx.drawImage(cacheImagens[caboAnimado.nome][frameAnimacao], 0, 0);
         }
     }
 
     function iniciarCabo() {
         if (indiceAtual >= cabos.length) return;
         const c = cabos[indiceAtual];
-        
-        // Exibe o conector permanente
         if (c.nome === "FASE_2") conFase2.style.display = "block";
         if (c.nome === "NEUTRO_2") conNeutro.style.display = "block";
-        
-        b1.style.display = "block";
-        b1.style.backgroundColor = c.cor;
-        b1.style.left = c.b1.x + "%"; 
-        b1.style.top = c.b1.y + "%";
-        
-        b2.style.display = "none";
-        b2.style.backgroundColor = c.cor;
-        
+        b1.style.display = "block"; b1.style.backgroundColor = c.cor;
+        b1.style.left = c.b1.x + "%"; b1.style.top = c.b1.y + "%";
+        b2.style.display = "none"; b2.style.backgroundColor = c.cor;
         b1.onclick = () => {
             b1.style.backgroundColor = "green";
-            b2.style.left = c.b2.x + "%"; 
-            b2.style.top = c.b2.y + "%";
+            b2.style.left = c.b2.x + "%"; b2.style.top = c.b2.y + "%";
             b2.style.display = "block";
         };
-
         b2.onclick = () => {
-            b1.style.display = "none";
-            b2.style.display = "none";
+            b1.style.display = "none"; b2.style.display = "none";
             animar(c);
         };
     }
@@ -120,17 +75,17 @@
         let frame = 1;
         let intv = setInterval(() => {
             renderizar(frame, c);
-
             if (++frame > c.total) {
                 clearInterval(intv);
                 cabosConcluidos.push(c);
                 indiceAtual++;
-                renderizar(0, null); // Finaliza o desenho
+                renderizar(0, null);
                 setTimeout(iniciarCabo, 500); 
             }
-        }, 50);
+        }, 30); // Aumentei a velocidade de 50ms para 30ms para ficar mais fluido
     }
 
+    preCarregar();
     iniciarCabo();
 </script>
 </body>
