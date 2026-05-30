@@ -5,15 +5,24 @@
     <style>
         body { margin: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; font-family: sans-serif; }
         
-        /* Container do Cabeçalho - Fixo acima do painel */
-        #header-container { width: 90vw; max-width: 1920px; text-align: center; margin-bottom: 20px; }
-        #titulo-app { color: cyan; font-size: 3vw; margin: 0; text-transform: uppercase; text-shadow: 0 0 10px cyan; }
+        /* Cabeçalho ajustado para ter proporção coerente com o painel */
+        #header-container { width: 90vw; max-width: 1920px; text-align: center; margin-bottom: 15px; }
+        #titulo-app { color: #00ffff; font-size: 3.5vw; margin: 0; text-transform: uppercase; text-shadow: 0 0 10px #00ffff; }
+        
         #status-bar { 
-            margin: 10px auto; width: 60%; padding: 15px; border: 2px solid #333; 
-            background: rgba(0,0,0,0.8); color: #ff8800; font-weight: bold; font-size: 1.2vw; border-radius: 8px;
+            margin: 15px auto; 
+            width: 75%; /* Ajustado para ser maior e mais próximo ao original */
+            padding: 20px 40px; 
+            border: 3px solid #333; 
+            background: rgba(0,0,0,0.9); 
+            color: #ff8800; 
+            font-weight: bold; 
+            font-size: 1.6vw; 
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        /* Container do Painel - Foco total e isolado */
+        /* Container do Painel */
         #game-container { 
             position: relative; 
             width: 90vw; 
