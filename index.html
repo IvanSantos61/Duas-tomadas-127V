@@ -5,34 +5,33 @@
     <style>
         body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; overflow: hidden; font-family: sans-serif; }
         
-        .neon-text { color: #00ffff; text-shadow: 0 0 10px #00ffff; text-transform: uppercase; }
-        .neon-box { border: 2px solid #00ffff; box-shadow: 0 0 15px #00ffff; border-radius: 20px; background: rgba(0, 0, 0, 0.9); }
+        .neon-text { color: #00ffff; text-shadow: 0 0 10px #00ffff; text-transform: uppercase; font-weight: normal; }
+        .neon-box { border: 2px solid #00ffff; box-shadow: 0 0 15px #00ffff; border-radius: 50px; background: rgba(0, 0, 0, 0.9); }
 
         #splash-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; 
             z-index: 9999; display: flex; justify-content: center; align-items: center; 
         }
-        #splash-content { text-align: center; padding: 3vw; width: 60%; }
+        #splash-content { text-align: center; padding: 3vw; width: 45%; } /* Largura reduzida */
         
         /* Hierarquia ajustada */
-        #splash-content h1 { font-size: 3.5vw; margin-bottom: 1.5vw; }
-        #splash-content h2 { font-size: 2.2vw; line-height: 1.2; margin: 1vw 0; opacity: 0.8; }
+        #splash-content h1 { font-size: 3.5vw; margin-bottom: 1.5vw; opacity: 0.6; } /* Opacidade menor */
+        #splash-content h2 { font-size: 2.2vw; line-height: 1.2; margin: 1vw 0; }
         #splash-content h3 { font-size: 1.5vw; margin: 1vw 0; }
         #splash-content p { font-size: 0.9vw; color: #808080; margin: 3vw 0; }
         
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         
-        /* Botão arredondado e pulsante */
         #btn-iniciar { 
             padding: 1vw 2vw; cursor: pointer; background: transparent; 
             color: #00ffff; border: 2px solid #00ffff; font-size: 1.3vw; 
-            border-radius: 50px; /* Arredondado conforme original */
+            border-radius: 50px; 
             text-shadow: 0 0 5px #00ffff; animation: pulse 1.5s infinite;
         }
 
         #main-layout { width: 90vw; max-width: 1920px; display: flex; flex-direction: column; align-items: center; }
         #titulo-header { font-size: 3.5vw; margin: 1vw 0; }
-        #status-bar { width: 100%; padding: 1.5vw; box-sizing: border-box; margin-bottom: 1vw; color: #ff8800; font-weight: bold; text-align: center; font-size: 1.2vw; border: 2px solid #333; }
+        #status-bar { width: 100%; padding: 1.5vw; box-sizing: border-box; margin-bottom: 1vw; color: #ff8800; font-weight: normal; text-align: center; font-size: 1.2vw; border: 2px solid #333; }
         #game-container { position: relative; width: 100%; aspect-ratio: 1920 / 1080; background: url('ambiente.jpg') no-repeat center center; background-size: contain; overflow: hidden; }
         
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
