@@ -36,6 +36,14 @@
             z-index: 999 !important; 
             display: none;
         }
+
+        /* Classes para as novas teclas */
+        .tecla {
+            position: absolute;
+            width: 50px; /* Ajuste o tamanho conforme necessário */
+            z-index: 2000;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -43,6 +51,10 @@
 <div id="game-container">
     <img id="derivacao_fase2" class="conector" src="con_derivacao.png" style="top: 13.3%; left: 71%;">
     <img id="derivacao_neutro" class="conector" src="con_derivacao.png" style="top: 10.2%; left: 91.5%;">
+    
+    <img id="tecla_dg" class="tecla" src="al_dg_off.png" style="top: 10%; left: 10%;">
+    <img id="tecla_dr" class="tecla" src="al_dr_off.png" style="top: 10%; left: 15%;">
+    <img id="tecla_int" class="tecla" src="tec_int_off.png" style="top: 10%; left: 20%;">
     
     <canvas id="canvasCabo" width="1920" height="1080"></canvas>
     <div id="bolinha1" class="bolinha"></div>
@@ -80,8 +92,6 @@
         if (indiceAtual >= cabos.length) return;
         const c = cabos[indiceAtual];
         
-        // A lógica de "resetar" (display = none) foi removida.
-        // O conector só é ativado se for a vez dele.
         if (c.nome === "FASE_2") conFase2.style.display = "block";
         if (c.nome === "NEUTRO_2") conNeutro.style.display = "block";
         
@@ -117,7 +127,6 @@
             };
             if (++frame > c.total) {
                 clearInterval(intv);
-                // NADA AQUI esconde os conectores. Eles ficam na tela permanentemente.
                 cabosConcluidos.push(c);
                 indiceAtual++;
                 setTimeout(iniciarCabo, 500); 
