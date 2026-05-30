@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        body { margin: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; font-family: sans-serif; }
         
-        /* Container principal que mantém a proporção 16:9 */
+        /* Container do Cabeçalho - Fixo acima do painel */
+        #header-container { width: 90vw; max-width: 1920px; text-align: center; margin-bottom: 20px; }
+        #titulo-app { color: cyan; font-size: 3vw; margin: 0; text-transform: uppercase; text-shadow: 0 0 10px cyan; }
+        #status-bar { 
+            margin: 10px auto; width: 60%; padding: 15px; border: 2px solid #333; 
+            background: rgba(0,0,0,0.8); color: #ff8800; font-weight: bold; font-size: 1.2vw; border-radius: 8px;
+        }
+
+        /* Container do Painel - Foco total e isolado */
         #game-container { 
             position: relative; 
             width: 90vw; 
@@ -15,42 +23,21 @@
             background-size: contain; 
             overflow: hidden; 
         }
-
-        /* Título e Status Fixos */
-        .layout-header {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 25%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 100; pointer-events: none;
-        }
-
-        #titulo-app { 
-            color: #00ffff; font-family: sans-serif; font-size: 5vw; 
-            margin: 0; text-transform: uppercase; text-shadow: 0 0 10px #000;
-        }
         
-        #status-bar { 
-            margin-top: 10px; width: 60%; 
-            border: 2px solid #333; padding: 1% 2%; box-sizing: border-box;
-            background: rgba(0,0,0,0.85); color: #ff8800; font-weight: bold; 
-            text-align: center; font-size: 1.5vw; border-radius: 8px;
-        }
-        
-        /* Elementos funcionais */
-        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-        .bolinha { width: 2%; aspect-ratio: 1/1; border-radius: 50%; position: absolute; cursor: pointer; display: none; border: 2px solid white; z-index: 1000; pointer-events: auto; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .bolinha { width: 2%; aspect-ratio: 1/1; border-radius: 50%; position: absolute; cursor: pointer; display: none; border: 2px solid white; z-index: 1000; }
         .conector { position: absolute; width: 5%; z-index: 999 !important; display: none; }
         #btn_dg, #btn_dr, #btn_int { position: absolute; z-index: 2000; cursor: pointer; width: 5%; }
     </style>
 </head>
 <body>
 
-<div id="game-container">
-    <div class="layout-header">
-        <h1 id="titulo-app">LABORATÓRIO SMT PRO</h1>
-        <div id="status-bar">REDE: CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</div>
-    </div>
+<div id="header-container">
+    <h1 id="titulo-app">LABORATÓRIO SMT PRO</h1>
+    <div id="status-bar">REDE: CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</div>
+</div>
 
+<div id="game-container">
     <img id="derivacao_fase2" class="conector" src="con_derivacao.png" style="top: 13.3%; left: 71%;">
     <img id="derivacao_neutro" class="conector" src="con_derivacao.png" style="top: 10.2%; left: 91.5%;">
     
@@ -64,7 +51,6 @@
 </div>
 
 <script>
-    // Lógica consolidada
     const statusBar = document.getElementById("status-bar");
     
     function habilitarTroca(id, offImg, onImg) {
@@ -88,7 +74,6 @@
     const canvas = document.getElementById('canvasCabo'), ctx = canvas.getContext('2d');
     const b1 = document.getElementById('bolinha1'), b2 = document.getElementById('bolinha2');
     const conFase2 = document.getElementById("derivacao_fase2"), conNeutro = document.getElementById("derivacao_neutro");
-    
     const buffer = document.createElement('canvas');
     buffer.width = 1920; buffer.height = 1080;
     const bCtx = buffer.getContext('2d');
