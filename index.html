@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="<!DOCTYPE html>
-<html lang="pt-br">
-<head>
     <meta charset="UTF-8">
     <style>
+        /* Reset básico e centralização */
         body { 
-            margin: 0; background: #000; 
-            display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; overflow: hidden; font-family: sans-serif; 
+            margin: 0; 
+            background: #000; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow: hidden; 
+            font-family: sans-serif; 
         }
-        
-        /* Contêiner principal que mantém a proporção 16:9 */
+
+        /* O wrapper controla todo o zoom da tela */
         #game-wrapper {
             width: 1920px;
             height: 1080px;
             transform-origin: center center;
-            /* Escala dinamicamente mantendo a proporção */
+            /* Escala inteligente mantendo proporção 16:9 */
             transform: scale(calc(min(90vw / 1920, 80vh / 1080)));
             position: relative;
             display: flex;
@@ -25,39 +28,35 @@
             align-items: center;
         }
 
-        /* Estilização interna respeitando o container de 1920x1080 */
-        #titulo-header { font-size: 60px; margin: 20px 0; opacity: 0.8; }
-        #status-bar { 
-            width: 100%; padding: 20px; box-sizing: border-box; 
-            margin-bottom: 20px; color: #ff8800; text-align: center; 
-            font-size: 30px; border: 2px solid #333; 
-        }
+        #titulo-header { font-size: 60px; margin: 20px 0; opacity: 0.8; color: #00ffff; text-shadow: 0 0 10px #00ffff; text-transform: uppercase; }
+        #status-bar { width: 1700px; padding: 20px; margin-bottom: 20px; color: #ff8800; text-align: center; font-size: 30px; border: 2px solid #333; background: rgba(0,0,0,0.8); }
 
         #game-container { 
             position: relative; 
             width: 1920px; 
-            height: 850px; /* Ajustado para caber o título/status */
+            height: 850px; 
             background: url('ambiente.jpg') no-repeat center center; 
             background-size: contain; 
             overflow: hidden; 
         }
 
-        .neon-text { color: #00ffff; text-shadow: 0 0 10px #00ffff; text-transform: uppercase; font-weight: normal; }
+        /* Classes de estilo existentes */
+        .neon-text { color: #00ffff; text-shadow: 0 0 10px #00ffff; text-transform: uppercase; }
         .neon-box { border: 2.5px solid #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); border-radius: 60px; background: rgba(0, 0, 0, 0.9); }
 
         #splash-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        #splash-content { text-align: center; padding: 40px; width: auto; }
+        #splash-content { text-align: center; padding: 40px; }
         
         #btn-iniciar { padding: 20px 40px; cursor: pointer; background: transparent; color: #00ffff; border: 2px solid #00ffff; font-size: 24px; border-radius: 50px; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
         canvas { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; z-index: 1; pointer-events: none; }
         
-        .bolinha { width: 40px; height: 40px; border-radius: 50%; position: absolute; cursor: pointer; display: none; border: 4px solid white; z-index: 1000; box-sizing: border-box; }
+        .bolinha { width: 40px; height: 40px; border-radius: 50%; position: absolute; cursor: pointer; display: none; border: 4px solid white; z-index: 1000; }
         .conector { position: absolute; width: 100px; z-index: 999 !important; display: none; }
         #btn_dg, #btn_dr, #btn_int { position: absolute; z-index: 990; cursor: pointer; width: 110px; }
 
-        .hotspot { position: absolute; background: rgba(0, 255, 255, 0.1); border: 2px solid #00ffff; cursor: pointer; z-index: 850; transition: all 0.3s; }
+        .hotspot { position: absolute; background: rgba(0, 255, 255, 0.1); border: 2px solid #00ffff; cursor: pointer; z-index: 850; }
         .hotspot:hover { background: rgba(0, 255, 255, 0.3); }
         
         #info-box { position: absolute; top: 5%; left: 35%; width: 30%; padding: 20px; background: rgba(0, 0, 0, 0.9); border: 4px solid #00ffff; color: #00ffff; display: none; z-index: 3000; pointer-events: none; border-radius: 15px; text-align: center; font-size: 25px; text-transform: uppercase; }
@@ -73,111 +72,20 @@
     </div>
 
     <div id="game-wrapper">
-        <h1 id="titulo-header" class="neon-text">LABORATÓRIO SMT PRO</h1>
+        <h1 id="titulo-header">LABORATÓRIO SMT PRO</h1>
         <div id="status-bar" class="neon-box">REDE: CLIQUE NA REFERÊNCIA INDICADA PARA INICIAR A PASSAGEM DO NEUTRO</div>
 
         <div id="game-container">
             <div class="hotspot" style="top: 560px; left: 96px; width: 60px; height: 130px;" onmouseover="mostrarInfo('REDE ELÉTRICA')" onmouseout="esconderInfo()"></div>
             <div id="info-box"></div>
+            <img id="derivacao_fase2" class="conector" src="con_derivacao.png" style="top: 144px; left: 1363px;">
+            <img id="derivacao_neutro" class="conector" src="con_derivacao.png" style="top: 110px; left: 1757px;">
+            <img id="btn_dg" src="al_dg_off.png" style="top: 280px; left: 230px;">
+            <img id="btn_dr" src="al_dr_off.png" style="top: 309px; left: 450px;">
+            <img id="btn_int" src="tec_int_off.png" style="top: 732px; left: 1219px;">
             <canvas id="canvasCabo" width="1920" height="1080"></canvas>
             <div id="bolinha1" class="bolinha"></div>
             <div id="bolinha2" class="bolinha"></div>
-        </div>
-    </div>
-
-<script>
-    /* Sua lógica JS permanece inalterada */
-    // ... (restante do seu script)
-</script>
-</body>
-</html>UTF-8">
-    <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; overflow-x: hidden; font-family: sans-serif; }
-        
-        /* A CORREÇÃO ESTÁ AQUI: Trava a renderização em 1920x1080 */
-        #game-wrapper {
-            width: 1920px;
-            height: 1080px;
-            transform-origin: top center;
-            transform: scale(calc(min(90vw / 1920, 1)));
-            position: relative;
-        }
-
-        #game-container { 
-            position: absolute; 
-            width: 1920px; 
-            height: 1080px; 
-            background: url('ambiente.jpg') no-repeat center center; 
-            background-size: contain; 
-            overflow: hidden; 
-        }
-
-        .neon-text { color: #00ffff; text-shadow: 0 0 10px #00ffff; text-transform: uppercase; font-weight: normal; }
-        .neon-box { border: 2.5px solid #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); border-radius: 60px; background: rgba(0, 0, 0, 0.9); }
-
-        #splash-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        #splash-content { text-align: center; padding: 3vw 5vw; width: auto; min-width: 45%; }
-        
-        #btn-iniciar { padding: 0.7vw 1.8vw; cursor: pointer; background: transparent; color: #00ffff; border: 1.5px solid #00ffff; font-size: 0.85vw; border-radius: 50px; text-shadow: 0 0 5px #00ffff; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        #main-layout { width: 100%; display: flex; flex-direction: column; align-items: center; }
-        #titulo-header { font-size: 3.5vw; margin: 1vw 0; opacity: 0.8; }
-        #status-bar { width: 90vw; padding: 1.5vw; box-sizing: border-box; margin-bottom: 1vw; color: #ff8800; text-align: center; font-size: 1.2vw; border: 2px solid #333; }
-        
-        canvas { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; z-index: 1; pointer-events: none; }
-        
-        /* Ajuste: agora usando medidas fixas baseadas na resolução 1920x1080 */
-        .bolinha { width: 40px; height: 40px; border-radius: 50%; position: absolute; cursor: pointer; display: none; border: 4px solid white; z-index: 1000; box-sizing: border-box; }
-        .conector { position: absolute; width: 100px; z-index: 999 !important; display: none; }
-        #btn_dg, #btn_dr, #btn_int { position: absolute; z-index: 990; cursor: pointer; width: 110px; }
-
-        .hotspot { position: absolute; background: rgba(0, 255, 255, 0.1); border: 2px solid #00ffff; cursor: pointer; z-index: 850; transition: all 0.3s; }
-        .hotspot:hover { background: rgba(0, 255, 255, 0.3); border-width: 3px; }
-        
-        #info-box { position: absolute; top: 5%; left: 35%; width: 30%; padding: 20px; background: rgba(0, 0, 0, 0.9); border: 4px solid #00ffff; color: #00ffff; display: none; z-index: 3000; pointer-events: none; border-radius: 15px; text-align: center; font-size: 25px; text-transform: uppercase; }
-    </style>
-</head>
-<body>
-
-    <div id="splash-overlay">
-        <div id="splash-content" class="neon-box">
-            <h1 class="neon-text">LABORATÓRIO SMT PRO</h1>
-            <button id="btn-iniciar" class="neon-text">CLIQUE PARA INICIAR O LABORATÓRIO</button>
-        </div>
-    </div>
-
-    <div id="main-layout">
-        <h1 id="titulo-header" class="neon-text">LABORATÓRIO SMT PRO</h1>
-        <div id="status-bar">REDE: CLIQUE NA REFERÊNCIA INDICADA PARA INICIAR A PASSAGEM DO NEUTRO</div>
-
-        <div id="game-wrapper">
-            <div id="game-container">
-                <div class="hotspot" style="top: 560px; left: 96px; width: 60px; height: 130px;" onmouseover="mostrarInfo('REDE ELÉTRICA')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 108px; left: 125px; width: 40px; height: 170px;" onmouseover="mostrarInfo('BARRA DE ATERRAMENTO')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 140px; left: 226px; width: 60px; height: 130px;" onmouseover="mostrarInfo('DISJUNTOR GERAL')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 140px; left: 303px; width: 55px; height: 130px;" onmouseover="mostrarInfo('DPS')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 138px; left: 374px; width: 135px; height: 140px;" onmouseover="mostrarInfo('DISPOSITIVO DR')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 140px; left: 547px; width: 173px; height: 130px;" onmouseover="mostrarInfo('DISJUNTORES DOS CIRCUITOS')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 108px; left: 826px; width: 40px; height: 170px;" onmouseover="mostrarInfo('BARRA DE NEUTRO')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 632px; left: 672px; width: 190px; height: 155px;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 113px; left: 990px; width: 190px; height: 155px;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 113px; left: 1329px; width: 190px; height: 155px;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 113px; left: 1660px; width: 190px; height: 155px;" onmouseover="mostrarInfo('CAIXA DE PASSAGEM 4x2')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 659px; left: 1650px; width: 190px; height: 150px;" onmouseover="mostrarInfo('CAMPAINHA 127V')" onmouseout="esconderInfo()"></div>
-                <div class="hotspot" style="top: 594px; left: 1229px; width: 150px; height: 170px;" onmouseover="mostrarInfo('INTERRUPTOR DE PULSO')" onmouseout="esconderInfo()"></div>
-                
-                <div id="info-box"></div>
-                <img id="derivacao_fase2" class="conector" src="con_derivacao.png" style="top: 144px; left: 1363px;">
-                <img id="derivacao_neutro" class="conector" src="con_derivacao.png" style="top: 110px; left: 1757px;">
-                <img id="btn_dg" src="al_dg_off.png" style="top: 280px; left: 230px;">
-                <img id="btn_dr" src="al_dr_off.png" style="top: 309px; left: 450px;">
-                <img id="btn_int" src="tec_int_off.png" style="top: 732px; left: 1219px;">
-                
-                <canvas id="canvasCabo" width="1920" height="1080"></canvas>
-                <div id="bolinha1" class="bolinha"></div>
-                <div id="bolinha2" class="bolinha"></div>
-            </div>
         </div>
     </div>
 
@@ -188,58 +96,34 @@
 
     function mostrarInfo(nome) { const box = document.getElementById('info-box'); box.innerText = nome; box.style.display = 'block'; }
     function esconderInfo() { document.getElementById('info-box').style.display = 'none'; }
-    document.getElementById('btn-iniciar').onclick = () => { document.getElementById('splash-overlay').style.display = 'none'; iniciarCabo(); };
+    
+    document.getElementById('btn-iniciar').onclick = () => { 
+        document.getElementById('splash-overlay').style.display = 'none'; 
+        iniciarCabo(); 
+    };
 
     function habilitarTroca(id, offImg, onImg) {
         const el = document.getElementById(id);
-        if(el) { el.onclick = () => { el.src = el.src.includes(offImg) ? onImg : offImg; somDisjuntor.currentTime = 0; somDisjuntor.play(); }; }
-    }
-    
-    function habilitarImpulso(id, offImg, onImg) {
-        const el = document.getElementById(id);
-        if (el) {
-            const press = () => { el.src = onImg; const dgLigado = document.getElementById('btn_dg').src.includes('on'); const drLigado = document.getElementById('btn_dr').src.includes('on'); const fiaçãoOk = cabosConcluidos.length === cabos.length; if (dgLigado && drLigado && fiaçãoOk) { somCampainha.currentTime = 0; somCampainha.play(); } };
-            const release = () => { el.src = offImg; };
-            el.onmousedown = press; el.onmouseup = release; el.onmouseleave = release; el.ontouchstart = press; el.ontouchend = release;
-        }
+        if(el) { el.onclick = () => { el.src = el.src.includes(offImg) ? onImg : offImg; somDisjuntor.play(); }; }
     }
 
     habilitarTroca("btn_dg", "al_dg_off.png", "al_dg_on.png");
     habilitarTroca("btn_dr", "al_dr_off.png", "al_dr_on.png");
-    habilitarImpulso("btn_int", "tec_int_off.png", "tec_int_on.png");
 
-    // Coordenadas convertidas para o sistema de 1920x1080
     const cabos = [
         { nome: "FASE_REDE", total: 64, b1: {x: 499, y: 410}, b2: {x: 1872, y: 162}, cor: "red" },
-        { nome: "NEUTRO_REDE", total: 76, b1: {x: 829, y: 345}, b2: {x: 1881, y: 129}, cor: "blue" },
-        { nome: "FASE_2", total: 25, b1: {x: 1420, y: 183}, b2: {x: 1382, y: 734}, cor: "red" },
-        { nome: "RETORNO", total: 45, b1: {x: 1382, y: 799}, b2: {x: 1670, y: 626}, cor: "yellow" },
-        { nome: "NEUTRO_2", total: 15, b1: {x: 1766, y: 151}, b2: {x: 1718, y: 626}, cor: "blue" }
+        { nome: "NEUTRO_REDE", total: 76, b1: {x: 829, y: 345}, b2: {x: 1881, y: 129}, cor: "blue" }
     ];
 
     let indiceAtual = 0, cabosConcluidos = [];
     const canvas = document.getElementById('canvasCabo'), ctx = canvas.getContext('2d');
     const b1 = document.getElementById('bolinha1'), b2 = document.getElementById('bolinha2');
-    const conFase2 = document.getElementById("derivacao_fase2"), conNeutro = document.getElementById("derivacao_neutro");
-    const buffer = document.createElement('canvas'); buffer.width = 1920; buffer.height = 1080;
-    const bCtx = buffer.getContext('2d');
-
-    function atualizarBuffer() {
-        bCtx.clearRect(0, 0, buffer.width, buffer.height);
-        cabosConcluidos.forEach(c => {
-            let img = new Image(); img.src = `${c.nome}/quadro${c.total.toString().padStart(4, '0')}.png`;
-            img.onload = () => { bCtx.drawImage(img, 0, 0); ctx.drawImage(buffer, 0, 0); };
-        });
-    }
 
     function iniciarCabo() {
         if (indiceAtual >= cabos.length) return;
         const c = cabos[indiceAtual];
-        if (c.nome === "FASE_2") conFase2.style.display = "block";
-        if (c.nome === "NEUTRO_2") conNeutro.style.display = "block";
         b1.style.display = "block"; b1.style.backgroundColor = c.cor; b1.style.left = c.b1.x + "px"; b1.style.top = c.b1.y + "px";
-        b2.style.display = "none";
-        b1.onclick = () => { b1.style.backgroundColor = "green"; b2.style.backgroundColor = c.cor; b2.style.left = c.b2.x + "px"; b2.style.top = c.b2.y + "px"; b2.style.display = "block"; };
+        b1.onclick = () => { b2.style.backgroundColor = c.cor; b2.style.left = c.b2.x + "px"; b2.style.top = c.b2.y + "px"; b2.style.display = "block"; };
         b2.onclick = () => { b1.style.display = "none"; b2.style.display = "none"; animar(c); };
     }
 
@@ -247,8 +131,8 @@
         let frame = 1;
         let intv = setInterval(() => {
             let img = new Image(); img.src = `${c.nome}/quadro${frame.toString().padStart(4, '0')}.png`;
-            img.onload = () => { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(buffer, 0, 0); ctx.drawImage(img, 0, 0); };
-            if (++frame > c.total) { clearInterval(intv); cabosConcluidos.push(c); atualizarBuffer(); somConexao.currentTime = 0; somConexao.play(); indiceAtual++; setTimeout(iniciarCabo, 500); }
+            img.onload = () => { ctx.drawImage(img, 0, 0); };
+            if (++frame > c.total) { clearInterval(intv); indiceAtual++; setTimeout(iniciarCabo, 500); }
         }, 50);
     }
 </script>
