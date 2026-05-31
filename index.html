@@ -27,7 +27,6 @@
     const status = document.getElementById('status');
     const b1 = document.getElementById('b1'), b2 = document.getElementById('b2');
 
-    // Configuração com os 5 cabos
     const config = [
         { nome: "FASE_REDE", total: 64, cor: "red", p1: {x: 200, y: 200}, p2: {x: 1000, y: 500} },
         { nome: "NEUTRO_REDE", total: 76, cor: "blue", p1: {x: 250, y: 250}, p2: {x: 1050, y: 550} },
@@ -42,6 +41,15 @@
     fundo.src = 'ambiente.jpg';
     fundo.onload = () => { ctx.drawImage(fundo, 0, 0, 1920, 1080); rodarCiclo(); };
 
+    function desenharConector(x, y) {
+        const conector = new Image();
+        conector.src = 'con_derivacao.png';
+        conector.onload = () => {
+            // Desenha o conector centralizado no ponto clicado
+            ctx.drawImage(conector, x - 25, y - 25, 50, 50);
+        };
+    }
+
     function rodarCiclo() {
         if (i >= config.length) { status.innerText = "LABORATÓRIO CONCLUÍDO!"; return; }
         let c = config[i];
@@ -52,6 +60,12 @@
 
         b1.onclick = () => {
             b1.style.backgroundColor = "green";
+            
+            // Adiciona o conector apenas para FASE_2 e NEUTRO_2
+            if (c.nome === "FASE_2" || c.nome === "NEUTRO_2") {
+                desenharConector(c.p1.x, c.p1.y);
+            }
+            
             b2.style.left = c.p2.x + "px"; b2.style.top = c.p2.y + "px"; b2.style.backgroundColor = c.cor;
             b2.style.display = "block";
         };
