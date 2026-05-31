@@ -63,14 +63,12 @@
             <img id="btn_dg" src="al_dg_off.png" style="top: 26%; left: 12%; width: 3.9%;">
             <img id="btn_dr" src="al_dr_off.png" style="top: 28.6%; left: 23.4%;">
             <img id="btn_int" src="tec_int_off.png" style="top: 67.8%; left: 63.5%;">
-            
             <canvas id="canvasCabo" width="1920" height="1080"></canvas>
             <div id="bolinha1" class="bolinha"></div>
             <div id="bolinha2" class="bolinha"></div>
         </div>
     </div>
     <script>
-        // Mantendo toda a sua lógica de cabos, botões e sons
         const somDisjuntor = new Audio('disj.mp3'); const somConexao = new Audio('conexao.mp3'); const somCampainha = new Audio('campainha.mp3');
         document.getElementById('btn-iniciar').onclick = () => { document.getElementById('splash-overlay').style.display = 'none'; iniciarCabo(); };
         function habilitarTroca(id, offImg, onImg) { const el = document.getElementById(id); if(el) el.onclick = () => { el.src = el.src.includes(offImg) ? onImg : offImg; somDisjuntor.play(); }; }
@@ -79,7 +77,7 @@
         const cabos = [ { nome: "FASE_REDE", total: 64, b1: {x: 26, y: 38}, b2: {x: 97.5, y: 15}, cor: "red" }, { nome: "NEUTRO_REDE", total: 76, b1: {x: 43.2, y: 32}, b2: {x: 98, y: 12}, cor: "blue" }, { nome: "FASE_2", total: 25, b1: {x: 74, y: 17}, b2: {x: 72, y: 68}, cor: "red" }, { nome: "RETORNO", total: 45, b1: {x: 72, y: 74}, b2: {x: 87, y: 58}, cor: "yellow" }, { nome: "NEUTRO_2", total: 15, b1: {x: 92, y: 14}, b2: {x: 89.5, y: 58}, cor: "blue" } ];
         let indiceAtual = 0, cabosConcluidos = []; const canvas = document.getElementById('canvasCabo'), ctx = canvas.getContext('2d'), b1 = document.getElementById('bolinha1'), b2 = document.getElementById('bolinha2');
         function atualizarBuffer() { ctx.clearRect(0,0,1920,1080); cabosConcluidos.forEach(c => { let img = new Image(); img.src = `${c.nome}/quadro${c.total.toString().padStart(4, '0')}.png`; img.onload = () => ctx.drawImage(img, 0, 0); }); }
-        function iniciarCabo() { if (indiceAtual >= cabos.length) return; const c = cabos[indiceAtual]; if (c.nome === "FASE_2") document.getElementById("derivacao_fase2").style.display = "block"; if (c.nome === "NEUTRO_2") document.getElementById("derivacao_neutro").style.display = "block"; b1.style.display = "block"; b1.style.backgroundColor = c.cor; b1.style.left = c.b1.x + "%"; b1.style.top = c.b1.y + "%"; b1.onclick = () => { b2.style.backgroundColor = c.cor; b2.style.left = c.b2.x + "%"; b2.style.top = c.b2.y + "%"; b2.style.display = "block"; }; b2.onclick = () => { b1.style.display = "none"; b2.style.display = "none"; animar(c); }; }
+        function iniciarCabo() { if (indiceAtual >= cabos.length) return; const c = cabos[indiceAtual]; if (c.nome === "FASE_2") document.getElementById("derivacao_fase2").style.display = "block"; if (c.nome === "NEUTRO_2") document.getElementById("derivacao_neutro").style.display = "block"; b1.style.display = "block"; b1.style.backgroundColor = c.cor; b1.style.left = c.b1.x + "%"; b1.style.top = c.b1.y + "%"; b1.onclick = () => { b1.style.backgroundColor = "green"; b2.style.backgroundColor = c.cor; b2.style.left = c.b2.x + "%"; b2.style.top = c.b2.y + "%"; b2.style.display = "block"; }; b2.onclick = () => { b1.style.display = "none"; b2.style.display = "none"; animar(c); }; }
         function animar(c) { let f = 1; let i = setInterval(() => { let img = new Image(); img.src = `${c.nome}/quadro${f.toString().padStart(4, '0')}.png`; img.onload = () => { ctx.drawImage(img, 0, 0); }; if (++f > c.total) { clearInterval(i); cabosConcluidos.push(c); somConexao.play(); indiceAtual++; iniciarCabo(); } }, 50); }
     </script>
 </body>
