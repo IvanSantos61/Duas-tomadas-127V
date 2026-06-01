@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro - Sistema de Ajuda</title>
+    <title>Laboratório SMT Pro - Diagnóstico de Circuito</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
@@ -105,11 +105,54 @@
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
 
+        /* --- QUADRO DE STATUS DO CIRCUITO (ESTILO IGUAL À GRAVURA) --- */
+        #painel-status-circuito {
+            position: absolute;
+            top: 33%;
+            left: 26%;
+            width: 20%;
+            background: rgba(5, 12, 20, 0.95);
+            border: 2px solid #00f2ff;
+            border-radius: 12px;
+            padding: 1.2%;
+            z-index: 300;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        #painel-status-circuito h3 {
+            color: #00f2ff;
+            font-size: 1.2vw;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+            padding-bottom: 6px;
+        }
+
+        .linha-dispositivo {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00f2ff;
+            border-radius: 30px;
+            padding: 6px 18px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1vw;
+        }
+
+        .linha-dispositivo span:first-child {
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
         /* --- BOTÕES DE CONTROLE --- */
         #btn-ajuda {
             position: absolute;
             bottom: 8.5%;
-            left: 8.5%;
+            left: 2%;
             background: linear-gradient(180deg, #008899, #004455);
             color: white;
             border: 1px solid #00f2ff;
@@ -126,7 +169,7 @@
         #btn-reiniciar {
             position: absolute;
             bottom: 3%;
-            left: 13.5%;
+            left: 2%;
             background: linear-gradient(180deg, #cc0000, #880000);
             color: white;
             border: 1px solid #500;
@@ -254,11 +297,20 @@
         <img id="img-retorno" class="camada oculto">
         <img id="img-neutro-circuito" class="camada oculto">
 
+        <!-- QUADRO DE STATUS REAL-TIME (Inicia oculto) -->
+        <div id="painel-status-circuito" class="oculto">
+            <h3>Status do Circuito</h3>
+            <div class="linha-dispositivo"><span>DG</span><span id="status-dg">❌</span></div>
+            <div class="linha-dispositivo"><span>DR</span><span id="status-dr">❌</span></div>
+            <div class="linha-dispositivo"><span>INT</span><span id="status-int">❌</span></div>
+        </div>
+
         <div id="interacao-container"></div>
         
         <button id="btn-ajuda" onclick="abrirAjuda()">AJUDA</button>
         <button id="btn-reiniciar" onclick="location.reload()">REINICIAR</button>
 
+        <!-- OVERLAY DE AJUDA -->
         <div id="overlay-ajuda" class="oculto">
             <div class="modal-ajuda">
                 <h2>Ajuda Técnico</h2>
@@ -273,6 +325,7 @@
             </div>
         </div>
 
+        <!-- VISUALIZADOR DE IMAGEM -->
         <div id="visualizador-tecnico" class="oculto">
             <img id="img-tecnica-exibida" src="">
             <button id="btn-voltar-lista" onclick="voltarParaLista()">VOLTAR PARA LISTA</button>
@@ -297,13 +350,11 @@
         let etapaAtual = 0;
         const cacheImagens = {};
 
-        // Funções de Áudio
         function tocarSom(id) {
             const som = document.getElementById(id);
             if (som) { som.currentTime = 0; som.play().catch(() => {}); }
         }
 
-        // Funções do Modal de Ajuda
         function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
         function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
         
@@ -316,10 +367,23 @@
 
         function voltarParaLista() { document.getElementById('visualizador-tecnico').classList.add('oculto'); }
 
-        // Lógica de Simulação
+        // Função para atualizar dinamicamente o painel de status
+        function atualizarPainelStatus() {
+            const dgLigado = document.getElementById('comp-dg').src.includes('al_dg_on.png');
+            const drLigado = document.getElementById('comp-dr').src.includes('al_dr_on.png');
+            const intLigado = document.getElementById('comp-int').src.includes('tec_int_on.png');
+
+            document.getElementById('status-dg').innerText = dgLigado ? '✅' : '❌';
+            document.getElementById('status-dr').innerText = drLigado ? '✅' : '❌';
+            document.getElementById('status-int').innerText = intLigado ? '✅' : '❌';
+        }
+
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
                 document.getElementById('label-status').innerText = "INSTALAÇÃO CONCLUÍDA! TESTE A CAMPAINHA.";
+                // Exibe o painel de status na tela ao finalizar
+                document.getElementById('painel-status-circuito').classList.remove('oculto');
+                atualizarPainelStatus();
                 return;
             }
             const dados = roteiro[etapaAtual];
@@ -339,15 +403,25 @@
         function toggleComp(el, offImg, onImg) {
             tocarSom('audio-disj');
             el.src = el.src.includes(offImg) ? onImg : offImg;
+            atualizarPainelStatus(); // Atualiza o quadro caso ele já esteja visível
         }
 
         function acionarPulsador(el, offImg, onImg) {
             tocarSom('audio-int');
             el.src = onImg;
+            atualizarPainelStatus(); // Fica ON instantaneamente no clique
+
             const dgLigado = document.getElementById('comp-dg').src.includes('al_dg_on.png');
             const drLigado = document.getElementById('comp-dr').src.includes('al_dr_on.png');
-            if (etapaAtual >= roteiro.length && dgLigado && drLigado) { tocarSom('audio-campainha'); }
-            setTimeout(() => { el.src = offImg; }, 200);
+            
+            if (etapaAtual >= roteiro.length && dgLigado && drLigado) { 
+                tocarSom('audio-campainha'); 
+            }
+            
+            setTimeout(() => { 
+                el.src = offImg; 
+                atualizarPainelStatus(); // Retorna para OFF automaticamente após soltar
+            }, 200);
         }
 
         function preCarregarCabo(dados) {
@@ -359,7 +433,9 @@
             }
         }
 
-        function criarPonto(pos, corClasse, cliqueFn) {
+        function criarPonto(pos, ...args) {
+            const cliqueFn = args[args.length - 1];
+            const corClasse = args[0];
             const ponto = document.createElement('div');
             ponto.className = `ponto ${corClasse}`;
             ponto.style.left = pos.x + "%";
@@ -368,7 +444,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0;
