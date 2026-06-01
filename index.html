@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro - Controle de Componentes</title>
+    <title>Laboratório SMT Pro - Pulsador de Campainha</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
@@ -64,8 +64,7 @@
             pointer-events: none;
         }
 
-        /* --- POSICIONAMENTO DOS COMPONENTES (AJUSTE AQUI) --- */
-        
+        /* --- COMPONENTES --- */
         .tecla-interativa {
             position: absolute;
             z-index: 60;
@@ -74,11 +73,11 @@
         }
         .tecla-interativa:active { transform: scale(0.95); }
 
-        #comp-dg { width: 4%; top: 26%; left: 12%; } /* Ajuste a posição do DG */
-        #comp-dr { width: 5%; top: 29%; left: 23.6%; } /* Ajuste a posição do DR */
-        #comp-int { width: 6%; top: 67%; left: 63%; } /* Ajuste a posição do Interruptor */
+        /* Ajuste as posições conforme seu painel */
+        #comp-dg { width: 5%; top: 10%; left: 10%; }
+        #comp-dr { width: 5%; top: 10%; left: 20%; }
+        #comp-int { width: 5%; top: 10%; left: 30%; }
 
-        /* --- CONECTORES MANTIDOS --- */
         #con-fase {
             position: absolute;
             z-index: 50;
@@ -135,7 +134,6 @@
             text-transform: uppercase;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        #btn-reiniciar:hover { filter: brightness(1.2); }
     </style>
 </head>
 <body>
@@ -151,7 +149,8 @@
 
         <img id="comp-dg" src="al_dg_off.png" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
-        <img id="comp-int" src="tec_int_off.png" class="tecla-interativa" onclick="toggleComp(this, 'tec_int_off.png', 'tec_int_on.png')">
+        
+        <img id="comp-int" src="tec_int_off.png" class="tecla-interativa" onclick="acionarPulsador(this, 'tec_int_off.png', 'tec_int_on.png')">
 
         <img id="con-fase" src="con_derivacao.png" class="oculto">
         <img id="con-neutro" src="con_derivacao.png" class="oculto">
@@ -163,18 +162,16 @@
         <img id="img-neutro-circuito" class="camada oculto">
 
         <div id="interacao-container"></div>
-
         <button id="btn-reiniciar">REINICIAR</button>
     </main>
 
     <script>
-        // COORDENADAS MANTIDAS CONFORME SUA ÚLTIMA VERSÃO
         const roteiro = [
             { nome: "Fase de Entrada", pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", cor: "fase", origem: { x: 27, y: 38.5 }, destino: { x: 98.5, y: 17.5 } },
             { nome: "Neutro de Entrada", pasta: "NEUTRO_REDE", total: 76, imgId: "img-neutro-rede", cor: "neutro", origem: { x: 44.3, y: 35.2 }, destino: { x: 98.5, y: 14 } },
-            { nome: "Fase do Circuito", pasta: "FASE_2", total: 25, imgId: "img-fase-circuito", cor: "fase", origem: { x: 75, y: 19 }, destino: { x: 73.5, y: 71.0 } },
-            { nome: "Retorno da Lâmpada", pasta: "RETORNO", total: 45, imgId: "img-retorno", cor: "retorno", origem: { x: 73, y: 76.5 }, destino: { x: 88.5, y: 59.5 } },
-            { nome: "Neutro da Lâmpada", pasta: "NEUTRO_2", total: 15, imgId: "img-neutro-circuito", cor: "neutro", origem: { x: 92.5, y: 15.8 }, destino: { x: 90.2, y: 59.5 } }
+            { nome: "Fase do Pulsador", pasta: "FASE_2", total: 25, imgId: "img-fase-circuito", cor: "fase", origem: { x: 75, y: 19 }, destino: { x: 73.5, y: 71.0 } },
+            { nome: "Retorno da Campainha", pasta: "RETORNO", total: 45, imgId: "img-retorno", cor: "retorno", origem: { x: 73, y: 76.5 }, destino: { x: 88.5, y: 59.5 } },
+            { nome: "Neutro da Campainha", pasta: "NEUTRO_2", total: 15, imgId: "img-neutro-circuito", cor: "neutro", origem: { x: 92.5, y: 15.8 }, destino: { x: 90.2, y: 59.5 } }
         ];
 
         let etapaAtual = 0;
@@ -185,15 +182,11 @@
                 document.getElementById('label-status').innerText = "INSTALAÇÃO CONCLUÍDA!";
                 return;
             }
-            
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
-            
             if (dados.pasta === "FASE_2") { document.getElementById('con-fase').classList.remove('oculto'); }
             if (dados.pasta === "NEUTRO_2") { document.getElementById('con-neutro').classList.remove('oculto'); }
-
             preCarregarCabo(dados);
-
             criarPonto(dados.origem, dados.cor, function() {
                 this.classList.add('sucesso');
                 criarPonto(dados.destino, dados.cor, function() {
@@ -203,13 +196,16 @@
             });
         }
 
-        // Função para alternar as imagens On/Off
-        function toggleComp(el, offImg, onImg) {
-            if (el.src.includes(offImg)) {
-                el.src = onImg;
-            } else {
+        // Lógica de Pulsador: liga e desliga após 200ms
+        function acionarPulsador(el, offImg, onImg) {
+            el.src = onImg;
+            setTimeout(() => {
                 el.src = offImg;
-            }
+            }, 200); 
+        }
+
+        function toggleComp(el, offImg, onImg) {
+            el.src = el.src.includes(offImg) ? onImg : offImg;
         }
 
         function preCarregarCabo(dados) {
@@ -238,7 +234,6 @@
             const frames = cacheImagens[dados.pasta];
             const lentidao = 3; 
             let contador = 0;
-
             function animar() {
                 if (frameIdx < frames.length) {
                     if (contador % lentidao === 0) {
