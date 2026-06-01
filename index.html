@@ -17,7 +17,6 @@
         .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         .tecla-interativa { position: absolute; z-index: 60; cursor: pointer; transition: transform 0.1s; }
         
-        /* Componentes */
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 67%; left: 63%; }
@@ -28,7 +27,6 @@
 
         .oculto { display: none !important; }
 
-        /* Painel de Status */
         #painel-dispositivos {
             position: absolute;
             top: 25%;
@@ -38,35 +36,19 @@
             border: 2px solid #00f2ff;
             border-radius: 8px;
             z-index: 500;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
         }
 
         #painel-dispositivos h3 {
-            background: #008899;
-            color: white;
-            text-align: center;
-            font-size: 1.1vw;
-            padding: 8px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #00f2ff;
+            background: #008899; color: white; text-align: center; font-size: 1.1vw; padding: 8px; text-transform: uppercase; border-bottom: 2px solid #00f2ff;
         }
 
         .linha-dispositivo {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            margin-bottom: 5px;
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 4px solid #1a3a5a;
-            font-weight: bold;
-            font-size: 1vw;
+            display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; margin-bottom: 5px; background: rgba(255, 255, 255, 0.05); border-left: 4px solid #1a3a5a; font-weight: bold; font-size: 1vw;
         }
 
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
 
-        /* Pontos e Botões */
         .ponto { position: absolute; width: 1.8%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 100; transform: translate(-50%, -50%); }
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
@@ -76,7 +58,6 @@
         #btn-ajuda { position: absolute; bottom: 10.5%; left: 15%; background: linear-gradient(180deg, #008899, #004455); color: white; border: 1px solid #00f2ff; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
         #btn-reiniciar { position: absolute; bottom: 3%; left: 13.5%; background: linear-gradient(180deg, #cc0000, #880000); color: white; border: 1px solid #500; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
 
-        /* Modais de Ajuda */
         #overlay-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; display: flex; justify-content: center; align-items: center; }
         .modal-ajuda { background: #0a1015; border: 2px solid #1a3a5a; width: 40%; padding: 30px; border-radius: 12px; text-align: center; }
         .item-ajuda { background: rgba(255, 255, 255, 0.03); border: 1px solid #1a3a5a; margin-bottom: 10px; padding: 15px; color: white; text-align: left; cursor: pointer; font-weight: bold; font-size: 1.1vw; }
@@ -170,17 +151,20 @@
             });
         }
 
-        // Lógica do Item 4: Clique para abrir/fechar
+        // --- CORREÇÃO DO ITEM 4: INICIA ABERTO, FECHA NO CLIQUE ---
         function abrirAnimacaoConector() {
             const img = document.getElementById('img-tecnica-exibida');
-            img.src = 'conectder_off.png'; // Inicia aberto
+            
+            // Garantindo que inicie no estado Aberto (conectder_off.png)
+            img.src = 'conectder_off.png'; 
             img.classList.add('cursor-clique');
             
             img.onclick = function() {
+                // Alterna entre Aberto (off) e Fechado (on)
                 if (this.src.includes('conectder_off.png')) {
-                    this.src = 'conectder_on.png';
+                    this.src = 'conectder_on.png'; // Fecha
                 } else {
-                    this.src = 'conectder_off.png';
+                    this.src = 'conectder_off.png'; // Abre novamente
                 }
             };
             
