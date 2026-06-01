@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro - Status em Tempo Real</title>
     <style>
-        /* Estilos Base mantidos para garantir estabilidade */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { background-color: #05070a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        
         #titulo-projeto { color: #00f2ff; font-size: clamp(24px, 5vw, 48px); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
+        
         #linha-status { background: rgba(10, 15, 20, 0.9); border: 1px solid #1a3a5a; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; width: 100%; max-width: 1200px; text-align: center; }
         .texto-status { color: #ffcc00; font-size: clamp(16px, 2.5vw, 24px); font-weight: bold; text-transform: uppercase; }
+        
         #quadro-simulacao { position: relative; width: 100%; max-width: 1600px; aspect-ratio: 1920 / 1080; background-color: #000; border: 2px solid #333; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         .tecla-interativa { position: absolute; z-index: 60; cursor: pointer; transition: transform 0.1s; }
@@ -22,7 +24,7 @@
 
         .oculto { display: none !important; }
 
-        /* --- NOVO QUADRO DE POSIÇÃO DOS DISPOSITIVOS (PADRÃO DA GRAVURA) --- */
+        /* --- QUADRO DE POSIÇÃO DOS DISPOSITIVOS (PADRÃO ATUALIZADO) --- */
         #painel-dispositivos {
             position: absolute;
             top: 25%;
@@ -60,6 +62,7 @@
             letter-spacing: 1px;
         }
 
+        /* Cores de Status */
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
 
@@ -69,6 +72,7 @@
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
+        
         #btn-ajuda { position: absolute; bottom: 10.5%; left: 15%; background: linear-gradient(180deg, #008899, #004455); color: white; border: 1px solid #00f2ff; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
         #btn-reiniciar { position: absolute; bottom: 3%; left: 13.5%; background: linear-gradient(180deg, #cc0000, #880000); color: white; border: 1px solid #500; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
     </style>
@@ -109,7 +113,7 @@
                     <span id="txt-dr">[ OFF ] ❌</span>
                 </div>
                 <div class="linha-dispositivo">
-                    <span>INTERRUPTOR</span>
+                    <span>INT.</span>
                     <span id="txt-int">[ OFF ] ❌</span>
                 </div>
             </div>
@@ -142,7 +146,7 @@
             if (som) { som.currentTime = 0; som.play().catch(() => {}); }
         }
 
-        // --- FUNÇÃO DE ATUALIZAÇÃO DO QUADRO (LÓGICA ON/OFF) ---
+        // --- FUNÇÃO DE ATUALIZAÇÃO DO QUADRO (FORÇANDO EXIBIÇÃO DO CHECK/X) ---
         function atualizarQuadroPosicao() {
             const dispositivos = [
                 { idComp: 'comp-dg', idTxt: 'txt-dg' },
@@ -216,7 +220,6 @@
             }, 200);
         }
 
-        // Funções de Suporte (Cabos e Pontos)
         function preCarregarCabo(dados) {
             cacheImagens[dados.pasta] = [];
             for (let i = 1; i <= dados.total; i++) {
@@ -248,7 +251,7 @@
             requestAnimationFrame(animar);
         }
 
-        function abrirAjuda() { /* Lógica de ajuda aqui se necessário */ }
+        function abrirAjuda() { /* Lógica de ajuda opcional */ }
         window.onload = proximoPasso;
     </script>
 </body>
