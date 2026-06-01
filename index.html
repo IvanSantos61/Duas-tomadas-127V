@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro - Conectores</title>
+    <title>Laboratório SMT Pro - Ajuste de Conector</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
@@ -64,6 +64,20 @@
             pointer-events: none;
         }
 
+        /* --- PROPRIEDADES DO CONECTOR (ACESSE E ALTERE AQUI) --- */
+        #img-con-derivacao {
+            position: absolute;
+            z-index: 50;           /* Fica acima do fundo, mas abaixo das bolinhas */
+            
+            /* ALTERE ESTES VALORES PARA AJUSTAR O CONECTOR */
+            width: 8%;             /* Tamanho do conector relativo ao quadro */
+            top: 50%;              /* Posição Vertical (ajuste conforme o seu fundo) */
+            left: 30%;             /* Posição Horizontal (ajuste conforme o seu fundo) */
+            
+            transform: translate(-50%, -50%); /* Garante que o ponto de ancoragem seja o centro */
+            pointer-events: none;
+        }
+
         .oculto { display: none; }
 
         /* PONTOS DE INTERAÇÃO */
@@ -85,7 +99,7 @@
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
 
-        /* BOTÃO REINICIAR - ESTILO PÍLULA */
+        /* BOTÃO REINICIAR (ESTILO PÍLULA) */
         #btn-reiniciar {
             position: absolute;
             bottom: 3%;
@@ -116,7 +130,7 @@
     <main id="quadro-simulacao">
         <img src="ambiente.jpg" class="camada">
 
-        <img id="img-con-derivacao" src="con_derivacao.png" class="camada oculto">
+        <img id="img-con-derivacao" src="con_derivacao.png" class="oculto">
 
         <img id="img-fase-rede" class="camada oculto">
         <img id="img-neutro-rede" class="camada oculto">
@@ -150,9 +164,12 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
             
-            // Lógica para exibir o conector de derivação nos cabos FASE_2 e NEUTRO_2
+            // Gatilho para mostrar o conector
             if (dados.pasta === "FASE_2" || dados.pasta === "NEUTRO_2") {
                 document.getElementById('img-con-derivacao').classList.remove('oculto');
+            } else {
+                // Opcional: esconder o conector em outras etapas se desejar
+                // document.getElementById('img-con-derivacao').classList.add('oculto');
             }
 
             preCarregarCabo(dados);
