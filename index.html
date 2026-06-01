@@ -3,28 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro - Status em Tempo Real</title>
+    <title>Laboratório SMT Pro - Versão Final</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        body { background-color: #05070a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
         
-        #titulo-projeto { color: #00f2ff; font-size: clamp(24px, 5vw, 48px); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
-        
-        #linha-status { background: rgba(10, 15, 20, 0.9); border: 1px solid #1a3a5a; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; width: 100%; max-width: 1200px; text-align: center; }
-        .texto-status { color: #ffcc00; font-size: clamp(16px, 2.5vw, 24px); font-weight: bold; text-transform: uppercase; }
-        
-        #quadro-simulacao { position: relative; width: 100%; max-width: 1600px; aspect-ratio: 1920 / 1080; background-color: #000; border: 2px solid #333; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-        .tecla-interativa { position: absolute; z-index: 60; cursor: pointer; transition: transform 0.1s; }
-        
+        body {
+            background-color: #05070a;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #titulo-projeto {
+            color: #00f2ff;
+            font-size: clamp(24px, 5vw, 48px);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+        }
+
+        #linha-status {
+            background: rgba(10, 15, 20, 0.9);
+            border: 1px solid #1a3a5a;
+            padding: 15px 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        .texto-status {
+            color: #ffcc00;
+            font-size: clamp(16px, 2.5vw, 24px);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        #quadro-simulacao {
+            position: relative;
+            width: 100%;
+            max-width: 1600px;
+            aspect-ratio: 1920 / 1080;
+            background-color: #000;
+            border: 2px solid #333;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .camada {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .tecla-interativa {
+            position: absolute;
+            z-index: 60;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .tecla-interativa:active { transform: scale(0.95); }
+
         /* Posições dos Componentes */
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 67%; left: 63%; }
 
+        #con-fase, #con-neutro {
+            position: absolute;
+            z-index: 50;
+            width: 5%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        #con-fase { top: 17.5%; left: 73.5%; }
+        #con-neutro { top: 14.5%; left: 93.5%; }
+
         .oculto { display: none !important; }
 
-        /* --- QUADRO DE POSIÇÃO DOS DISPOSITIVOS (PADRÃO ATUALIZADO) --- */
+        /* --- QUADRO DE POSIÇÃO DOS DISPOSITIVOS --- */
         #painel-dispositivos {
             position: absolute;
             top: 25%;
@@ -55,26 +120,108 @@
             align-items: center;
             padding: 10px 15px;
             margin-bottom: 5px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid #1a3a5a;
             font-weight: bold;
             font-size: 1vw;
-            letter-spacing: 1px;
         }
 
-        /* Cores de Status */
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
 
-        /* Estilos de Botões e Pontos */
-        .ponto { position: absolute; width: 1.8%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 100; transform: translate(-50%, -50%); }
+        /* Pontos e Botões */
+        .ponto {
+            position: absolute;
+            width: 1.8%;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            z-index: 100;
+            transform: translate(-50%, -50%);
+        }
+
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
-        
-        #btn-ajuda { position: absolute; bottom: 10.5%; left: 15%; background: linear-gradient(180deg, #008899, #004455); color: white; border: 1px solid #00f2ff; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
-        #btn-reiniciar { position: absolute; bottom: 3%; left: 13.5%; background: linear-gradient(180deg, #cc0000, #880000); color: white; border: 1px solid #500; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
+
+        #btn-ajuda {
+            position: absolute;
+            bottom: 10.5%;
+            left: 15%;
+            background: linear-gradient(180deg, #008899, #004455);
+            color: white;
+            border: 1px solid #00f2ff;
+            padding: 0.6% 3.5%;
+            font-size: 1.1vw;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 200;
+            text-transform: uppercase;
+        }
+
+        #btn-reiniciar {
+            position: absolute;
+            bottom: 3%;
+            left: 13.5%;
+            background: linear-gradient(180deg, #cc0000, #880000);
+            color: white;
+            border: 1px solid #500;
+            padding: 0.6% 3.5%;
+            font-size: 1.1vw;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 200;
+            text-transform: uppercase;
+        }
+
+        /* --- MODAIS DE AJUDA --- */
+        #overlay-ajuda {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-ajuda {
+            background: #0a1015;
+            border: 2px solid #1a3a5a;
+            width: 40%;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .item-ajuda {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #1a3a5a;
+            margin-bottom: 10px;
+            padding: 15px;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1vw;
+        }
+
+        #visualizador-tecnico {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -120,8 +267,26 @@
         </div>
 
         <div id="interacao-container"></div>
+        
         <button id="btn-ajuda" onclick="abrirAjuda()">AJUDA</button>
         <button id="btn-reiniciar" onclick="location.reload()">REINICIAR</button>
+
+        <div id="overlay-ajuda" class="oculto">
+            <div class="modal-ajuda">
+                <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnico</h2>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligaint.png')">1. Ligação do interruptor pulsador</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligcamp.png')">2. Ligação da campainha</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligcamp.png')">3. Conexões e emendas</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('con_derivacao.png')">4. Instalação do conector de derivação</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">5. Lista de material</div>
+                <button onclick="fecharAjuda()" style="margin-top:20px; padding:10px 20px; cursor:pointer;">Fechar</button>
+            </div>
+        </div>
+
+        <div id="visualizador-tecnico" class="oculto">
+            <img id="img-tecnica-exibida" src="" style="max-width:90%; max-height:80%;">
+            <button onclick="voltarParaLista()" style="margin-top:20px; background:#ffcc00; padding:10px 30px; font-weight:bold; cursor:pointer;">VOLTAR</button>
+        </div>
     </main>
 
     <audio id="audio-campainha" src="campainha.mp3" preload="auto"></audio>
@@ -146,7 +311,6 @@
             if (som) { som.currentTime = 0; som.play().catch(() => {}); }
         }
 
-        // --- FUNÇÃO DE ATUALIZAÇÃO DO QUADRO (FORÇANDO EXIBIÇÃO DO CHECK/X) ---
         function atualizarQuadroPosicao() {
             const dispositivos = [
                 { idComp: 'comp-dg', idTxt: 'txt-dg' },
@@ -158,12 +322,7 @@
                 const el = document.getElementById(disp.idComp);
                 const txt = document.getElementById(disp.idTxt);
                 const isON = el.getAttribute('data-state') === 'on';
-
-                if (isON) {
-                    txt.innerHTML = `<span class="status-on">[ ON ] ✅</span>`;
-                } else {
-                    txt.innerHTML = `<span class="status-off">[ OFF ] ❌</span>`;
-                }
+                txt.innerHTML = isON ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
             });
         }
 
@@ -174,10 +333,14 @@
                 atualizarQuadroPosicao();
                 return;
             }
+            
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
+            
+            // Restauração dos Conectores de Derivação
             if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
             if (dados.pasta === "NEUTRO_2") document.getElementById('con-neutro').classList.remove('oculto');
+            
             preCarregarCabo(dados);
             criarPonto(dados.origem, dados.cor, function() {
                 this.classList.add('sucesso');
@@ -190,32 +353,26 @@
 
         function toggleComp(el, offImg, onImg) {
             tocarSom('audio-disj');
-            if (el.getAttribute('data-state') === 'off') {
-                el.src = onImg;
-                el.setAttribute('data-state', 'on');
+            const state = el.getAttribute('data-state');
+            if (state === 'off') {
+                el.src = onImg; el.setAttribute('data-state', 'on');
             } else {
-                el.src = offImg;
-                el.setAttribute('data-state', 'off');
+                el.src = offImg; el.setAttribute('data-state', 'off');
             }
             atualizarQuadroPosicao();
         }
 
         function acionarPulsador(el, offImg, onImg) {
             tocarSom('audio-int');
-            el.src = onImg;
-            el.setAttribute('data-state', 'on');
+            el.src = onImg; el.setAttribute('data-state', 'on');
             atualizarQuadroPosicao();
-
+            
             const dgOn = document.getElementById('comp-dg').getAttribute('data-state') === 'on';
             const drOn = document.getElementById('comp-dr').getAttribute('data-state') === 'on';
+            if (etapaAtual >= roteiro.length && dgOn && drOn) { tocarSom('audio-campainha'); }
             
-            if (etapaAtual >= roteiro.length && dgOn && drOn) { 
-                tocarSom('audio-campainha'); 
-            }
-
             setTimeout(() => { 
-                el.src = offImg; 
-                el.setAttribute('data-state', 'off');
+                el.src = offImg; el.setAttribute('data-state', 'off');
                 atualizarQuadroPosicao();
             }, 200);
         }
@@ -251,7 +408,12 @@
             requestAnimationFrame(animar);
         }
 
-        function abrirAjuda() { /* Lógica de ajuda opcional */ }
+        // Funções de Ajuda Restauradas
+        function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
+        function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
+        function mostrarImagemTecnica(src) { document.getElementById('img-tecnica-exibida').src = src; document.getElementById('visualizador-tecnico').classList.remove('oculto'); }
+        function voltarParaLista() { document.getElementById('visualizador-tecnico').classList.add('oculto'); }
+
         window.onload = proximoPasso;
     </script>
 </body>
