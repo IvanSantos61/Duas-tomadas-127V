@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro - Diagnóstico de Circuito</title>
+    <title>Laboratório SMT Pro - Estável</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
@@ -64,7 +64,6 @@
             pointer-events: none;
         }
 
-        /* --- COMPONENTES --- */
         .tecla-interativa {
             position: absolute;
             z-index: 60;
@@ -98,6 +97,7 @@
             cursor: pointer;
             z-index: 100;
             transform: translate(-50%, -50%);
+            transition: transform 0.2s;
         }
 
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
@@ -105,50 +105,6 @@
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
 
-        /* --- QUADRO DE STATUS DO CIRCUITO (ESTILO IGUAL À GRAVURA) --- */
-        #painel-status-circuito {
-            position: absolute;
-            top: 33%;
-            left: 26%;
-            width: 20%;
-            background: rgba(5, 12, 20, 0.95);
-            border: 2px solid #00f2ff;
-            border-radius: 12px;
-            padding: 1.2%;
-            z-index: 300;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-        }
-
-        #painel-status-circuito h3 {
-            color: #00f2ff;
-            font-size: 1.2vw;
-            text-align: center;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            border-bottom: 1px solid rgba(0, 242, 255, 0.3);
-            padding-bottom: 6px;
-        }
-
-        .linha-dispositivo {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #00f2ff;
-            border-radius: 30px;
-            padding: 6px 18px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1.1vw;
-        }
-
-        .linha-dispositivo span:first-child {
-            color: white;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- BOTÕES DE CONTROLE --- */
         #btn-ajuda {
             position: absolute;
             bottom: 8.5%;
@@ -163,7 +119,6 @@
             cursor: pointer;
             z-index: 200;
             text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
         }
 
         #btn-reiniciar {
@@ -201,17 +156,7 @@
             padding: 30px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 1);
         }
-
-        .modal-ajuda h2 {
-            color: #ffcc00;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            font-size: 1.5vw;
-        }
-
-        .lista-ajuda { list-style: none; }
 
         .item-ajuda {
             background: rgba(255, 255, 255, 0.03);
@@ -223,25 +168,9 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 1.1vw;
-            transition: background 0.3s;
         }
 
-        .item-ajuda:hover {
-            background: rgba(0, 242, 255, 0.1);
-            border-color: #00f2ff;
-        }
-
-        #btn-fechar-modal {
-            margin-top: 20px;
-            background: #222;
-            color: #888;
-            border: 1px solid #444;
-            padding: 10px 30px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        /* --- VISUALIZADOR DE IMAGEM TÉCNICA --- */
+        /* --- VISUALIZADOR --- */
         #visualizador-tecnico {
             position: absolute;
             top: 0; left: 0;
@@ -252,24 +181,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        #img-tecnica-exibida {
-            max-width: 90%;
-            max-height: 85%;
-            border: 2px solid #333;
-        }
-
-        #btn-voltar-lista {
-            margin-top: 20px;
-            background: #ffcc00;
-            color: #000;
-            border: none;
-            padding: 12px 40px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            border-radius: 4px;
         }
     </style>
 </head>
@@ -297,40 +208,27 @@
         <img id="img-retorno" class="camada oculto">
         <img id="img-neutro-circuito" class="camada oculto">
 
-        <!-- QUADRO DE STATUS REAL-TIME (Inicia oculto) -->
-        <div id="painel-status-circuito" class="oculto">
-            <h3>Status do Circuito</h3>
-            <div class="linha-dispositivo"><span>DG</span><span id="status-dg">❌</span></div>
-            <div class="linha-dispositivo"><span>DR</span><span id="status-dr">❌</span></div>
-            <div class="linha-dispositivo"><span>INT</span><span id="status-int">❌</span></div>
-        </div>
-
         <div id="interacao-container"></div>
         
         <button id="btn-ajuda" onclick="abrirAjuda()">AJUDA</button>
         <button id="btn-reiniciar" onclick="location.reload()">REINICIAR</button>
 
-        <!-- OVERLAY DE AJUDA -->
         <div id="overlay-ajuda" class="oculto">
             <div class="modal-ajuda">
-                <h2>Ajuda Técnico</h2>
-                <div class="lista-ajuda">
-                    <div class="item-ajuda" onclick="mostrarImagemTecnica('ligaint.png')">1. Ligação do interruptor pulsador</div>
-                    <div class="item-ajuda" onclick="mostrarImagemTecnica('ligcamp.png')">2. Ligação da campainha</div>
-                    <div class="item-ajuda" onclick="mostrarImagemTecnica('ligcamp.png')">3. Conexões e emendas</div>
-                    <div class="item-ajuda" onclick="mostrarImagemTecnica('con_derivacao.png')">4. Instalação do conector de derivação</div>
-                    <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">5. Lista de material</div>
-                </div>
-                <button id="btn-fechar-modal" onclick="fecharAjuda()">Fechar</button>
+                <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnico</h2>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligaint.png')">1. Ligação do interruptor pulsador</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligcamp.png')">2. Ligação da campainha</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligcamp.png')">3. Conexões e emendas</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('con_derivacao.png')">4. Instalação do conector de derivação</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">5. Lista de material</div>
+                <button onclick="fecharAjuda()" style="margin-top:20px; padding:10px 20px; cursor:pointer;">Fechar</button>
             </div>
         </div>
 
-        <!-- VISUALIZADOR DE IMAGEM -->
         <div id="visualizador-tecnico" class="oculto">
-            <img id="img-tecnica-exibida" src="">
-            <button id="btn-voltar-lista" onclick="voltarParaLista()">VOLTAR PARA LISTA</button>
+            <img id="img-tecnica-exibida" src="" style="max-width:90%; max-height:80%;">
+            <button onclick="voltarParaLista()" style="margin-top:20px; background:#ffcc00; padding:10px 30px; font-weight:bold; cursor:pointer;">VOLTAR</button>
         </div>
-
     </main>
 
     <audio id="audio-campainha" src="campainha.mp3" preload="auto"></audio>
@@ -355,35 +253,9 @@
             if (som) { som.currentTime = 0; som.play().catch(() => {}); }
         }
 
-        function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
-        function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
-        
-        function mostrarImagemTecnica(src) {
-            const vis = document.getElementById('visualizador-tecnico');
-            const img = document.getElementById('img-tecnica-exibida');
-            img.src = src;
-            vis.classList.remove('oculto');
-        }
-
-        function voltarParaLista() { document.getElementById('visualizador-tecnico').classList.add('oculto'); }
-
-        // Função para atualizar dinamicamente o painel de status
-        function atualizarPainelStatus() {
-            const dgLigado = document.getElementById('comp-dg').src.includes('al_dg_on.png');
-            const drLigado = document.getElementById('comp-dr').src.includes('al_dr_on.png');
-            const intLigado = document.getElementById('comp-int').src.includes('tec_int_on.png');
-
-            document.getElementById('status-dg').innerText = dgLigado ? '✅' : '❌';
-            document.getElementById('status-dr').innerText = drLigado ? '✅' : '❌';
-            document.getElementById('status-int').innerText = intLigado ? '✅' : '❌';
-        }
-
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
                 document.getElementById('label-status').innerText = "INSTALAÇÃO CONCLUÍDA! TESTE A CAMPAINHA.";
-                // Exibe o painel de status na tela ao finalizar
-                document.getElementById('painel-status-circuito').classList.remove('oculto');
-                atualizarPainelStatus();
                 return;
             }
             const dados = roteiro[etapaAtual];
@@ -403,25 +275,15 @@
         function toggleComp(el, offImg, onImg) {
             tocarSom('audio-disj');
             el.src = el.src.includes(offImg) ? onImg : offImg;
-            atualizarPainelStatus(); // Atualiza o quadro caso ele já esteja visível
         }
 
         function acionarPulsador(el, offImg, onImg) {
             tocarSom('audio-int');
             el.src = onImg;
-            atualizarPainelStatus(); // Fica ON instantaneamente no clique
-
-            const dgLigado = document.getElementById('comp-dg').src.includes('al_dg_on.png');
-            const drLigado = document.getElementById('comp-dr').src.includes('al_dr_on.png');
-            
-            if (etapaAtual >= roteiro.length && dgLigado && drLigado) { 
-                tocarSom('audio-campainha'); 
-            }
-            
-            setTimeout(() => { 
-                el.src = offImg; 
-                atualizarPainelStatus(); // Retorna para OFF automaticamente após soltar
-            }, 200);
+            const dgOn = document.getElementById('comp-dg').src.includes('on');
+            const drOn = document.getElementById('comp-dr').src.includes('on');
+            if (etapaAtual >= roteiro.length && dgOn && drOn) { tocarSom('audio-campainha'); }
+            setTimeout(() => { el.src = offImg; }, 200);
         }
 
         function preCarregarCabo(dados) {
@@ -433,32 +295,32 @@
             }
         }
 
-        function criarPonto(pos, ...args) {
-            const cliqueFn = args[args.length - 1];
-            const corClasse = args[0];
+        function criarPonto(pos, corClasse, cliqueFn) {
             const ponto = document.createElement('div');
             ponto.className = `ponto ${corClasse}`;
-            ponto.style.left = pos.x + "%";
-            ponto.style.top = pos.y + "%";
+            ponto.style.left = pos.x + "%"; ponto.style.top = pos.y + "%";
             ponto.onclick = (e) => { e.stopPropagation(); cliqueFn.call(ponto); };
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
-            let frameIdx = 0;
-            const frames = cacheImagens[dados.pasta];
-            const lentidao = 3; 
+            let frameIdx = 0; const frames = cacheImagens[dados.pasta];
             let contador = 0;
             function animar() {
                 if (frameIdx < frames.length) {
-                    if (contador % lentidao === 0) { imgElemento.src = frames[frameIdx].src; frameIdx++; }
+                    if (contador % 3 === 0) { imgElemento.src = frames[frameIdx].src; frameIdx++; }
                     contador++; requestAnimationFrame(animar);
                 } else { tocarSom('audio-conexao'); etapaAtual++; setTimeout(proximoPasso, 400); }
             }
             requestAnimationFrame(animar);
         }
+
+        function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
+        function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
+        function mostrarImagemTecnica(src) { document.getElementById('img-tecnica-exibida').src = src; document.getElementById('visualizador-tecnico').classList.remove('oculto'); }
+        function voltarParaLista() { document.getElementById('visualizador-tecnico').classList.add('oculto'); }
 
         window.onload = proximoPasso;
     </script>
