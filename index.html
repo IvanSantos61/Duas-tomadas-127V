@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMT Pro - Simulador Interativo</title>
+    <title>Laboratório SMT Pro - Simulação Completa</title>
     <style>
+        /* ZERAMENTO E ESTRUTURA */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
         body {
@@ -15,10 +16,10 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
-        /* Container com proporção 1920x1080 resistente ao zoom */
+        /* CONTAINER MESTRE (1920x1080) */
         #app-container {
             width: 1920px;
             height: 1080px;
@@ -29,38 +30,40 @@
             background-color: #000;
         }
 
-        /* 1. ÁREA DO TÍTULO (Fora do quadro principal) */
+        /* 1. TÍTULO (Topo - Fora do quadro) */
         #zona-titulo {
-            height: 100px;
+            height: 110px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .titulo-cyan {
             color: #00f2ff;
-            font-size: 50px;
+            font-size: 52px;
             font-weight: 900;
-            text-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
         }
 
-        /* 2. ÁREA DE STATUS (Fora do quadro principal) */
+        /* 2. LINHA DE STATUS (Meio - Fora do quadro) */
         #zona-status {
-            height: 80px;
+            height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .caixa-status {
-            background: rgba(20, 25, 30, 0.9);
+            background: rgba(10, 15, 20, 0.95);
             border: 1px solid #1a3a5a;
-            padding: 10px 40px;
-            border-radius: 8px;
-            min-width: 600px;
+            padding: 15px 60px;
+            border-radius: 10px;
+            min-width: 850px;
             text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
         .texto-gold {
             color: #ffcc00;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
             text-transform: uppercase;
         }
@@ -69,10 +72,10 @@
         #quadro-principal {
             flex: 1;
             position: relative;
-            margin: 0 40px 40px 40px;
-            border: 3px solid #222;
+            margin: 0 40px 30px 40px;
+            border: 2px solid #2a2a2a;
+            background-color: #0a0a0a;
             overflow: hidden;
-            background-color: #111;
         }
 
         .camada-grafica {
@@ -86,39 +89,42 @@
 
         .cabo-oculto { display: none; }
 
-        /* Estilo das Bolinhas de Indicação */
+        /* INTERAÇÃO: BOLINHAS (CHECKPOINTS) */
         .ponto-conexao {
             position: absolute;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 100;
-            border: 3px solid white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            transition: background-color 0.3s, transform 0.2s;
+            border: 3px solid #ffffff;
+            transform: translate(-50%, -50%); /* Centraliza exatamente na coordenada */
+            transition: all 0.2s ease;
         }
-        .ponto-conexao:hover { transform: scale(1.2); }
-        
-        /* Cores das bolinhas conforme o cabo */
+        .ponto-conexao:hover { transform: translate(-50%, -50%) scale(1.3); }
+
+        /* Cores conforme o tipo de cabo */
         .ponto-fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .ponto-neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
-        .ponto-retorno { background-color: #ffffff; box-shadow: 0 0 15px #ffffff; }
-        .ponto-sucesso { background-color: #00ff00 !important; box-shadow: 0 0 15px #00ff00 !important; }
+        .ponto-retorno { background-color: #ffffff; box-shadow: 0 0 15px #000; }
+        .ponto-sucesso { background-color: #00ff00 !important; box-shadow: 0 0 20px #00ff00 !important; }
 
+        /* Botão Reiniciar */
         #btn-reiniciar {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: #cc0000;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(180deg, #cc0000 0%, #880000 100%);
             color: white;
-            border: none;
-            padding: 10px 30px;
+            border: 1px solid #500;
+            padding: 12px 35px;
+            font-size: 20px;
             font-weight: bold;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             z-index: 110;
         }
+        #btn-reiniciar:hover { filter: brightness(1.2); }
     </style>
 </head>
 <body>
@@ -131,7 +137,7 @@
 
         <section id="zona-status">
             <div class="caixa-status">
-                <p class="texto-gold" id="texto-instrucao">INICIAR INSTALAÇÃO: CLIQUE NA ORIGEM DO CABO FASE</p>
+                <p class="texto-gold" id="texto-instrucao">AGUARDANDO INÍCIO...</p>
             </div>
         </section>
 
@@ -152,7 +158,7 @@
     </div>
 
     <script>
-        // --- CONFIGURAÇÃO DE ESCALA ---
+        // --- 1. AJUSTE DE ESCALA (ZOOM RESISTANT) ---
         const container = document.getElementById('app-container');
         function ajustarEscala() {
             const escala = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
@@ -161,89 +167,97 @@
         window.addEventListener('resize', ajustarEscala);
         window.addEventListener('load', ajustarEscala);
 
-        // --- DADOS DA SIMULAÇÃO ---
-        // Aqui você define as coordenadas (x, y) de onde as bolinhas devem aparecer no seu ambiente.jpg
+        // --- 2. ROTEIRO COMPLETO (OS 5 CABOS) ---
+        // ATENÇÃO: Ajuste as coordenadas X e Y conforme a posição real no seu ambiente.jpg
         const roteiro = [
             { 
-                nome: "Fase Rede", 
-                pasta: "FASE_REDE", total: 64, idCamada: "camada-fase-rede", cor: "ponto-fase",
-                origem: { x: 540, y: 420 }, destino: { x: 540, y: 550 }
+                nome: "Fase da Rede", pasta: "FASE_REDE", total: 64, idImg: "camada-fase-rede", cor: "ponto-fase",
+                origem: { x: 520, y: 400 }, destino: { x: 520, y: 560 }
             },
             { 
-                nome: "Neutro Rede", 
-                pasta: "NEUTRO_REDE", total: 76, idCamada: "camada-neutro-rede", cor: "ponto-neutro",
-                origem: { x: 580, y: 420 }, destino: { x: 580, y: 550 }
+                nome: "Neutro da Rede", pasta: "NEUTRO_REDE", total: 76, idImg: "camada-neutro-rede", cor: "ponto-neutro",
+                origem: { x: 580, y: 400 }, destino: { x: 580, y: 560 }
             },
             { 
-                nome: "Fase Circuito 2", 
-                pasta: "FASE_2", total: 25, idCamada: "camada-fase-2", cor: "ponto-fase",
-                origem: { x: 650, y: 600 }, destino: { x: 1150, y: 750 }
+                nome: "Fase do Circuito", pasta: "FASE_2", total: 25, idImg: "camada-fase-2", cor: "ponto-fase",
+                origem: { x: 650, y: 600 }, destino: { x: 1140, y: 740 }
+            },
+            { 
+                nome: "Retorno da Lâmpada", pasta: "RETORNO", total: 45, idImg: "camada-retorno", cor: "ponto-retorno",
+                origem: { x: 1160, y: 740 }, destino: { x: 1400, y: 680 }
+            },
+            { 
+                nome: "Neutro da Lâmpada", pasta: "NEUTRO_2", total: 15, idImg: "camada-neutro-2", cor: "ponto-neutro",
+                origem: { x: 1430, y: 680 }, destino: { x: 600, y: 600 }
             }
-            // Adicione os outros conforme necessário seguindo o mesmo padrão
         ];
 
         let etapaAtual = 0;
         const textoInstrucao = document.getElementById('texto-instrucao');
         const containerPontos = document.getElementById('container-pontos');
 
-        function iniciarEtapa() {
+        // --- 3. LÓGICA DE INTERAÇÃO ---
+        function carregarEtapa() {
             if (etapaAtual >= roteiro.length) {
-                textoInstrucao.innerText = "INSTALAÇÃO CONCLUÍDA COM SUCESSO!";
+                textoInstrucao.innerText = "SIMULAÇÃO CONCLUÍDA! CIRCUITO ENERGIZADO.";
+                textoInstrucao.style.color = "#00f2ff";
                 return;
             }
 
-            const dados = roteiro[etapaAtual];
-            textoInstrucao.innerText = `CONECTE O CABO: ${dados.nome.toUpperCase()}`;
-            
-            // Cria a bolinha de origem
-            criarPonto(dados.origem.x, dados.origem.y, dados.cor, () => {
-                // Ao clicar na origem: muda cor para verde e cria o destino
-                const pontoOrigem = containerPontos.lastChild;
-                pontoOrigem.classList.add('ponto-sucesso');
+            const passo = roteiro[etapaAtual];
+            textoInstrucao.innerText = `PASSO ${etapaAtual + 1}: INSTALAR ${passo.nome.toUpperCase()}`;
+            textoInstrucao.style.color = "#ffcc00";
+
+            // Criar ponto de ORIGEM
+            criarPonto(passo.origem.x, passo.origem.y, passo.cor, function() {
+                this.classList.add('ponto-sucesso'); // Bolinha fica verde
                 
-                criarPonto(dados.destino.x, dados.destino.y, dados.cor, () => {
-                    // Ao clicar no destino: remove bolinhas e inicia animação do cabo
-                    containerPontos.innerHTML = "";
-                    executarAnimacao(dados);
+                // Criar ponto de DESTINO
+                criarPonto(passo.destino.x, passo.destino.y, passo.cor, function() {
+                    containerPontos.innerHTML = ""; // Limpa bolinhas
+                    executarAnimacao(passo);
                 });
             });
         }
 
-        function criarPonto(x, y, classeCor, acao) {
+        function criarPonto(x, y, classeCor, cliqueFn) {
             const ponto = document.createElement('div');
             ponto.className = `ponto-conexao ${classeCor}`;
             ponto.style.left = x + "px";
             ponto.style.top = y + "px";
             ponto.onclick = (e) => {
                 e.stopPropagation();
-                acao();
+                cliqueFn.call(ponto); // Executa a função passando o ponto como 'this'
             };
             containerPontos.appendChild(ponto);
         }
 
-        function executarAnimacao(dados) {
-            const img = document.getElementById(dados.idCamada);
+        function executarAnimacao(passo) {
+            const img = document.getElementById(passo.idImg);
             img.classList.remove('cabo-oculto');
             let frame = 1;
 
-            function animar() {
-                if (frame <= dados.total) {
-                    const sufixo = String(frame).padStart(4, '0');
-                    img.src = `${dados.pasta}/quadro${sufixo}.png`;
+            function processar() {
+                if (frame <= passo.total) {
+                    const idx = String(frame).padStart(4, '0');
+                    img.src = `${passo.pasta}/quadro${idx}.png`;
                     frame++;
-                    requestAnimationFrame(animar);
+                    requestAnimationFrame(processar);
                 } else {
                     etapaAtual++;
-                    iniciarEtapa();
+                    setTimeout(carregarEtapa, 500); // Pequena pausa para o usuário ver o cabo pronto
                 }
             }
-            animar();
+            processar();
         }
 
         document.getElementById('btn-reiniciar').onclick = () => location.reload();
 
-        // Inicia o processo
-        iniciarEtapa();
+        // Início imediato
+        window.onload = () => {
+            ajustarEscala();
+            carregarEtapa();
+        };
     </script>
 </body>
 </html>
