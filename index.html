@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -28,7 +27,7 @@
         .oculto { display: none !important; }
 
         /* Estilo Balões */
-        .balao-info { position: absolute; width: 30px; height: 30px; background: #00f2ff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 900; font-size: 18px; }
+        .balao-info { position: absolute; width: 30px; height: 30px; background: #00f2ff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 900; font-size: 16px; }
         .balao-info::after { content: attr(data-msg); visibility: hidden; position: absolute; bottom: 40px; left: 0; width: 280px; background: white; color: black; padding: 10px; border-radius: 5px; font-size: 13px; z-index: 999; text-transform: none; font-weight: normal; white-space: pre-line; }
         .balao-info:hover::after { visibility: visible; }
 
@@ -91,12 +90,12 @@
     <main id="quadro-simulacao">
         <img src="ambiente.jpg" class="camada">
 
-        <div id="balao-fase-rede" class="balao-info oculto" style="top: 93%; left: 40%;" data-msg="A fase pode ser de qualquer cor (Item 6.1.5.3.4 da NBR-5410)">i</div>
-        <div id="balao-neutro-rede" class="balao-info oculto" style="top: 93%; left: 45%;" data-msg="A seção mínima dos fios do circuito de iluminação é 1,5mm2 (Item 6.2.6.1.1 da NBR-5410)">i</div>
-        <div id="balao-fase-2" class="balao-info oculto" style="top: 93%; left: 50%;" data-msg="O interruptor deve seccionar o condutor fase (Item 6.3.7.2.1 da NBR-5410)">i</div>
-        <div id="balao-retorno" class="balao-info oculto" style="top: 93%; left: 55%;" data-msg="O retorno, também, pode ser de qualquer cor (Continuidade da fase NBR-5410)">i</div>
-        <div id="balao-conector" class="balao-info oculto" style="top: 93%; left: 60%;" data-msg="Conectores de emenda garantem conexões firmes e energia sem interrupção">i</div>
-        <div id="balao-final" class="balao-info oculto" style="top: 93%; left: 65%;" data-msg="CAMPAINHA --> Recebe Neutro e Retorno.&#13;INTERRUPTOR --> Recebe Fase e Retorno">i</div>
+        <div id="balao-fase-rede" class="balao-info oculto" style="top: 93%; left: 40%;" data-msg="A fase pode ser de qualquer cor (Item 6.1.5.3.4 da NBR-5410)">💡</div>
+        <div id="balao-neutro-rede" class="balao-info oculto" style="top: 93%; left: 45%;" data-msg="A seção mínima dos fios do circuito de iluminação é 1,5mm2 (Item 6.2.6.1.1 da NBR-5410)">💡</div>
+        <div id="balao-fase-2" class="balao-info oculto" style="top: 93%; left: 50%;" data-msg="O interruptor deve seccionar o condutor fase (Item 6.3.7.2.1 da NBR-5410)">💡</div>
+        <div id="balao-retorno" class="balao-info oculto" style="top: 93%; left: 55%;" data-msg="O retorno, também, pode ser de qualquer cor (Continuidade da fase NBR-5410)">💡</div>
+        <div id="balao-conector" class="balao-info oculto" style="top: 93%; left: 60%;" data-msg="Conectores de emenda garantem conexões firmes e energia sem interrupção">💡</div>
+        <div id="balao-final" class="balao-info oculto" style="top: 93%; left: 65%;" data-msg="CAMPAINHA --> Recebe Neutro e Retorno.&#13;INTERRUPTOR --> Recebe Fase e Retorno">💡</div>
 
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
