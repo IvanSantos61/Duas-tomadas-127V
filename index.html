@@ -180,16 +180,17 @@
             const dgOn = document.getElementById('comp-dg').getAttribute('data-state') === 'on';
             const drOn = document.getElementById('comp-dr').getAttribute('data-state') === 'on';
             
-            // Retorno do botão após 200ms
+            if (etapaAtual >= roteiro.length && dgOn && drOn) { 
+                tocarSom('audio-campainha'); // Toca IMEDIATAMENTE
+            }
+            
             setTimeout(() => { 
                 el.src = off; 
                 el.setAttribute('data-state', 'off');
                 atualizarQuadroPosicao();
 
-                // Lógica da Placa: Após o retorno (pulsador off), espera 2 segundos para exibir
                 if (etapaAtual >= roteiro.length && dgOn && drOn) { 
-                    setTimeout(() => {
-                        tocarSom('audio-campainha');
+                    setTimeout(() => { // Delay de 2 segundos APÓS o retorno
                         const placa = document.getElementById('placa-concluido');
                         placa.classList.remove('oculto');
                         
