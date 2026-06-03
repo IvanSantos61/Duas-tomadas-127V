@@ -188,12 +188,39 @@
             });
         }
 
-        function toggleComp(el, off, on) {
+function toggleComp(el, off, on) {
             tocarSom('audio-disj');
             const state = el.getAttribute('data-state') === 'off' ? 'on' : 'off';
             el.src = state === 'on' ? on : off;
             el.setAttribute('data-state', state);
             atualizarQuadroPosicao();
+            
+            // Nova lógica de verificação da lâmpada
+            verificarLampada();
+        }
+
+        function verificarLampada() {
+            const dg = document.getElementById('comp-dg').getAttribute('data-state');
+            const dr = document.getElementById('comp-dr').getAttribute('data-state');
+            const int = document.getElementById('comp-int').getAttribute('data-state');
+            
+            let lampada = document.getElementById('img-lampada');
+            
+            // Se não existir o elemento da lâmpada, cria um (ou substitua pelo seu ID se já existir no HTML)
+            if (!lampada) {
+                lampada = document.createElement('img');
+                lampada.id = 'img-lampada';
+                lampada.src = 'lamp_on.png';
+                lampada.className = 'camada'; // Usando a mesma classe das outras camadas
+                document.getElementById('quadro-simulacao').appendChild(lampada);
+            }
+
+            // Verifica se todos estão ligados
+            if (dg === 'on' && dr === 'on' && int === 'on') {
+                lampada.classList.remove('oculto');
+            } else {
+                lampada.classList.add('oculto');
+            }
         }
 
         function abrirAnimacaoConector() {
