@@ -161,19 +161,34 @@
             }
         }
 
-        function toggleComp(el, off, on) {
-            if (!el) return;
-            
+     function toggleComp(el, off, on) {
+            // 1. Toca o som primeiro para feedback imediato
             tocarSom('audio-disj');
             
+            // 2. Muda o estado visual imediatamente sem depender de outras funções
             const currentState = el.getAttribute('data-state');
             const newState = (currentState === 'off') ? 'on' : 'off';
-            
             el.src = (newState === 'on') ? on : off;
             el.setAttribute('data-state', newState);
             
-            // Pequeno atraso para garantir que o DOM processe o atributo antes de atualizar a UI
-            setTimeout(atualizarQuadroPosicao, 50);
+            // 3. Atualiza o painel de texto de forma segura
+            if (el.id === 'comp-dg') document.getElementById('txt-dg').innerHTML = newState === 'on' ? '<span class="status-on">[ ON ] ✅</span>' : '<span class="status-off">[ OFF ] ❌</span>';
+            if (el.id === 'comp-dr') document.getElementById('txt-dr').innerHTML = newState === 'on' ? '<span class="status-on">[ ON ] ✅</span>' : '<span class="status-off">[ OFF ] ❌</span>';
+            if (el.id === 'comp-int') document.getElementById('txt-int').innerHTML = newState === 'on' ? '<span class="status-on">[ ON ] ✅</span>' : '<span class="status-off">[ OFF ] ❌</span>';
+            
+            // 4. Verificação da Lâmpada (separada para não travar o clique)
+            setTimeout(() => {
+                const dgState = document.getElementById('comp-dg').getAttribute('data-state');
+                const drState = document.getElementById('comp-dr').getAttribute('data-state');
+                const intState = document.getElementById('comp-int').getAttribute('data-state');
+                const lamp = document.getElementById('img-lampada');
+                
+                if (dgState === 'on' && drState === 'on' && intState === 'on') {
+                    lamp.classList.remove('oculto');
+                } else {
+                    lamp.classList.add('oculto');
+                }
+            }, 100);
         }
         function abrirAnimacaoConector() {
             const img = document.getElementById('img-tecnica-exibida');
