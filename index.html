@@ -67,6 +67,9 @@
 
         .modal-ajuda button { border-radius: 50px !important; padding: 12px 30px !important; border: none !important; cursor: pointer !important; background-color: yellow !important; color: black !important; }
         #visualizador-tecnico button { border-radius: 50px !important; padding: 10px 30px !important; border: none !important; cursor: pointer !important; }
+        
+        /* Nova classe para a lâmpada */
+        #img-lampada { z-index: 70; }
     </style>
 </head>
 <body>
@@ -89,6 +92,8 @@
 
     <main id="quadro-simulacao">
         <img src="ambiente.jpg" class="camada">
+        
+        <img id="img-lampada" src="lamp_on.png" class="camada oculto">
 
         <div id="balao-fase-rede" class="balao-info oculto" style="top: 93%; left: 40%;">💡
             <div class="texto-balao">A fase pode ser de qualquer cor <span style="color:red;">(Item 6.1.5.3.4 da NBR-5410)</span></div>
@@ -181,11 +186,24 @@
                 { idComp: 'comp-dr', idTxt: 'txt-dr' },
                 { idComp: 'comp-int', idTxt: 'txt-int' }
             ];
+            
+            let todosLigados = true;
+            
             dispositivos.forEach(disp => {
                 const el = document.getElementById(disp.idComp);
                 const isON = el.getAttribute('data-state') === 'on';
                 document.getElementById(disp.idTxt).innerHTML = isON ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+                
+                if (!isON) todosLigados = false;
             });
+
+            // Lógica da lâmpada
+            const imgLampada = document.getElementById('img-lampada');
+            if (todosLigados) {
+                imgLampada.classList.remove('oculto');
+            } else {
+                imgLampada.classList.add('oculto');
+            }
         }
 
         function toggleComp(el, off, on) {
