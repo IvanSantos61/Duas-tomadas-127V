@@ -99,6 +99,17 @@
     border: none !important;
     cursor: pointer !important;
 }
+        /* ... código existente ... */
+
+.estilo-lampada-acesa {
+    position: absolute;
+    top: 50px;   /* Ajuste o deslocamento vertical aqui */
+    left: 50px;  /* Ajuste o deslocamento horizontal aqui */
+    width: 100px;/* Ajuste o tamanho da lâmpada aqui */
+    z-index: 100;
+    pointer-events: none;
+}
+</style>
     </style>
 </head>
 <body>
@@ -255,7 +266,8 @@ function acionarPulsador(el, off, on) {
             lampada = document.createElement('img');
             lampada.id = 'lampada-sobreposta';
             lampada.src = 'lamp_on.png';
-            lampada.className = 'camada'; 
+           */ lampada.className = 'camada'; */
+            lampada.className = 'estilo-lampada-acesa';
             document.getElementById('quadro-simulacao').appendChild(lampada);
         }
         lampada.classList.remove('oculto');
