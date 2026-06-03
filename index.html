@@ -233,37 +233,46 @@
 
 /* --- INÍCIO DA FUNÇÃO AQUI --- */
 function acionarPulsador(el, off, on) {
-    if (estaPulsando) return;
-    estaPulsando = true;
-    tocarSom('audio-int');
-    el.src = on; 
-    el.setAttribute('data-state', 'on');
+    // Alterna o estado do interruptor (Simples/Comum)
+    const isOff = el.getAttribute('data-state') === 'off';
+    const newState = isOff ? 'on' : 'off';
+    
+    el.src = isOff ? on : off;
+    el.setAttribute('data-state', newState);
+    
     atualizarQuadroPosicao();
     
+    // Verifica se o sistema está pronto e os dispositivos ligados
     const dgOn = document.getElementById('comp-dg').getAttribute('data-state') === 'on';
     const drOn = document.getElementById('comp-dr').getAttribute('data-state') === 'on';
+    const intOn = newState === 'on';
     
-    if (etapaAtual >= roteiro.length && dgOn && drOn) { tocarSom('audio-campainha'); }
+    let lampada = document.getElementById('lampada-sobreposta');
     
-    setTimeout(() => { 
-        el.src = off; 
-        el.setAttribute('data-state', 'off');
-        atualizarQuadroPosicao();
-        estaPulsando = false; 
-
-        if (etapaAtual >= roteiro.length && dgOn && drOn) { 
-            setTimeout(() => {
-                const placa = document.getElementById('placa-concluido');
-                if (placa.classList.contains('oculto')) {
-                    placa.classList.remove('oculto');
-                    placa.addEventListener('animationend', function handler() {
-                        placa.classList.add('oculto');
-                        placa.removeEventListener('animationend', handler);
-                    });
-                }
-            }, 500);
+    // Condição: Fiação concluída + DG ligado + DR ligado + Interruptor ligado
+    if (etapaAtual >= roteiro.length && dgOn && drOn && intOn) {
+        if (!lampada) {
+            lampada = document.createElement('img');
+            lampada.id = 'lampada-sobreposta';
+            lampada.src = 'lamp_on.png';
+            lampada.className = 'camada'; 
+            document.getElementById('quadro-simulacao').appendChild(lampada);
         }
-    }, 300); 
+        lampada.classList.remove('oculto');
+        
+        // Exibe a placa de concluído apenas na primeira vez que acender
+        const placa = document.getElementById('placa-concluido');
+        if (placa.classList.contains('oculto')) {
+            placa.classList.remove('oculto');
+            placa.addEventListener('animationend', function handler() {
+                placa.classList.add('oculto');
+                placa.removeEventListener('animationend', handler);
+            });
+        }
+    } else {
+        // Se qualquer condição falhar, esconde a lâmpada acesa
+        if (lampada) lampada.classList.add('oculto');
+    }
 }
 /* --- FIM DA FUNÇÃO AQUI --- */
 
