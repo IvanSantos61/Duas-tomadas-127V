@@ -39,6 +39,11 @@
         .texto-balao { visibility: hidden; position: absolute; bottom: 50px; left: 0; width: 300px; background: white; color: black; padding: 12px; border-radius: 8px; font-size: 18px; z-index: 999; text-transform: none; font-weight: normal; white-space: normal; line-height: 1.4; border: 2px solid #00f2ff; }
         .balao-info:hover .texto-balao { visibility: visible; }
 
+        .hotspot-area { position: absolute; z-index: 800; cursor: help; border: 1px dashed rgba(0, 242, 255, 0.3); transition: background 0.3s; }
+        .hotspot-area:hover { background: rgba(0, 242, 255, 0.1); border: 1px solid #00f2ff; }
+        .hotspot-area .tooltip-area { visibility: hidden; position: absolute; bottom: 105%; left: 50%; transform: translateX(-50%); background: #00f2ff; color: #000; padding: 5px 12px; border-radius: 4px; font-size: 14px; font-weight: bold; white-space: nowrap; z-index: 1000; pointer-events: none; box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
+        .hotspot-area:hover .tooltip-area { visibility: visible; }
+
         #painel-dispositivos { position: absolute; top: 25%; left: 59%; width: 15%; background: rgba(5, 15, 30, 0.95); border: 2px solid #00f2ff; border-radius: 8px; z-index: 500; }
         #painel-dispositivos h3 { background: #008899; color: white; text-align: center; font-size: 1.1vw; padding: 8px; text-transform: uppercase; border-bottom: 2px solid #00f2ff; }
         .linha-dispositivo { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; margin-bottom: 5px; background: rgba(255, 255, 255, 0.05); border-left: 4px solid #1a3a5a; font-weight: bold; font-size: 1vw; }
@@ -118,50 +123,21 @@
             <div class="texto-balao">O fio neutro deve ser de cor azul-claro <span style="color:red;">(Item 6.1.5.3.1 da NBR-5410)</span></div>
         </div>
 
-        <!-- Novos Hotspots -->
-        <div id="balao-aterramento" class="balao-info" style="top: 10%; left: 10%;">💡
-            <div class="texto-balao">BARRA DE ATERRAMENTO</div>
-        </div>
-        <div id="balao-disjuntor-geral" class="balao-info" style="top: 15%; left: 15%;">💡
-            <div class="texto-balao">DISJUNTOR GERAL</div>
-        </div>
-        <div id="balao-dps" class="balao-info" style="top: 20%; left: 20%;">💡
-            <div class="texto-balao">DPS</div>
-        </div>
-        <div id="balao-dr" class="balao-info" style="top: 25%; left: 25%;">💡
-            <div class="texto-balao">DISPOSITIVO DR</div>
-        </div>
-        <div id="balao-disjuntores-circuitos" class="balao-info" style="top: 30%; left: 30%;">💡
-            <div class="texto-balao">DISJUNTORES DOS CIRCUITOS</div>
-        </div>
-        <div id="balao-barra-neutro" class="balao-info" style="top: 35%; left: 35%;">💡
-            <div class="texto-balao">BARRA DE NEUTRO</div>
-        </div>
-        <div id="balao-lampada-led" class="balao-info" style="top: 40%; left: 40%;">💡
-            <div class="texto-balao">LÂMPADA LED (Bivolt)</div>
-        </div>
-        <div id="balao-bocal-e27" class="balao-info" style="top: 45%; left: 45%;">💡
-            <div class="texto-balao">BOCAL E-27</div>
-        </div>
-        <div id="balao-interruptor-simples" class="balao-info" style="top: 50%; left: 50%;">💡
-            <div class="texto-balao">INTERRUPTOR SIMPLES</div>
-        </div>
-        <div id="balao-rede-eletrica" class="balao-info" style="top: 55%; left: 55%;">💡
-            <div class="texto-balao">REDE ELÉTRICA</div>
-        </div>
-        <div id="balao-caixa-passagem-1" class="balao-info" style="top: 60%; left: 60%;">💡
-            <div class="texto-balao">CAIXA DE PASSAGEM 4x2"</div>
-        </div>
-        <div id="balao-caixa-passagem-2" class="balao-info" style="top: 65%; left: 65%;">💡
-            <div class="texto-balao">CAIXA DE PASSAGEM 4x2"</div>
-        </div>
-        <div id="balao-caixa-passagem-3" class="balao-info" style="top: 70%; left: 70%;">💡
-            <div class="texto-balao">CAIXA DE PASSAGEM 4x2"</div>
-        </div>
-        <div id="balao-caixa-passagem-4" class="balao-info" style="top: 75%; left: 75%;">💡
-            <div class="texto-balao">CAIXA DE PASSAGEM 4x2"</div>
-        </div>
 
+        <div id="hotspot-aterramento" class="hotspot-area" style="top: 10%; left: 10%; width: 5%; height: 5%;"><span class="tooltip-area">BARRA DE ATERRAMENTO</span></div>
+        <div id="hotspot-disjuntor-geral" class="hotspot-area" style="top: 15%; left: 15%; width: 5%; height: 5%;"><span class="tooltip-area">DISJUNTOR GERAL</span></div>
+        <div id="hotspot-dps" class="hotspot-area" style="top: 20%; left: 20%; width: 5%; height: 5%;"><span class="tooltip-area">DPS</span></div>
+        <div id="hotspot-dr" class="hotspot-area" style="top: 25%; left: 25%; width: 5%; height: 5%;"><span class="tooltip-area">DISPOSITIVO DR</span></div>
+        <div id="hotspot-disjuntores-circuitos" class="hotspot-area" style="top: 30%; left: 30%; width: 5%; height: 5%;"><span class="tooltip-area">DISJUNTORES DOS CIRCUITOS</span></div>
+        <div id="hotspot-barra-neutro" class="hotspot-area" style="top: 35%; left: 35%; width: 5%; height: 5%;"><span class="tooltip-area">BARRA DE NEUTRO</span></div>
+        <div id="hotspot-lampada-led" class="hotspot-area" style="top: 40%; left: 40%; width: 5%; height: 5%;"><span class="tooltip-area">LÂMPADA LED (Bivolt)</span></div>
+        <div id="hotspot-bocal-e27" class="hotspot-area" style="top: 45%; left: 45%; width: 5%; height: 5%;"><span class="tooltip-area">BOCAL E-27</span></div>
+        <div id="hotspot-interruptor-simples" class="hotspot-area" style="top: 50%; left: 50%; width: 5%; height: 5%;"><span class="tooltip-area">INTERRUPTOR SIMPLES</span></div>
+        <div id="hotspot-rede-eletrica" class="hotspot-area" style="top: 55%; left: 55%; width: 5%; height: 5%;"><span class="tooltip-area">REDE ELÉTRICA</span></div>
+        <div id="hotspot-caixa-passagem-1" class="hotspot-area" style="top: 60%; left: 60%; width: 5%; height: 5%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
+        <div id="hotspot-caixa-passagem-2" class="hotspot-area" style="top: 65%; left: 65%; width: 5%; height: 5%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
+        <div id="hotspot-caixa-passagem-3" class="hotspot-area" style="top: 70%; left: 70%; width: 5%; height: 5%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
+        <div id="hotspot-caixa-passagem-4" class="hotspot-area" style="top: 75%; left: 75%; width: 5%; height: 5%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
         <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'tec_int_off.png', 'tec_int_on.png')">
