@@ -28,6 +28,7 @@
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 72%; left: 54.5%; }
+        #comp-luz-tom { width: 6%; top: 72%; left: 75.5%; } /* Nova estilização para a luminária da tomada */
 
         /* Conectores e Derivações */
         .conector-der { position: absolute; z-index: 50; width: 5%; transform: translate(-50%, -50%); pointer-events: none; }
@@ -107,7 +108,7 @@
         </div>
         
         <div id="balao-fase-rede" class="balao-info oculto" style="top: 94.5%; left: 40%;">💡
-            <div class="texto-balao">A fase pode ser de qualquer cor <span style="color:red;">(Item 6.1.5.3.4 da NBR-5410)</span></div>
+            <div class="texto-balao">A fase pode be de qualquer cor <span style="color:red;">(Item 6.1.5.3.4 da NBR-5410)</span></div>
         </div>
         <div id="balao-neutro-rede" class="balao-info oculto" style="top: 94.5%; left: 45%;">💡
             <div class="texto-balao">A seção mínima dos fios do circuito de iluminação é 1,5mm² <span style="color:red;">(Item 6.2.6.1.1 da NBR-5410)</span></div>
@@ -146,6 +147,8 @@
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
         <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'tec_int_off.png', 'tec_int_on.png')">
+        
+        <img id="comp-luz-tom" src="luz_tom_off.png" data-state="off" class="tecla-interativa oculto" onclick="toggleComp(this, 'luz_tom_off.png', 'luz_tom_on.png')">
 
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-retorno-fim" src="con_derivacao.png" class="conector-der oculto">
@@ -212,7 +215,7 @@
             { nome: "Neutro da Lâmpada - Clique nos pontos indicados", pasta: "NEUTRO_2", total: 20, imgId: "img-neutro-circuito", cor: "neutro", origem: { x: 93.2, y: 9 }, destino: { x: 94.8, y: 62 } },
             { nome: "Neutro da Tomada - Clique nos pontos indicados", pasta: "NEUTRO_TOM", total: 35, imgId: "img-neutro-tom", cor: "neutro", origem: { x: 70, y: 9 }, destino: { x: 73.5, y: 72} },
             { nome: "Terra da Tomada - Clique nos pontos indicados", pasta: "TERRA_TOM", total: 25, imgId: "img-terra-tom", cor: "terra", origem: { x: 75, y: 14 }, destino: { x: 76, y: 72 } },
-            { nome: "Fase da Tomada - Clique nos pontos indicados", pasta: "FASE_TOM", total: 26, imgId: "img-fase-tom", cor: "fase", origem: { x: 81, y: 9 }, destino: { x: 78, y: 72 } }
+            { nome: "Fase da Tomada - Clique nos pontos indicados", pasta: "FASE_TOM", total: 26, imgId: "img-fase-tom", cor: "fase", origins: { x: 81, y: 9 }, destino: { x: 78, y: 72 } }
         ];
 
         let etapaAtual = 0;
@@ -322,7 +325,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
@@ -352,22 +355,22 @@
                     else if (dados.pasta === "RETORNO") { 
                         document.getElementById('balao-retorno').classList.remove('oculto'); 
                         document.getElementById('balao-conector').classList.remove('oculto'); 
-                        // Conector surge ao finalizar o RETORNO
                         document.getElementById('con-retorno-fim').classList.remove('oculto');
                     }
                     else if (dados.pasta === "NEUTRO_2") { 
                         document.getElementById('balao-final').classList.remove('oculto'); 
                         document.getElementById('balao-neutro-norma').classList.remove('oculto'); 
-                        // Outro conector surge ao finalizar o NEUTRO_2
                         document.getElementById('con-neutro2-fim').classList.remove('oculto');
                     }
                     else if (dados.pasta === "NEUTRO_TOM") {
-                        // Outro conector surge ao finalizar o NEUTRO_TOM
                         document.getElementById('con-neutrotom-fim').classList.remove('oculto');
                     }
                     else if (dados.pasta === "TERRA_TOM") {
-                        // Outro conector surge ao finalizar o TERRA_TOM
                         document.getElementById('con-terratom-fim').classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "FASE_TOM") {
+                        // Exibe a imagem de teste da tomada (luz_tom_off) ao finalizar o cabo FASE_TOM
+                        document.getElementById('comp-luz-tom').classList.remove('oculto');
                     }
                     
                     etapaAtual++; 
