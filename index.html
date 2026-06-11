@@ -287,7 +287,7 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
             if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
-            if (dados.pasta === "NEUTRO_2") document.getElementById('con-neutro').classList.remove('oculto');
+            // O con-neutro agora é acionado apenas após a conclusão da animação física do cabo NEUTRO_2
             preCarregarCabo(dados);
             criarPonto(dados.origem, dados.cor, function() {
                 this.classList.add('sucesso');
@@ -323,7 +323,6 @@
             let contador = 0;
             
             function animar() {
-                // CORREÇÃO ASYNC: Se o frame atual falhar ou sumir, força o encerramento seguro e não trava o script
                 if (frameIdx < frames.length && frames[frameIdx]) {
                     if (contador % 3 === 0) { 
                         imgElemento.src = frames[frameIdx].src; 
@@ -337,7 +336,12 @@
                     else if (dados.pasta === "NEUTRO_REDE") document.getElementById('balao-neutro-rede').classList.remove('oculto');
                     else if (dados.pasta === "FASE_2") document.getElementById('balao-fase-2').classList.remove('oculto');
                     else if (dados.pasta === "RETORNO") { document.getElementById('balao-retorno').classList.remove('oculto'); document.getElementById('balao-conector').classList.remove('oculto'); }
-                    else if (dados.pasta === "NEUTRO_2") { document.getElementById('balao-final').classList.remove('oculto'); document.getElementById('balao-neutro-norma').classList.remove('oculto'); }
+                    else if (dados.pasta === "NEUTRO_2") { 
+                        document.getElementById('balao-final').classList.remove('oculto'); 
+                        document.getElementById('balao-neutro-norma').classList.remove('oculto'); 
+                        // Ativa o conector de derivação do neutro exatamente ao fim do cabo NEUTRO_2
+                        document.getElementById('con-neutro').classList.remove('oculto');
+                    }
                     etapaAtual++; 
                     setTimeout(proximoPasso, 400); 
                 }
