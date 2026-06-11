@@ -174,7 +174,7 @@
 
         <div id="overlay-ajuda" class="oculto">
             <div class="modal-ajuda">
-                <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnico</h2>
+                <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnica</h2>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('ligaint.png')">1. Ligação do interruptor simples</div>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('ligabocal.png')">2. Ligação da lâmpada</div>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('inst_con_der.png')">3. Conexões e emendas</div>
@@ -315,15 +315,21 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
-            let frameIdx = 0; const frames = cacheImagens[dados.pasta];
+            let frameIdx = 0; 
+            const frames = cacheImagens[dados.pasta];
             let contador = 0;
+            
             function animar() {
                 if (frameIdx < frames.length) {
-                    if (contador % 3 === 0) { imgElemento.src = frames[frameIdx].src; frameIdx++; }
-                    contador++; requestAnimationFrame(animar);
+                    if (contador % 3 === 0) { 
+                        imgElemento.src = frames[frameIdx].src; 
+                        frameIdx++; 
+                    }
+                    contador++; 
+                    requestAnimationFrame(animar);
                 } else { 
                     tocarSom('audio-conexao');
                     if (dados.pasta === "FASE_REDE") { document.getElementById('balao-fase-rede').classList.remove('oculto'); document.getElementById('placa-dicas').classList.remove('oculto'); }
