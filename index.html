@@ -315,7 +315,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
@@ -323,7 +323,8 @@
             let contador = 0;
             
             function animar() {
-                if (frameIdx < frames.length) {
+                // CORREÇÃO ASYNC: Se o frame atual falhar ou sumir, força o encerramento seguro e não trava o script
+                if (frameIdx < frames.length && frames[frameIdx]) {
                     if (contador % 3 === 0) { 
                         imgElemento.src = frames[frameIdx].src; 
                         frameIdx++; 
