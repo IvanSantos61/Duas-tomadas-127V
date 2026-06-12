@@ -252,7 +252,6 @@
             const lampada = document.getElementById('lamp-on');
             const placa = document.getElementById('placa-concluido');
 
-            // Controle estrito baseado nas regras de clique e energia
             if (fiacaoConcluida) {
                 const tOff = document.getElementById('comp-luz-tom-off');
                 const tOn = document.getElementById('comp-luz-tom-on');
@@ -265,14 +264,11 @@
 
                     if (tomadaLigadaAtualmente) {
                         if (energiaOk) {
-                            // Se estiver plugado e houver energia, mostra ligado e brilhando
                             tOn.classList.remove('oculto');
                         } else {
-                            // Se estiver plugado, mas cair o disjuntor, muda sozinho para a gravura estática e apagada
                             tOffB.classList.remove('oculto');
                         }
                     } else {
-                        // Estado padrão: aguardando o primeiro clique do mouse na primeira gravura
                         tOff.classList.remove('oculto');
                     }
                 }
@@ -304,11 +300,10 @@
         }
 
         function interagirTomada() {
-            // Segurança: Ignora cliques se o roteiro de fiação não terminou
             if (etapaAtual < roteiro.length) return;
             
             tocarSom('audio-disj');
-            tomadaLigadaAtualmente = true; // Usuário inseriu o plugue. Daqui em diante, depende do DG/DR.
+            tomadaLigadaAtualmente = true; 
             atualizarQuadroPosicao();
         }
 
@@ -340,6 +335,10 @@
             if (etapaAtual >= roteiro.length) {
                 document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE OS DISPOSITIVOS PARA TESTAR.";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
+                
+                // ATIVAÇÃO SEGURA: A primeira gravura só ganha visibilidade aqui, após o roteiro estar zerado
+                document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+                
                 atualizarQuadroPosicao();
                 return;
             }
@@ -376,7 +375,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
@@ -419,9 +418,6 @@
                     }
                     else if (dados.pasta === "TERRA_TOM") {
                         document.getElementById('con-terratom-fim').classList.remove('oculto');
-                    }
-                    else if (dados.pasta === "FASE_TOM") {
-                        document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                     }
                     
                     etapaAtual++; 
