@@ -325,7 +325,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
@@ -369,7 +369,11 @@
                         document.getElementById('con-terratom-fim').classList.remove('oculto');
                     }
                     else if (dados.pasta === "FASE_TOM") {
-                        document.getElementById('comp-luz-tom').classList.remove('oculto');
+                        // Corrigido: Exibe explicitamente o elemento off quando o cabo finaliza
+                        const compLuzTom = document.getElementById('comp-luz-tom');
+                        compLuzTom.src = 'luz_tom_off.png';
+                        compLuzTom.setAttribute('data-state', 'off');
+                        compLuzTom.classList.remove('oculto');
                     }
                     
                     etapaAtual++; 
