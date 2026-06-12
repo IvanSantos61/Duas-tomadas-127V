@@ -73,10 +73,12 @@
         #btn-ajuda { position: absolute; bottom: 10.5%; left: 15%; background: linear-gradient(180deg, #008899, #004455); color: white; border: 1px solid #00f2ff; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
         #btn-reiniciar { position: absolute; bottom: 3%; left: 13.5%; background: linear-gradient(180deg, #cc0000, #880000); color: white; border: 1px solid #500; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
 
+        /* CORRIGIDO: z-index aumentado para cobrir as teclas interativas */
         #overlay-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 6000; display: flex; justify-content: center; align-items: center; }
         .modal-ajuda { background: #0a1015; border: 2px solid #1a3a5a; width: 40%; padding: 30px; border-radius: 12px; text-align: center; }
         .item-ajuda { background: rgba(255, 255, 255, 0.03); border: 1px solid #1a3a5a; margin-bottom: 10px; padding: 15px; color: white; text-align: left; cursor: pointer; font-weight: normal; font-size: 1.1vw; }
         
+        /* CORRIGIDO: z-index aumentado para ficar acima do menu de ajuda original */
         #visualizador-tecnico { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 6100; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         #instrucao-clique { background: #ffcc00; color: #000; padding: 5px 15px; font-weight: bold; border-radius: 4px; margin-bottom: 15px; text-transform: uppercase; font-size: 1vw; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
@@ -100,7 +102,7 @@
     <h1 id="titulo-projeto">LABORATÓRIO SMT PRO</h1>
 
     <div id="linha-status">
-        <span id="label-status" class="texto-status">CARREGANDO COMPONENTES...</span>
+        <span id="label-status" class="texto-status">SISTEMA PRONTO</span>
     </div>
 
     <main id="quadro-simulacao">
@@ -332,56 +334,37 @@
             document.getElementById('instrucao-clique').classList.add('oculto');
         }
 
-        /* CORREÇÃO DO BLOQUEIO ASSÍNCRONO: Executa os pontos apenas após a garantia de que as imagens carregaram */
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
                 document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE OS DISPOSITIVOS PARA TESTAR.";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
+                
                 document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+                
                 atualizarQuadroPosicao();
                 return;
             }
             
             const dados = roteiro[etapaAtual];
-            document.getElementById('label-status').innerText = `CARREGANDO COMPONENTES DA ETAPA...`;
+            document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
             
-            preCarregarCabo(dados, function() {
-                document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
-                
-                if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
-                
-                document.getElementById('interacao-container').innerHTML = "";
-                criarPonto(dados.origem, dados.cor, function() {
-                    this.classList.add('sucesso');
-                    criarPonto(dados.destino, dados.cor, function() {
-                        document.getElementById('interacao-container').innerHTML = "";
-                        executarAnimacaoFluida(dados);
-                    });
+            if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
+            
+            preCarregarCabo(dados);
+            criarPonto(dados.origem, dados.cor, function() {
+                this.classList.add('sucesso');
+                criarPonto(dados.destino, dados.cor, function() {
+                    document.getElementById('interacao-container').innerHTML = "";
+                    executarAnimacaoFluida(dados);
                 });
             });
         }
 
-        function preCarregarCabo(dados, callback) {
+        function preCarregarCabo(dados) {
             cacheImagens[dados.pasta] = [];
-            let carregadas = 0;
-            const totalImagens = dados.total;
-
-            for (let i = 1; i <= totalImagens; i++) {
+            for (let i = 1; i <= dados.total; i++) {
                 const img = new Image();
                 img.src = `${dados.pasta}/quadro${String(i).padStart(4, '0')}.png`;
-                img.onload = function() {
-                    carregadas++;
-                    if (carregadas === totalImagens) {
-                        callback();
-                    }
-                };
-                img.onerror = function() {
-                    // Prevenção contra quebra caso falte algum frame específico
-                    carregadas++;
-                    if (carregadas === totalImagens) {
-                        callback();
-                    }
-                };
                 cacheImagens[dados.pasta].push(img);
             }
         }
@@ -389,13 +372,12 @@
         function criarPonto(pos, corClasse, cliqueFn) {
             const ponto = document.createElement('div');
             ponto.className = `ponto ${corClasse}`;
-            ponto.style.left = pos.x + "%"; 
-            ponto.style.top = pos.y + "%";
+            ponto.style.left = pos.x + "%"; ponto.style.top = pos.y + "%";
             ponto.onclick = (e) => { e.stopPropagation(); cliqueFn.call(ponto); };
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
@@ -448,7 +430,7 @@
         }
 
         function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
-        function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
+        function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('add('oculto'); }
         function tocarSom(id) { const s = document.getElementById(id); if(s) { s.currentTime=0; s.play().catch(()=>{}); } }
 
         window.onload = proximoPasso;
