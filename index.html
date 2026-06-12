@@ -29,7 +29,7 @@
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 72%; left: 54.5%; }
         
-        /* Posicionamento unificado para as duas imagens da tomada */
+        /* Posicionamento original e unificado */
         #comp-luz-tom-off { width: 26%; top: 55%; left: 73%; }
         #comp-luz-tom-on { width: 26%; top: 55%; left: 73%; }
 
@@ -226,25 +226,41 @@
         const cacheImagens = {};
         let tomadaLigada = false;
 
+        function verificarEnergiaDisponivel() {
+            const dgState = document.getElementById('comp-dg').getAttribute('data-state');
+            const drState = document.getElementById('comp-dr').getAttribute('data-state');
+            return (dgState === 'on' && drState === 'on');
+        }
+
         function atualizarQuadroPosicao() {
             const dispositivos = [
                 { idComp: 'comp-dg', idTxt: 'txt-dg' },
                 { idComp: 'comp-dr', idTxt: 'txt-dr' },
                 { idComp: 'comp-int', idTxt: 'txt-int' }
             ];
-            let todosLigados = true;
+            
             dispositivos.forEach(disp => {
                 const el = document.getElementById(disp.idComp);
                 const isON = el.getAttribute('data-state') === 'on';
-                if (!isON) todosLigados = false;
                 document.getElementById(disp.idTxt).innerHTML = isON ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
             });
 
+            const energiaOk = verificarEnergiaDisponivel();
             const fiacaoConcluida = etapaAtual >= roteiro.length;
+            const intState = document.getElementById('comp-int').getAttribute('data-state');
+            
             const lampada = document.getElementById('lamp-on');
             const placa = document.getElementById('placa-concluido');
 
-            if (fiacaoConcluida && todosLigados) {
+            // REGRA: Se a energia cair e a tomada estiver ativa, ela desliga visualmente na hora
+            if (!energiaOk && tomadaLigada) {
+                document.getElementById('comp-luz-tom-on').classList.add('oculto');
+                document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+                tomadaLigada = false;
+            }
+
+            // Ativação da Lâmpada (Apenas com fiação pronta e tudo alimentado)
+            if (fiacaoConcluida && energiaOk && intState === 'on') {
                 if (lampada.classList.contains('oculto')) {
                     lampada.classList.remove('oculto');
                     setTimeout(() => {
@@ -269,6 +285,9 @@
         }
 
         function ligarTomada() {
+            // TRAVA MANDATÓRIA: Não muda de imagem se DG ou DR estiverem desligados!
+            if (!verificarEnergiaDisponivel()) return;
+
             tocarSom('audio-disj');
             document.getElementById('comp-luz-tom-off').classList.add('oculto');
             document.getElementById('comp-luz-tom-on').classList.remove('oculto');
@@ -277,6 +296,9 @@
         }
 
         function desligarTomada() {
+            // Permite desligar contanto que a energia esteja presente
+            if (!verificarEnergiaDisponivel()) return;
+
             tocarSom('audio-disj');
             document.getElementById('comp-luz-tom-on').classList.add('oculto');
             document.getElementById('comp-luz-tom-off').classList.remove('oculto');
@@ -309,12 +331,9 @@
         }
 
         function proximoPasso() {
-            // Se ultrapassar o tamanho do roteiro, finaliza a fiação e libera os testes
             if (etapaAtual >= roteiro.length) {
                 document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE OS DISPOSITIVOS PARA TESTAR.";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
-                document.getElementById('comp-luz-tom-off').classList.remove('oculto');
-                document.getElementById('comp-luz-tom-on').classList.add('oculto');
                 atualizarQuadroPosicao();
                 return;
             }
@@ -369,7 +388,6 @@
                 } else { 
                     tocarSom('audio-conexao');
                     
-                    // Validações exclusivas de balões e conectores ao término de cada cabo
                     if (dados.pasta === "FASE_REDE") { 
                         document.getElementById('balao-fase-rede').classList.remove('oculto'); 
                         document.getElementById('placa-dicas').classList.remove('oculto'); 
@@ -395,6 +413,10 @@
                     }
                     else if (dados.pasta === "TERRA_TOM") {
                         document.getElementById('con-terratom-fim').classList.remove('oculto');
+                    }
+                    // EXATAMENTE AQUI: Surge o 'luz_tom_off.png' imediatamente após o cabo FASE_TOM acabar!
+                    else if (dados.pasta === "FASE_TOM") {
+                        document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                     }
                     
                     etapaAtual++; 
