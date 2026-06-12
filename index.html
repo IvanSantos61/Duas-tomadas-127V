@@ -151,8 +151,8 @@
         <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'tec_int_off.png', 'tec_int_on.png')">
         
         <img id="comp-luz-tom-off" src="luz_tom_off.png" class="tecla-interativa oculto" onclick="interagirTomada()">
-        <img id="comp-luz-tom-on" src="luz_tom_on.png" class="tecla-interativa oculto" onclick="interagirTomada()">
-        <img id="comp-luz-tom-off-b" src="luz_tom_off_b.png" class="tecla-interativa oculto" onclick="interagirTomada()">
+        <img id="comp-luz-tom-on" src="luz_tom_on.png" class="tecla-interativa oculto">
+        <img id="comp-luz-tom-off-b" src="luz_tom_off_b.png" class="tecla-interativa oculto">
 
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-retorno-fim" src="con_derivacao.png" class="conector-der oculto">
@@ -252,7 +252,7 @@
             const lampada = document.getElementById('lamp-on');
             const placa = document.getElementById('placa-concluido');
 
-            // PROTEÇÃO CONTRA ELEMENTOS INEXISTENTES DURANTE A MONTAGEM
+            // Controle estrito baseado nas regras de clique e energia
             if (fiacaoConcluida) {
                 const tOff = document.getElementById('comp-luz-tom-off');
                 const tOn = document.getElementById('comp-luz-tom-on');
@@ -265,11 +265,14 @@
 
                     if (tomadaLigadaAtualmente) {
                         if (energiaOk) {
+                            // Se estiver plugado e houver energia, mostra ligado e brilhando
                             tOn.classList.remove('oculto');
                         } else {
+                            // Se estiver plugado, mas cair o disjuntor, muda sozinho para a gravura estática e apagada
                             tOffB.classList.remove('oculto');
                         }
                     } else {
+                        // Estado padrão: aguardando o primeiro clique do mouse na primeira gravura
                         tOff.classList.remove('oculto');
                     }
                 }
@@ -301,11 +304,11 @@
         }
 
         function interagirTomada() {
-            // Só executa o clique se a fiação correspondente foi concluída
+            // Segurança: Ignora cliques se o roteiro de fiação não terminou
             if (etapaAtual < roteiro.length) return;
             
             tocarSom('audio-disj');
-            tomadaLigadaAtualmente = !tomadaLigadaAtualmente;
+            tomadaLigadaAtualmente = true; // Usuário inseriu o plugue. Daqui em diante, depende do DG/DR.
             atualizarQuadroPosicao();
         }
 
@@ -373,7 +376,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
