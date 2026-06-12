@@ -224,20 +224,23 @@
 
         let etapaAtual = 0;
         const cacheImagens = {};
-        
-        // Estado atual do teste de carga na tomada
         let tomadaLigadaAtualmente = false;
 
         function verificarEnergiaDisponivel() {
-            const dgState = document.getElementById('comp-dg').getAttribute('data-state');
-            const drState = document.getElementById('comp-dr').getAttribute('data-state');
-            return (dgState === 'on' && drState === 'on');
+            const dg = document.getElementById('comp-dg');
+            const dr = document.getElementById('comp-dr');
+            if(!dg || !dr) return false;
+            return (dg.getAttribute('data-state') === 'on' && dr.getAttribute('data-state') === 'on');
         }
 
         function atualizarQuadroPosicao() {
-            const dgState = document.getElementById('comp-dg').getAttribute('data-state');
-            const drState = document.getElementById('comp-dr').getAttribute('data-state');
-            const intState = document.getElementById('comp-int').getAttribute('data-state');
+            const dg = document.getElementById('comp-dg');
+            const dr = document.getElementById('comp-dr');
+            const inter = document.getElementById('comp-int');
+
+            const dgState = dg.getAttribute('data-state');
+            const drState = dr.getAttribute('data-state');
+            const intState = inter.getAttribute('data-state');
 
             document.getElementById('txt-dg').innerHTML = dgState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
             document.getElementById('txt-dr').innerHTML = drState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
@@ -249,38 +252,43 @@
             const lampada = document.getElementById('lamp-on');
             const placa = document.getElementById('placa-concluido');
 
-            // MÁQUINA DE ESTADOS DINÂMICA DA TOMADA (Responde em tempo real ao mexer no DG/DR)
+            // PROTEÇÃO CONTRA ELEMENTOS INEXISTENTES DURANTE A MONTAGEM
             if (fiacaoConcluida) {
-                // Esconde todas por segurança antes de aplicar a regra
-                document.getElementById('comp-luz-tom-off').classList.add('oculto');
-                document.getElementById('comp-luz-tom-on').classList.add('oculto');
-                document.getElementById('comp-luz-tom-off-b').classList.add('oculto');
+                const tOff = document.getElementById('comp-luz-tom-off');
+                const tOn = document.getElementById('comp-luz-tom-on');
+                const tOffB = document.getElementById('comp-luz-tom-off-b');
 
-                if (tomadaLigadaAtualmente) {
-                    if (energiaOk) {
-                        document.getElementById('comp-luz-tom-on').classList.remove('oculto');
+                if (tOff && tOn && tOffB) {
+                    tOff.classList.add('oculto');
+                    tOn.classList.add('oculto');
+                    tOffB.classList.add('oculto');
+
+                    if (tomadaLigadaAtualmente) {
+                        if (energiaOk) {
+                            tOn.classList.remove('oculto');
+                        } else {
+                            tOffB.classList.remove('oculto');
+                        }
                     } else {
-                        document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
+                        tOff.classList.remove('oculto');
                     }
-                } else {
-                    document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                 }
             }
 
-            // Ativação da Lâmpada (Lógica original preservada)
+            // Controle da Lâmpada
             if (fiacaoConcluida && energiaOk && intState === 'on') {
-                if (lampada.classList.contains('oculto')) {
+                if (lampada && lampada.classList.contains('oculto')) {
                     lampada.classList.remove('oculto');
                     setTimeout(() => {
-                        placa.classList.remove('oculto');
-                        setTimeout(() => {
-                            placa.classList.add('oculto');
-                        }, 4000);
+                        if(placa) {
+                            placa.classList.remove('oculto');
+                            setTimeout(() => { placa.classList.add('oculto'); }, 4000);
+                        }
                     }, 1500);
                 }
             } else {
-                lampada.classList.add('oculto');
-                placa.classList.add('oculto');
+                if(lampada) lampada.classList.add('oculto');
+                if(placa) placa.classList.add('oculto');
             }
         }
 
@@ -289,16 +297,15 @@
             const state = el.getAttribute('data-state') === 'off' ? 'on' : 'off';
             el.src = state === 'on' ? on : off;
             el.setAttribute('data-state', state);
-            atualizarQuadroPosicao(); // Atualiza em tempo real a energia e os estados visuais
+            atualizarQuadroPosicao();
         }
 
-        // Função unificada para clique na tomada obedecendo ao loop infinito solicitado
         function interagirTomada() {
+            // Só executa o clique se a fiação correspondente foi concluída
+            if (etapaAtual < roteiro.length) return;
+            
             tocarSom('audio-disj');
-            
-            // Inverte o interruptor virtual da luminária conectada na tomada
             tomadaLigadaAtualmente = !tomadaLigadaAtualmente;
-            
             atualizarQuadroPosicao();
         }
 
@@ -322,7 +329,6 @@
         }
 
         function voltarParaLista() {
-            document.getElementById('visualizador-tecnico').classList.add('ocital');
             document.getElementById('visualizador-tecnico').classList.add('oculto');
             document.getElementById('instrucao-clique').classList.add('oculto');
         }
@@ -367,7 +373,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
