@@ -146,6 +146,7 @@
         <div id="hotspot-caixa-passagem-2" class="hotspot-area" style="top: 4.2%; left: 52.5%; width: 12%; height: 32%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
         <div id="hotspot-caixa-passagem-3" class="hotspot-area" style="top: 5.2%; left: 68.8%; width: 12%; height: 32%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
         <div id="hotspot-caixa-passagem-4" class="hotspot-area" style="top: 5.2%; left: 85%; width: 13%; height: 32%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
+        <div id="hotspot-tomada-10a" class="hotspot-area" style="top: 55%; left: 73%; width: 10%; height: 34%;"><span class="tooltip-area">TOMADA 10A</span></div>
         
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
@@ -254,7 +255,6 @@
             const lampada = document.getElementById('lamp-on');
             const placa = document.getElementById('placa-concluido');
 
-            // --- ESTADO ORIGINAL RESTAURADO DA LUMINÁRIA DA TOMADA ---
             if (fiacaoConcluida) {
                 const tOff = document.getElementById('comp-luz-tom-off');
                 const tOn = document.getElementById('comp-luz-tom-on');
@@ -266,15 +266,14 @@
 
                 if (tomadaLigadaAtualmente) {
                     if (energiaOk) {
-                        tOn.classList.remove('oculto'); // Acesa com disjuntores ON
+                        tOn.classList.remove('oculto');
                     } else {
-                        tOffB.classList.remove('oculto'); // Plugada porém Apagada com disjuntores OFF
+                        tOffB.classList.remove('oculto');
                     }
                 } else {
-                    tOff.classList.remove('oculto'); // Aguardando primeiro clique
+                    tOff.classList.remove('oculto');
                 }
             }
-            // ---------------------------------------------------------
 
             if (fiacaoConcluida && energiaOk && intState === 'on') {
                 if (lampada && lampada.classList.contains('oculto')) {
