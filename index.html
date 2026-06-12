@@ -24,18 +24,15 @@
         #quadro-simulacao { position: relative; width: 100%; max-width: 1600px; aspect-ratio: 1920 / 1080; background-color: #000; border: 2px solid #333; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         
-        /* CORREÇÃO DO EMPILHAMENTO DA INTERAÇÃO DOS BOTÕES */
         .tecla-interativa { position: absolute; z-index: 1005; cursor: pointer; transition: transform 0.1s; }
         
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 72%; left: 54.5%; }
         
-        /* CORREÇÃO DO POSICIONAMENTO DA TOMADA */
         #comp-luz-tom-off { width: 26%; top: 55%; left: 73%; }
         #comp-luz-tom-on, #comp-luz-tom-off-b { width: 26%; top: 45%; left: 62.6%; }
 
-        /* Conectores e Derivações */
         .conector-der { position: absolute; z-index: 50; width: 5%; transform: translate(-50%, -50%); pointer-events: none; }
         #con-fase { top: 9.9%; left: 57.5%; }
         #con-retorno-fim { top: 7.5%; left: 91.5%; }
@@ -45,12 +42,10 @@
 
         .oculto { display: none !important; }
 
-        /* AJUSTE DOS BALÕES DE DICA ACIMA DAS TECLAS */
         .balao-info { position: absolute; width: 45px; height: 45px; background: #000; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 1020; font-size: 24px; }
         .texto-balao { visibility: hidden; position: absolute; bottom: 50px; left: 0; width: 300px; background: white; color: black; padding: 12px; border-radius: 8px; font-size: 18px; z-index: 1500; text-transform: none; font-weight: normal; white-space: normal; line-height: 1.4; border: 2px solid #00f2ff; }
         .balao-info:hover .texto-balao { visibility: visible; }
 
-        /* AJUSTE DO BASEBOARD DOS HOTSPOTS */
         .hotspot-area { position: absolute; z-index: 800; cursor: help; border: 1px dashed rgba(0, 242, 255, 0.3); transition: background 0.3s; }
         .hotspot-area:hover { background: rgba(0, 242, 255, 0.1); border: 1px solid #00f2ff; }
         .hotspot-area .tooltip-area { visibility: hidden; position: absolute; bottom: 105%; left: 50%; transform: translateX(-50%); background: #000000; color: yellow; padding: 5px 12px; border-radius: 4px; font-size: 16px; font-weight: bold; white-space: nowrap; z-index: 1000; pointer-events: none; box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
@@ -195,10 +190,11 @@
             <div class="modal-ajuda">
                 <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnico</h2>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('ligaint.png')">1. Ligação do interruptor simples</div>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligabocal.png')">2. Ligação da lâmpada</div>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('inst_con_der.png')">3. Conexões e emendas</div>
-                <div class="item-ajuda" onclick="abrirAnimacaoConector()">4. Instalação do conector de derivação</div>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">5. Lista de material</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('tom_simples.png')">2. Ligação da tomada</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligabocal.png')">3. Ligação da lâmpada</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('inst_con_der.png')">4. Conexões e emendas</div>
+                <div class="item-ajuda" onclick="abrirAnimacaoConector()">5. Instalação do conector de derivação</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">6. Lista de material</div>
                 <button onclick="fecharAjuda()" style="margin-top:20px; padding:20px 30px; cursor:pointer;">Fechar</button>
             </div>
         </div>
@@ -264,7 +260,7 @@
 
                 if (tOff && tOn && tOffB) {
                     tOff.classList.add('oculto');
-                    tOn.classList.add('oculto');
+                    tOn.classList.remove('oculto');
                     tOffB.classList.add('oculto');
 
                     if (tomadaLigadaAtualmente) {
@@ -279,7 +275,6 @@
                 }
             }
 
-            // Controle da Lâmpada
             if (fiacaoConcluida && energiaOk && intState === 'on') {
                 if (lampada && lampada.classList.contains('oculto')) {
                     lampada.classList.remove('oculto');
@@ -341,7 +336,6 @@
                 document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE OS DISPOSITIVOS PARA TESTAR.";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
-                // Exibe a gravura inicial separada no fim da fiação
                 document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                 
                 atualizarQuadroPosicao();
@@ -380,7 +374,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
