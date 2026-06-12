@@ -23,18 +23,16 @@
         
         #quadro-simulacao { position: relative; width: 100%; max-width: 1600px; aspect-ratio: 1920 / 1080; background-color: #000; border: 2px solid #333; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
- /* Altere na linha 25 do seu <style> */
-.tecla-interativa { position: absolute; z-index: 700; cursor: pointer; transition: transform 0.1s; }
+        
+        /* CORREÇÃO DO EMPILHAMENTO DA INTERAÇÃO DOS BOTÕES */
+        .tecla-interativa { position: absolute; z-index: 1005; cursor: pointer; transition: transform 0.1s; }
         
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 72%; left: 54.5%; }
         
         /* CORREÇÃO DO POSICIONAMENTO DA TOMADA */
-        /* Gravura inicial (Desplugada) - Posicionamento à parte */
         #comp-luz-tom-off { width: 26%; top: 55%; left: 73%; }
-
-        /* Demais gravuras (Plugadas) - Alinhadas entre si */
         #comp-luz-tom-on, #comp-luz-tom-off-b { width: 26%; top: 45%; left: 62.6%; }
 
         /* Conectores e Derivações */
@@ -47,10 +45,12 @@
 
         .oculto { display: none !important; }
 
-        .balao-info { position: absolute; width: 45px; height: 45px; background: #000; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 900; font-size: 24px; }
+        /* AJUSTE DOS BALÕES DE DICA ACIMA DAS TECLAS */
+        .balao-info { position: absolute; width: 45px; height: 45px; background: #000; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 1020; font-size: 24px; }
         .texto-balao { visibility: hidden; position: absolute; bottom: 50px; left: 0; width: 300px; background: white; color: black; padding: 12px; border-radius: 8px; font-size: 18px; z-index: 1500; text-transform: none; font-weight: normal; white-space: normal; line-height: 1.4; border: 2px solid #00f2ff; }
         .balao-info:hover .texto-balao { visibility: visible; }
 
+        /* AJUSTE DO BASEBOARD DOS HOTSPOTS */
         .hotspot-area { position: absolute; z-index: 800; cursor: help; border: 1px dashed rgba(0, 242, 255, 0.3); transition: background 0.3s; }
         .hotspot-area:hover { background: rgba(0, 242, 255, 0.1); border: 1px solid #00f2ff; }
         .hotspot-area .tooltip-area { visibility: hidden; position: absolute; bottom: 105%; left: 50%; transform: translateX(-50%); background: #000000; color: yellow; padding: 5px 12px; border-radius: 4px; font-size: 16px; font-weight: bold; white-space: nowrap; z-index: 1000; pointer-events: none; box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
