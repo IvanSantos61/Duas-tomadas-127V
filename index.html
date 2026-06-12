@@ -29,9 +29,10 @@
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 72%; left: 54.5%; }
         
-        /* Posicionamento original e unificado */
+        /* Posicionamento original compartilhado por todas as variações da tomada */
         #comp-luz-tom-off { width: 26%; top: 55%; left: 73%; }
         #comp-luz-tom-on { width: 26%; top: 55%; left: 73%; }
+        #comp-luz-tom-off-b { width: 26%; top: 55%; left: 73%; }
 
         /* Conectores e Derivações */
         .conector-der { position: absolute; z-index: 50; width: 5%; transform: translate(-50%, -50%); pointer-events: none; }
@@ -153,6 +154,7 @@
         
         <img id="comp-luz-tom-off" src="luz_tom_off.png" class="tecla-interativa oculto" onclick="ligarTomada()">
         <img id="comp-luz-tom-on" src="luz_tom_on.png" class="tecla-interativa oculto" onclick="desligarTomada()">
+        <img id="comp-luz-tom-off-b" src="luz_tom_off_b.png" class="tecla-interativa oculto" onclick="ligarTomada()">
 
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-retorno-fim" src="con_derivacao.png" class="conector-der oculto">
@@ -178,7 +180,7 @@
             <div class="lista-status">
                 <div class="linha-dispositivo"><span>DG</span><span id="txt-dg">[ OFF ] ❌</span></div>
                 <div class="linha-dispositivo"><span>DR</span><span id="txt-dr">[ OFF ] ❌</span></div>
-                <div class="linha-dispositivo"><span>INT.</span><span id="txt-int">[ OFF ] ❌</span></div>
+                <div class="lista-dispositivo"><span>INT.</span><span id="txt-int">[ OFF ] ❌</span></div>
             </div>
         </div>
 
@@ -224,7 +226,10 @@
 
         let etapaAtual = 0;
         const cacheImagens = {};
-        let tomadaLigada = false;
+        
+        // Controle da máquina de estados da tomada
+        let tomadaJaLigadaUmaVez = false; 
+        let tomadaLigadaAtualmente = false;
 
         function verificarEnergiaDisponivel() {
             const dgState = document.getElementById('comp-dg').getAttribute('data-state');
@@ -252,14 +257,14 @@
             const lampada = document.getElementById('lamp-on');
             const placa = document.getElementById('placa-concluido');
 
-            // REGRA: Se a energia cair e a tomada estiver ativa, ela desliga visualmente na hora
-            if (!energiaOk && tomadaLigada) {
+            // NOVA LOGICA: Queda de energia após ligada altera para 'off_b'
+            if (!energiaOk && tomadaLigadaAtualmente) {
                 document.getElementById('comp-luz-tom-on').classList.add('oculto');
-                document.getElementById('comp-luz-tom-off').classList.remove('oculto');
-                tomadaLigada = false;
+                document.getElementById('comp-luz-tom-off').classList.add('oculto');
+                document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
+                tomadaLigadaAtualmente = false;
             }
 
-            // Ativação da Lâmpada (Apenas com fiação pronta e tudo alimentado)
             if (fiacaoConcluida && energiaOk && intState === 'on') {
                 if (lampada.classList.contains('oculto')) {
                     lampada.classList.remove('oculto');
@@ -285,24 +290,37 @@
         }
 
         function ligarTomada() {
-            // TRAVA MANDATÓRIA: Não muda de imagem se DG ou DR estiverem desligados!
+            // Trava de segurança física obrigatória
             if (!verificarEnergiaDisponivel()) return;
 
             tocarSom('audio-disj');
+            
+            // Oculta os dois estados possíveis de "desligado"
             document.getElementById('comp-luz-tom-off').classList.add('oculto');
+            document.getElementById('comp-luz-tom-off-b').classList.add('oculto');
+            
+            // Exibe o estado ligado
             document.getElementById('comp-luz-tom-on').classList.remove('oculto');
-            tomadaLigada = true;
+            
+            tomadaLigadaAtualmente = true;
+            tomadaJaLigadaUmaVez = true; // Ativa a flag permanente da nova alternância
             atualizarQuadroPosicao();
         }
 
         function desligarTomada() {
-            // Permite desligar contanto que a energia esteja presente
             if (!verificarEnergiaDisponivel()) return;
 
             tocarSom('audio-disj');
             document.getElementById('comp-luz-tom-on').classList.add('oculto');
-            document.getElementById('comp-luz-tom-off').classList.remove('oculto');
-            tomadaLigada = false;
+            
+            // Como já foi ligada uma vez, a alternância passa a usar obrigatoriamente a versão "off_b"
+            if (tomadaJaLigadaUmaVez) {
+                document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
+            } else {
+                document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+            }
+            
+            tomadaLigadaAtualmente = false;
             atualizarQuadroPosicao();
         }
 
@@ -370,7 +388,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
@@ -386,6 +404,7 @@
                     contador++; 
                     requestAnimationFrame(animar);
                 } else { 
+                    // Mudança solicitada: Todos os cabos tocam o som conexao.mp3 ao surgir
                     tocarSom('audio-conexao');
                     
                     if (dados.pasta === "FASE_REDE") { 
@@ -414,7 +433,7 @@
                     else if (dados.pasta === "TERRA_TOM") {
                         document.getElementById('con-terratom-fim').classList.remove('oculto');
                     }
-                    // EXATAMENTE AQUI: Surge o 'luz_tom_off.png' imediatamente após o cabo FASE_TOM acabar!
+                    // A tomada original surge apenas aqui
                     else if (dados.pasta === "FASE_TOM") {
                         document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                     }
