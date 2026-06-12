@@ -29,10 +29,8 @@
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 72%; left: 54.5%; }
         
-        /* Posicionamento original compartilhado por todas as variações da tomada */
-        #comp-luz-tom-off { width: 26%; top: 55%; left: 73%; }
-        #comp-luz-tom-on { width: 26%; top: 55%; left: 73%; }
-        #comp-luz-tom-off-b { width: 26%; top: 55%; left: 73%; }
+        /* Posicionamento unificado das gravuras da tomada */
+        #comp-luz-tom-off, #comp-luz-tom-on, #comp-luz-tom-off-b { width: 26%; top: 55%; left: 73%; }
 
         /* Conectores e Derivações */
         .conector-der { position: absolute; z-index: 50; width: 5%; transform: translate(-50%, -50%); pointer-events: none; }
@@ -180,7 +178,7 @@
             <div class="lista-status">
                 <div class="linha-dispositivo"><span>DG</span><span id="txt-dg">[ OFF ] ❌</span></div>
                 <div class="linha-dispositivo"><span>DR</span><span id="txt-dr">[ OFF ] ❌</span></div>
-                <div class="lista-dispositivo"><span>INT.</span><span id="txt-int">[ OFF ] ❌</span></div>
+                <div class="linha-dispositivo"><span>INT.</span><span id="txt-int">[ OFF ] ❌</span></div>
             </div>
         </div>
 
@@ -227,7 +225,7 @@
         let etapaAtual = 0;
         const cacheImagens = {};
         
-        // Controle da máquina de estados da tomada
+        // Flags de controle da máquina de estados da tomada
         let tomadaJaLigadaUmaVez = false; 
         let tomadaLigadaAtualmente = false;
 
@@ -238,26 +236,22 @@
         }
 
         function atualizarQuadroPosicao() {
-            const dispositivos = [
-                { idComp: 'comp-dg', idTxt: 'txt-dg' },
-                { idComp: 'comp-dr', idTxt: 'txt-dr' },
-                { idComp: 'comp-int', idTxt: 'txt-int' }
-            ];
-            
-            dispositivos.forEach(disp => {
-                const el = document.getElementById(disp.idComp);
-                const isON = el.getAttribute('data-state') === 'on';
-                document.getElementById(disp.idTxt).innerHTML = isON ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
-            });
-
-            const energiaOk = verificarEnergiaDisponivel();
-            const fiacaoConcluida = etapaAtual >= roteiro.length;
+            // Atualiza os status textuais de forma correta e sem loops corrompidos
+            const dgState = document.getElementById('comp-dg').getAttribute('data-state');
+            const drState = document.getElementById('comp-dr').getAttribute('data-state');
             const intState = document.getElementById('comp-int').getAttribute('data-state');
+
+            document.getElementById('txt-dg').innerHTML = dgState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+            document.getElementById('txt-dr').innerHTML = drState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+            document.getElementById('txt-int').innerHTML = intState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+
+            const energiaOk = (dgState === 'on' && drState === 'on');
+            const fiacaoConcluida = etapaAtual >= roteiro.length;
             
             const lampada = document.getElementById('lamp-on');
             const placa = document.getElementById('placa-concluido');
 
-            // NOVA LOGICA: Queda de energia após ligada altera para 'off_b'
+            // LOGICA SOLICITADA: Se cair energia após ser ligada uma vez, força a imagem 'luz_tom_off_b.png'
             if (!energiaOk && tomadaLigadaAtualmente) {
                 document.getElementById('comp-luz-tom-on').classList.add('oculto');
                 document.getElementById('comp-luz-tom-off').classList.add('oculto');
@@ -265,6 +259,7 @@
                 tomadaLigadaAtualmente = false;
             }
 
+            // Ativação da Lâmpada
             if (fiacaoConcluida && energiaOk && intState === 'on') {
                 if (lampada.classList.contains('oculto')) {
                     lampada.classList.remove('oculto');
@@ -290,20 +285,20 @@
         }
 
         function ligarTomada() {
-            // Trava de segurança física obrigatória
+            // Se DG ou DR estiverem em OFF, o clique é completamente ignorado
             if (!verificarEnergiaDisponivel()) return;
 
             tocarSom('audio-disj');
             
-            // Oculta os dois estados possíveis de "desligado"
+            // Oculta as versões de desligado
             document.getElementById('comp-luz-tom-off').classList.add('oculto');
             document.getElementById('comp-luz-tom-off-b').classList.add('oculto');
             
-            // Exibe o estado ligado
+            // Ativa a imagem Ligada
             document.getElementById('comp-luz-tom-on').classList.remove('oculto');
             
             tomadaLigadaAtualmente = true;
-            tomadaJaLigadaUmaVez = true; // Ativa a flag permanente da nova alternância
+            tomadaJaLigadaUmaVez = true; // Habilita a trava permanente para usar o 'off_b'
             atualizarQuadroPosicao();
         }
 
@@ -313,7 +308,7 @@
             tocarSom('audio-disj');
             document.getElementById('comp-luz-tom-on').classList.add('oculto');
             
-            // Como já foi ligada uma vez, a alternância passa a usar obrigatoriamente a versão "off_b"
+            // Alterna com base na nova regra de estado permanente
             if (tomadaJaLigadaUmaVez) {
                 document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
             } else {
@@ -344,6 +339,7 @@
         }
 
         function voltarParaLista() {
+            document.getElementById('visualizador-tecnico').classList.add('ocital');
             document.getElementById('visualizador-tecnico').classList.add('oculto');
             document.getElementById('instrucao-clique').classList.add('oculto');
         }
@@ -388,7 +384,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
@@ -404,7 +400,7 @@
                     contador++; 
                     requestAnimationFrame(animar);
                 } else { 
-                    // Mudança solicitada: Todos os cabos tocam o som conexao.mp3 ao surgir
+                    // Mudança Solicitada: Agora toca exclusivamente o 'audio-conexao' (conexao.mp3) no fim de TODOS os cabos!
                     tocarSom('audio-conexao');
                     
                     if (dados.pasta === "FASE_REDE") { 
@@ -433,7 +429,7 @@
                     else if (dados.pasta === "TERRA_TOM") {
                         document.getElementById('con-terratom-fim').classList.remove('oculto');
                     }
-                    // A tomada original surge apenas aqui
+                    // A tomada original surge intacta exatamente aqui após o término de FASE_TOM
                     else if (dados.pasta === "FASE_TOM") {
                         document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                     }
