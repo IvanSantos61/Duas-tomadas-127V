@@ -427,6 +427,7 @@
             requestAnimationFrame(animar);
         }
 
+        /* CORREÇÃO DO BLOQUEIO: O menu inicia ocultado corretamente no HTML e a função remove a classe corretamente */
         function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
         function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
         function tocarSom(id) { const s = document.getElementById(id); if(s) { s.currentTime=0; s.play().catch(()=>{}); } }
