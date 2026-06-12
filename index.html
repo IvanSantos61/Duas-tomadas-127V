@@ -28,7 +28,10 @@
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 72%; left: 54.5%; }
-        #comp-luz-tom { width: 26%; top: 55%; left: 73%; }
+        
+        /* Posicionamento unificado para os dois estados físicos da Tomada */
+        #comp-luz-tom-off { width: 26%; top: 55%; left: 73%; }
+        #comp-luz-tom-on { width: 26%; top: 55%; left: 73%; }
 
         /* Conectores e Derivações */
         .conector-der { position: absolute; z-index: 50; width: 5%; transform: translate(-50%, -50%); pointer-events: none; }
@@ -148,7 +151,8 @@
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
         <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'tec_int_off.png', 'tec_int_on.png')">
         
-        <img id="comp-luz-tom" src="luz_tom_off.png" data-state="off" class="tecla-interativa oculto" onclick="toggleComp(this, 'luz_tom_off.png', 'luz_tom_on.png')">
+        <img id="comp-luz-tom-off" src="luz_tom_off.png" class="tecla-interativa oculto" onclick="ligarTomada()">
+        <img id="comp-luz-tom-on" src="luz_tom_on.png" class="tecla-interativa oculto" onclick="desligarTomada()">
 
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-retorno-fim" src="con_derivacao.png" class="conector-der oculto">
@@ -220,6 +224,7 @@
 
         let etapaAtual = 0;
         const cacheImagens = {};
+        let tomadaLigada = false; // Estado global para gerenciar as duas imagens físicas da tomada
 
         function atualizarQuadroPosicao() {
             const dispositivos = [
@@ -260,6 +265,23 @@
             const state = el.getAttribute('data-state') === 'off' ? 'on' : 'off';
             el.src = state === 'on' ? on : off;
             el.setAttribute('data-state', state);
+            atualizarQuadroPosicao();
+        }
+
+        // Novas funções para gerenciar as imagens físicas independentes da tomada
+        function ligarTomada() {
+            tocarSom('audio-disj');
+            document.getElementById('comp-luz-tom-off').classList.add('oculto');
+            document.getElementById('comp-luz-tom-on').classList.remove('oculto');
+            tomadaLigada = true;
+            atualizarQuadroPosicao();
+        }
+
+        function desligarTomada() {
+            tocarSom('audio-disj');
+            document.getElementById('comp-luz-tom-on').classList.add('oculto');
+            document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+            tomadaLigada = false;
             atualizarQuadroPosicao();
         }
 
@@ -369,11 +391,9 @@
                         document.getElementById('con-terratom-fim').classList.remove('oculto');
                     }
                     else if (dados.pasta === "FASE_TOM") {
-                        // Corrigido: Exibe explicitamente o elemento off quando o cabo finaliza
-                        const compLuzTom = document.getElementById('comp-luz-tom');
-                        compLuzTom.src = 'luz_tom_off.png';
-                        compLuzTom.setAttribute('data-state', 'off');
-                        compLuzTom.classList.remove('oculto');
+                        // FAIXA CORRIGIDA: Faz surgir exclusivamente a imagem OFF na sua respectiva posição
+                        document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+                        document.getElementById('comp-luz-tom-on').classList.add('oculto');
                     }
                     
                     etapaAtual++; 
