@@ -73,12 +73,10 @@
         #btn-ajuda { position: absolute; bottom: 10.5%; left: 15%; background: linear-gradient(180deg, #008899, #004455); color: white; border: 1px solid #00f2ff; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
         #btn-reiniciar { position: absolute; bottom: 3%; left: 13.5%; background: linear-gradient(180deg, #cc0000, #880000); color: white; border: 1px solid #500; padding: 0.6% 3.5%; font-size: 1.1vw; font-weight: bold; border-radius: 50px; cursor: pointer; z-index: 200; }
 
-        /* CORRIGIDO: z-index aumentado para cobrir as teclas interativas */
         #overlay-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 6000; display: flex; justify-content: center; align-items: center; }
         .modal-ajuda { background: #0a1015; border: 2px solid #1a3a5a; width: 40%; padding: 30px; border-radius: 12px; text-align: center; }
         .item-ajuda { background: rgba(255, 255, 255, 0.03); border: 1px solid #1a3a5a; margin-bottom: 10px; padding: 15px; color: white; text-align: left; cursor: pointer; font-weight: normal; font-size: 1.1vw; }
         
-        /* CORRIGIDO: z-index aumentado para ficar acima do menu de ajuda original */
         #visualizador-tecnico { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 6100; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         #instrucao-clique { background: #ffcc00; color: #000; padding: 5px 15px; font-weight: bold; border-radius: 4px; margin-bottom: 15px; text-transform: uppercase; font-size: 1vw; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
@@ -429,8 +427,9 @@
             requestAnimationFrame(animar);
         }
 
+        /* CORREÇÃO DO BLOQUEIO: O menu inicia ocultado corretamente no HTML e a função remove a classe corretamente */
         function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
-        function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('add('oculto'); }
+        function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
         function tocarSom(id) { const s = document.getElementById(id); if(s) { s.currentTime=0; s.play().catch(()=>{}); } }
 
         window.onload = proximoPasso;
