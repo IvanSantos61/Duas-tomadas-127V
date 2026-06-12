@@ -29,7 +29,7 @@
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         #comp-int { width: 6%; top: 72%; left: 54.5%; }
         
-        /* Posicionamento unificado para os dois estados físicos da Tomada */
+        /* Posicionamento unificado para as duas imagens da tomada */
         #comp-luz-tom-off { width: 26%; top: 55%; left: 73%; }
         #comp-luz-tom-on { width: 26%; top: 55%; left: 73%; }
 
@@ -224,7 +224,7 @@
 
         let etapaAtual = 0;
         const cacheImagens = {};
-        let tomadaLigada = false; // Estado global para gerenciar as duas imagens físicas da tomada
+        let tomadaLigada = false;
 
         function atualizarQuadroPosicao() {
             const dispositivos = [
@@ -268,7 +268,6 @@
             atualizarQuadroPosicao();
         }
 
-        // Novas funções para gerenciar as imagens físicas independentes da tomada
         function ligarTomada() {
             tocarSom('audio-disj');
             document.getElementById('comp-luz-tom-off').classList.add('oculto');
@@ -310,14 +309,19 @@
         }
 
         function proximoPasso() {
+            // Se ultrapassar o tamanho do roteiro, finaliza a fiação e libera os testes
             if (etapaAtual >= roteiro.length) {
                 document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE OS DISPOSITIVOS PARA TESTAR.";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
+                document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+                document.getElementById('comp-luz-tom-on').classList.add('oculto');
                 atualizarQuadroPosicao();
                 return;
             }
+            
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
+            
             if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
             
             preCarregarCabo(dados);
@@ -347,7 +351,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0; 
@@ -364,6 +368,8 @@
                     requestAnimationFrame(animar);
                 } else { 
                     tocarSom('audio-conexao');
+                    
+                    // Validações exclusivas de balões e conectores ao término de cada cabo
                     if (dados.pasta === "FASE_REDE") { 
                         document.getElementById('balao-fase-rede').classList.remove('oculto'); 
                         document.getElementById('placa-dicas').classList.remove('oculto'); 
@@ -389,11 +395,6 @@
                     }
                     else if (dados.pasta === "TERRA_TOM") {
                         document.getElementById('con-terratom-fim').classList.remove('oculto');
-                    }
-                    else if (dados.pasta === "FASE_TOM") {
-                        // FAIXA CORRIGIDA: Faz surgir exclusivamente a imagem OFF na sua respectiva posição
-                        document.getElementById('comp-luz-tom-off').classList.remove('oculto');
-                        document.getElementById('comp-luz-tom-on').classList.add('oculto');
                     }
                     
                     etapaAtual++; 
