@@ -63,7 +63,6 @@
         .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .terra { background-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
         
-        /* Alterado de verde para Laranja Neon para evitar confusão com o condutor Terra */
         .sucesso { background-color: #ff6600 !important; box-shadow: 0 0 20px #ff6600 !important; }
 
         #lamp-on { top: 33.4%; left: 71.9%; width: 50.5%; }
@@ -304,7 +303,7 @@
         function interagirTomada() {
             if (etapaAtual < roteiro.length) return;
             
-            tocarSom('audio-disj');
+            tocarSom('audio-conexao');
             tomadaLigadaAtualmente = true; 
             atualizarQuadroPosicao();
         }
