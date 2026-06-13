@@ -204,9 +204,9 @@
         </div>
 
         <div id="visualizador-tecnico" class="oculto">
-            <div id="instrucao-clique" class="oculto">CLIQUE NO CONECTOR PARA INSTALAÇÃO</div>
+            <div id="instrucao-clique" class="oculto">CLIQUE NO CONECTOR PARA VER A INSTALAÇÃO</div>
             <img id="img-tecnica-exibida" src="" style="max-width:90%; max-height:80%;">
-            <button onclick="voltarParaLista()" style="margin-top:20px; background:#ffcc00; padding:10px 30px; font-weight:bold; cursor:pointer;">VOLTAR</button>
+            <button onclick="voltarParaLista()" style="margin-top:20px; background:#ffcc00; padding:10px 30px; font-weight:none; cursor:pointer;">VOLTAR</button>
         </div>
     </main>
 
@@ -335,7 +335,7 @@
 
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
-                document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG O DR E O INTERRUPTOR";
+                document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
                 document.getElementById('comp-luz-tom-off').classList.remove('oculto');
