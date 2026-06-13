@@ -230,20 +230,6 @@
         const cacheImagens = {};
         let tomadaLigadaAtualmente = false;
 
-        const luzTomOff = document.getElementById('comp-luz-tom-off');
-        if (luzTomOff) {
-            luzTomOff.addEventListener('mouseover', () => {
-                if (!tomadaLigadaAtualmente && etapaAtual >= roteiro.length) {
-                    document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA";
-                }
-            });
-            luzTomOff.addEventListener('mouseout', () => {
-                if (!tomadaLigadaAtualmente && etapaAtual >= roteiro.length) {
-                    document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR";
-                }
-            });
-        }
-
         function verificarEnergiaDisponivel() {
             const dg = document.getElementById('comp-dg');
             const dr = document.getElementById('comp-dr');
@@ -352,7 +338,22 @@
                 document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
-                document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+                const luzTomOff = document.getElementById('comp-luz-tom-off');
+                if (luzTomOff) {
+                    luzTomOff.classList.remove('oculto');
+                    
+                    // Configuração segura dos eventos de passar o mouse quando a tela final carrega
+                    luzTomOff.onmouseover = () => {
+                        if (!tomadaLigadaAtualmente) {
+                            document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA";
+                        }
+                    };
+                    luzTomOff.onmouseout = () => {
+                        if (!tomadaLigadaAtualmente) {
+                            document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR";
+                        }
+                    };
+                }
                 
                 atualizarQuadroPosicao();
                 return;
