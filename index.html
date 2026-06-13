@@ -384,9 +384,11 @@
             }
             
             preCarregarCabo(dados);
-            criarPonto(dados.origem, dados.cor, function() {
-                this.classList.add('sucesso');
-                criarPonto(dados.destino, dados.cor, function() {
+            
+            // Correção de Escopo: Uso de Arrow Functions salvando a referência explícita do elemento criado
+            criarPonto(dados.origem, dados.cor, (pontoOrigem) => {
+                pontoOrigem.classList.add('sucesso');
+                criarPonto(dados.destino, dados.cor, () => {
                     const ic = document.getElementById('interacao-container');
                     if(ic) ic.innerHTML = "";
                     executarAnimacaoFluida(dados);
@@ -407,7 +409,8 @@
             const ponto = document.createElement('div');
             ponto.className = `ponto ${corClasse}`;
             ponto.style.left = pos.x + "%"; ponto.style.top = pos.y + "%";
-            ponto.onclick = (e) => { e.stopPropagation(); cliqueFn.call(ponto); };
+            // Correção de Escopo: Passando a instância do ponto para evitar falhas do 'this'
+            ponto.onclick = (e) => { e.stopPropagation(); cliqueFn(ponto); };
             const container = document.getElementById('interacao-container');
             if(container) container.appendChild(ponto);
         }
@@ -425,13 +428,19 @@
             let contador = 0;
             
             function animar() {
-                if (frameIdx < frames.length && frames[frameIdx]) {
-                    if (contador % 3 === 0) { 
-                        imgElemento.src = frames[frameIdx].src; 
-                        frameIdx++; 
+                if (frameIdx < frames.length) {
+                    // Proteção Concorrente: Garante que o frame está instanciado no DOM antes de ler a propriedade de imagem
+                    if (frames[frameIdx] && frames[frameIdx].src) {
+                        if (contador % 3 === 0) { 
+                            imgElemento.src = frames[frameIdx].src; 
+                            frameIdx++; 
+                        }
+                        contador++; 
+                        requestAnimationFrame(animar);
+                    } else {
+                        // Se a imagem ainda estiver carregando da rede, aguarda um frame sem travar o loop
+                        requestAnimationFrame(animar);
                     }
-                    contador++; 
-                    requestAnimationFrame(animar);
                 } else { 
                     tocarSom('audio-conexao');
                     
@@ -487,7 +496,6 @@
             if(s) { s.currentTime=0; s.play().catch(()=>{}); } 
         }
 
-        // Executa estritamente após o DOM estar pronto e carregado
         window.addEventListener('DOMContentLoaded', () => {
             proximoPasso();
         });
