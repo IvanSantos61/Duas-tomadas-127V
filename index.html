@@ -152,7 +152,7 @@
         
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
-        <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'tec_int_off.png', 'tec_int_on.png')">
+        <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'tec_int_off.png', 'tec_int_on.png', 'audio-int')">
         
         <img id="comp-luz-tom-off" src="luz_tom_off.png" class="tecla-interativa oculto" onclick="interagirTomada()">
         <img id="comp-luz-tom-on" src="luz_tom_on.png" class="tecla-interativa oculto">
@@ -293,8 +293,8 @@
             }
         }
 
-        function toggleComp(el, off, on) {
-            tocarSom('audio-disj');
+        function toggleComp(el, off, on, somId = 'audio-disj') {
+            tocarSom(somId);
             const state = el.getAttribute('data-state') === 'off' ? 'on' : 'off';
             el.src = state === 'on' ? on : off;
             el.setAttribute('data-state', state);
