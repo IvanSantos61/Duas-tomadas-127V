@@ -231,70 +231,49 @@
         let tomadaLigadaAtualmente = false;
 
         function verificarEnergiaDisponivel() {
-            const dg = document.getElementById('comp-dg');
-            const dr = document.getElementById('comp-dr');
-            if(!dg || !dr) return false;
-            return (dg.getAttribute('data-state') === 'on' && dr.getAttribute('data-state') === 'on');
+            return (document.getElementById('comp-dg').getAttribute('data-state') === 'on' && 
+                    document.getElementById('comp-dr').getAttribute('data-state') === 'on');
         }
 
         function atualizarQuadroPosicao() {
-            const dg = document.getElementById('comp-dg');
-            const dr = document.getElementById('comp-dr');
-            const inter = document.getElementById('comp-int');
+            const dgState = document.getElementById('comp-dg').getAttribute('data-state');
+            const drState = document.getElementById('comp-dr').getAttribute('data-state');
+            const intState = document.getElementById('comp-int').getAttribute('data-state');
 
-            if (!dg || !dr || !inter) return;
-
-            const dgState = dg.getAttribute('data-state');
-            const drState = dr.getAttribute('data-state');
-            const intState = inter.getAttribute('data-state');
-
-            const txtDg = document.getElementById('txt-dg');
-            const txtDr = document.getElementById('txt-dr');
-            const txtInt = document.getElementById('txt-int');
-
-            if(txtDg) txtDg.innerHTML = dgState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
-            if(txtDr) txtDr.innerHTML = drState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
-            if(txtInt) txtInt.innerHTML = intState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+            document.getElementById('txt-dg').innerHTML = dgState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+            document.getElementById('txt-dr').innerHTML = drState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
+            document.getElementById('txt-int').innerHTML = intState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
 
             const energiaOk = (dgState === 'on' && drState === 'on');
             const fiacaoConcluida = etapaAtual >= roteiro.length;
-            
-            const lampada = document.getElementById('lamp-on');
-            const placa = document.getElementById('placa-concluido');
 
             if (fiacaoConcluida) {
-                const tOff = document.getElementById('comp-luz-tom-off');
-                const tOn = document.getElementById('comp-luz-tom-on');
-                const tOffB = document.getElementById('comp-luz-tom-off-b');
-
-                if (tOff) tOff.classList.add('oculto');
-                if (tOn) tOn.classList.add('oculto');
-                if (tOffB) tOffB.classList.add('oculto');
+                document.getElementById('comp-luz-tom-off').classList.add('oculto');
+                document.getElementById('comp-luz-tom-on').classList.add('oculto');
+                document.getElementById('comp-luz-tom-off-b').classList.add('oculto');
 
                 if (tomadaLigadaAtualmente) {
                     if (energiaOk) {
-                        if (tOn) tOn.classList.remove('oculto');
+                        document.getElementById('comp-luz-tom-on').classList.remove('oculto');
                     } else {
-                        if (tOffB) tOffB.classList.remove('oculto');
+                        document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
                     }
                 } else {
-                    if (tOff) tOff.classList.remove('oculto');
+                    document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                 }
             }
 
             if (fiacaoConcluida && energiaOk && intState === 'on') {
-                if (lampada && lampada.classList.contains('oculto')) {
-                    lampada.classList.remove('oculto');
+                if (document.getElementById('lamp-on').classList.contains('oculto')) {
+                    document.getElementById('lamp-on').classList.remove('oculto');
                     setTimeout(() => {
-                        if(placa) {
-                            placa.classList.remove('oculto');
-                            setTimeout(() => { placa.classList.add('oculto'); }, 4000);
-                        }
+                        document.getElementById('placa-concluido').classList.remove('oculto');
+                        setTimeout(() => { document.getElementById('placa-concluido').classList.add('oculto'); }, 4000);
                     }, 1500);
                 }
             } else {
-                if(lampada) lampada.classList.add('oculto');
-                if(placa) placa.classList.add('oculto');
+                document.getElementById('lamp-on').classList.add('oculto');
+                document.getElementById('placa-concluido').classList.add('oculto');
             }
         }
 
@@ -308,89 +287,65 @@
 
         function interagirTomada() {
             if (etapaAtual < roteiro.length) return;
-            
             tocarSom('audio-conexao');
-            tomadaLigadaAtualmente = true; 
-            const statusLabel = document.getElementById('label-status');
-            if (statusLabel) statusLabel.innerText = "FIAÇÃO CONCLUÍDA! LIGUE O DG, O DR E O INTERRUPTOR";
+            tomadaLigadaAtualmente = true;
+            document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE O DG, O DR E O INTERRUPTOR";
             atualizarQuadroPosicao();
         }
 
         function abrirAnimacaoConector() {
             const img = document.getElementById('img-tecnica-exibida');
-            const legenda = document.getElementById('instrucao-clique');
-            if(!img || !legenda) return;
-            img.src = 'conectder_on.png'; 
-            legenda.classList.remove('oculto');
+            img.src = 'conectder_on.png';
+            document.getElementById('instrucao-clique').classList.remove('oculto');
             img.onclick = function() {
-                this.src = this.src.includes('conectder_on.png') ? 'conectder_off.png' : 'conectder_on.png';
+                if (this.src.includes('conectder_on.png')) this.src = 'conectder_off.png';
+                else this.src = 'conectder_on.png';
             };
             document.getElementById('visualizador-tecnico').classList.remove('oculto');
         }
 
         function mostrarImagemTecnica(src) {
+            document.getElementById('instrucao-clique').classList.add('oculto');
             const img = document.getElementById('img-tecnica-exibida');
-            const legenda = document.getElementById('instrucao-clique');
-            if(!img) return;
-            if(legenda) legenda.classList.add('oculto');
             img.src = src;
             img.onclick = null;
             document.getElementById('visualizador-tecnico').classList.remove('oculto');
         }
 
         function voltarParaLista() {
-            const vt = document.getElementById('visualizador-tecnico');
-            const ic = document.getElementById('instrucao-clique');
-            if(vt) vt.classList.add('oculto');
-            if(ic) ic.classList.add('oculto');
+            document.getElementById('visualizador-tecnico').classList.add('oculto');
+            document.getElementById('instrucao-clique').classList.add('oculto');
         }
 
         function proximoPasso() {
-            const statusLabel = document.getElementById('label-status');
-            
             if (etapaAtual >= roteiro.length) {
-                if (statusLabel) statusLabel.innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR";
-                const pd = document.getElementById('painel-dispositivos');
-                if (pd) pd.classList.remove('oculto');
+                document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR";
+                document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
                 const luzTomOff = document.getElementById('comp-luz-tom-off');
-                if (luzTomOff) {
-                    luzTomOff.classList.remove('oculto');
-                    
-                    luzTomOff.onmouseover = () => {
-                        const label = document.getElementById('label-status');
-                        if (!tomadaLigadaAtualmente && label) {
-                            label.innerText = "PLUGUE A LUMINÁRIA NA TOMADA";
-                        }
-                    };
-                    luzTomOff.onmouseout = () => {
-                        const label = document.getElementById('label-status');
-                        if (!tomadaLigadaAtualmente && label) {
-                            label.innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR";
-                        }
-                    };
-                }
+                luzTomOff.classList.remove('oculto');
+                luzTomOff.onmouseover = function() { 
+                    if(!tomadaLigadaAtualmente) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA"; 
+                };
+                luzTomOff.onmouseout = function() { 
+                    if(!tomadaLigadaAtualmente) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR"; 
+                };
                 
                 atualizarQuadroPosicao();
                 return;
             }
-            
+
             const dados = roteiro[etapaAtual];
-            if (statusLabel) statusLabel.innerText = `CONECTE: ${dados.nome.toUpperCase()}`;
-            
-            if (dados.pasta === "FASE_2") {
-                const cf = document.getElementById('con-fase');
-                if(cf) cf.classList.remove('oculto');
-            }
-            
+            document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
+
+            if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
+
             preCarregarCabo(dados);
-            
-            // Correção de Escopo: Uso de Arrow Functions salvando a referência explícita do elemento criado
-            criarPonto(dados.origem, dados.cor, (pontoOrigem) => {
-                pontoOrigem.classList.add('sucesso');
-                criarPonto(dados.destino, dados.cor, () => {
-                    const ic = document.getElementById('interacao-container');
-                    if(ic) ic.innerHTML = "";
+
+            criarPonto(dados.origem, dados.cor, function() {
+                this.classList.add('sucesso');
+                criarPonto(dados.destino, dados.cor, function() {
+                    document.getElementById('interacao-container').innerHTML = "";
                     executarAnimacaoFluida(dados);
                 });
             });
@@ -400,105 +355,71 @@
             cacheImagens[dados.pasta] = [];
             for (let i = 1; i <= dados.total; i++) {
                 const img = new Image();
-                img.src = `${dados.pasta}/quadro${String(i).padStart(4, '0')}.png`;
+                img.src = dados.pasta + "/quadro" + String(i).padStart(4, '0') + ".png";
                 cacheImagens[dados.pasta].push(img);
             }
         }
 
         function criarPonto(pos, corClasse, cliqueFn) {
             const ponto = document.createElement('div');
-            ponto.className = `ponto ${corClasse}`;
-            ponto.style.left = pos.x + "%"; ponto.style.top = pos.y + "%";
-            // Correção de Escopo: Passando a instância do ponto para evitar falhas do 'this'
-            ponto.onclick = (e) => { e.stopPropagation(); cliqueFn(ponto); };
-            const container = document.getElementById('interacao-container');
-            if(container) container.appendChild(ponto);
+            ponto.className = "ponto " + corClasse;
+            ponto.style.left = pos.x + "%";
+            ponto.style.top = pos.y + "%";
+            ponto.onclick = function(e) { e.stopPropagation(); cliqueFn.call(this); };
+            document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
-            if(!imgElemento) {
-                etapaAtual++;
-                proximoPasso();
-                return;
-            }
             imgElemento.classList.remove('oculto');
-            let frameIdx = 0; 
-            const frames = cacheImagens[dados.pasta] || [];
+            let frameIdx = 0;
+            const frames = cacheImagens[dados.pasta];
             let contador = 0;
-            
+
             function animar() {
                 if (frameIdx < frames.length) {
-                    // Proteção Concorrente: Garante que o frame está instanciado no DOM antes de ler a propriedade de imagem
-                    if (frames[frameIdx] && frames[frameIdx].src) {
-                        if (contador % 3 === 0) { 
-                            imgElemento.src = frames[frameIdx].src; 
-                            frameIdx++; 
-                        }
-                        contador++; 
-                        requestAnimationFrame(animar);
-                    } else {
-                        // Se a imagem ainda estiver carregando da rede, aguarda um frame sem travar o loop
-                        requestAnimationFrame(animar);
+                    if (contador % 3 === 0) {
+                        imgElemento.src = frames[frameIdx].src;
+                        frameIdx++;
                     }
-                } else { 
+                    contador++;
+                    requestAnimationFrame(animar);
+                } else {
                     tocarSom('audio-conexao');
                     
-                    const bfr = document.getElementById('balao-fase-rede');
-                    const pd = document.getElementById('placa-dicas');
-                    const bnr = document.getElementById('balao-neutro-rede');
-                    const bf2 = document.getElementById('balao-fase-2');
-                    const br = document.getElementById('balao-retorno');
-                    const bc = document.getElementById('balao-conector');
-                    const crf = document.getElementById('con-retorno-fim');
-                    const bf = document.getElementById('balao-final');
-                    const bnn = document.getElementById('balao-neutro-norma');
-                    const cn2 = document.getElementById('con-neutro2-fim');
-                    const cnt = document.getElementById('con-neutrotom-fim');
-                    const ctt = document.getElementById('con-terratom-fim');
-
                     if (dados.pasta === "FASE_REDE") { 
-                        if(bfr) bfr.classList.remove('oculto'); 
-                        if(pd) pd.classList.remove('oculto'); 
+                        document.getElementById('balao-fase-rede').classList.remove('oculto'); 
+                        document.getElementById('placa-dicas').classList.remove('oculto'); 
                     }
-                    else if (dados.pasta === "NEUTRO_REDE") { if(bnr) bnr.classList.remove('oculto'); }
-                    else if (dados.pasta === "FASE_2") { if(bf2) bf2.classList.remove('oculto'); }
+                    else if (dados.pasta === "NEUTRO_REDE") document.getElementById('balao-neutro-rede').classList.remove('oculto');
+                    else if (dados.pasta === "FASE_2") document.getElementById('balao-fase-2').classList.remove('oculto');
                     else if (dados.pasta === "RETORNO") { 
-                        if(br) br.classList.remove('oculto'); 
-                        if(bc) bc.classList.remove('oculto'); 
-                        if(crf) crf.classList.remove('oculto');
+                        document.getElementById('balao-retorno').classList.remove('oculto'); 
+                        document.getElementById('balao-conector').classList.remove('oculto'); 
+                        document.getElementById('con-retorno-fim').classList.remove('oculto');
                     }
                     else if (dados.pasta === "NEUTRO_2") { 
-                        if(bf) bf.classList.remove('oculto'); 
-                        if(bnn) bnn.classList.remove('oculto'); 
-                        if(cn2) cn2.classList.remove('oculto');
+                        document.getElementById('balao-final').classList.remove('oculto'); 
+                        document.getElementById('balao-neutro-norma').classList.remove('oculto'); 
+                        document.getElementById('con-neutro2-fim').classList.remove('oculto');
                     }
-                    else if (dados.pasta === "NEUTRO_TOM") { if(cnt) cnt.classList.remove('oculto'); }
-                    else if (dados.pasta === "TERRA_TOM") { if(ctt) ctt.classList.remove('oculto'); }
-                    
-                    etapaAtual++; 
-                    setTimeout(proximoPasso, 400); 
+                    else if (dados.pasta === "NEUTRO_TOM") document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+                    else if (dados.pasta === "TERRA_TOM") document.getElementById('con-terratom-fim').classList.remove('oculto');
+
+                    etapaAtual++;
+                    setTimeout(proximoPasso, 400);
                 }
             }
             requestAnimationFrame(animar);
         }
 
-        function abrirAjuda() { 
-            const oa = document.getElementById('overlay-ajuda');
-            if(oa) oa.classList.remove('oculto'); 
-        }
-        function fecharAjuda() { 
-            const oa = document.getElementById('overlay-ajuda');
-            if(oa) oa.classList.add('oculto'); 
-        }
-        function tocarSom(id) { 
-            const s = document.getElementById(id); 
-            if(s) { s.currentTime=0; s.play().catch(()=>{}); } 
-        }
+        function abrirAjuda() { document.getElementById('overlay-ajuda').classList.remove('oculto'); }
+        function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
+        function tocarSom(id) { const s = document.getElementById(id); if(s) { s.currentTime=0; s.play().catch(()=>{}); } }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        window.onload = function() {
             proximoPasso();
-        });
+        };
     </script>
 </body>
 </html>
