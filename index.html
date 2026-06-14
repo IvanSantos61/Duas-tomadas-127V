@@ -28,15 +28,12 @@
         
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
-        #comp-int { width: 6%; top: 72%; left: 54.5%; }
         
         #comp-luz-tom-off { width: 26%; top: 55%; left: 73%; }
         #comp-luz-tom-on, #comp-luz-tom-off-b { width: 26%; top: 45%; left: 62.6%; }
 
         .conector-der { position: absolute; z-index: 50; width: 5%; transform: translate(-50%, -50%); pointer-events: none; }
         #con-fase { top: 9.9%; left: 57.5%; }
-        #con-retorno-fim { top: 7.5%; left: 91.5%; }
-        #con-neutro2-fim { top: 7.5%; left: 68.5%; }
         #con-neutrotom-fim { top: 12.5%; left: 73.5%; }
         #con-terratom-fim { top: 9.7%; left: 80.5%; }
 
@@ -60,12 +57,9 @@
         .ponto { position: absolute; width: 1.8%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 1010; transform: translate(-50%, -50%); }
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
-        .retorno { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
         .terra { background-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
         
         .sucesso { background-color: #ff6600 !important; box-shadow: 0 0 20px #ff6600 !important; }
-
-        #lamp-on { top: 33.4%; left: 71.9%; width: 50.5%; }
 
         #placa-concluido { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #001100; border: 3px solid #00ff00; padding: 40px 100px; font-size: 3.5vw; color: #00ff00; z-index: 2000; text-align: center; border-radius: 8px; overflow: hidden; box-shadow: 0 0 30px rgba(0, 255, 0, 0.4); text-transform: uppercase; font-weight: bold; letter-spacing: 2px; }
         #placa-concluido::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 2px; background: #00ff00; box-shadow: 0 0 15px #00ff00; animation: scanner 2s linear 2; }
@@ -91,7 +85,7 @@
     <div id="splash-screen">
         <div class="moldura-neon">
             <h1 class="splash-titulo">LABORATÓRIO SMT PRO</h1>
-            <h2 class="splash-subtitulo">INTERRUPTOR SIMPLES<br> E TOMADA 127V</h2>
+            <h2 class="splash-subtitulo">TOMADA 127V</h2>
             <p class="splash-info">CIRCUITO MONOFÁSICO - 127V</p>
             <p class="splash-footer">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</p>
             <button class="btn-iniciar" onclick="document.getElementById('splash-screen').style.display='none'">CLIQUE PARA INICIAR O LABORATÓRIO</button>
@@ -115,21 +109,6 @@
             <div class="texto-balao">A fase pode ser de qualquer cor <span style="color:red;">(Item 6.1.5.3.4 da NBR-5410)</span></div>
         </div>
         <div id="balao-neutro-rede" class="balao-info oculto" style="top: 94.5%; left: 45%;">💡
-            <div class="texto-balao">A seção mínima dos fios do circuito de iluminação é 1,5mm² <span style="color:red;">(Item 6.2.6.1.1 da NBR-5410)</span></div>
-        </div>
-        <div id="balao-fase-2" class="balao-info oculto" style="top: 94.5%; left: 50%;">💡
-            <div class="texto-balao">O interruptor deve seccionar o condutor fase <span style="color:red;">(Item 6.3.7.2.1 da NBR-5410)</span></div>
-        </div>
-        <div id="balao-retorno" class="balao-info oculto" style="top:94.5%; left: 55%;">💡
-            <div class="texto-balao">O retorno, também, pode ser de qualquer cor <span style="color:red;">(Continuidade da fase NBR-5410)</span></div>
-        </div>
-        <div id="balao-conector" class="balao-info oculto" style="top: 94.5%; left: 60%;">💡
-            <div class="texto-balao"><span style="color:red;">Conectores de emenda</span> garantem conexões firmes e energia sem interrupção</div>
-        </div>
-        <div id="balao-final" class="balao-info oculto" style="top: 94.5%; left: 65%;">💡
-            <div class="texto-balao"><span style="color:red;">LÂMPADA</span> --> Recebe Neutro e Retorno.<br><span style="color:red;">INTERRUPTOR</span> --> Recebe Fase e Retorno</div>
-        </div>
-        <div id="balao-neutro-norma" class="balao-info oculto" style="top: 94.5%; left: 70%;">💡
             <div class="texto-balao">O fio neutro deve ser de cor azul-claro <span style="color:red;">(Item 6.1.5.3.1 da NBR-5410)</span></div>
         </div>
 
@@ -139,9 +118,6 @@
         <div id="hotspot-dr" class="hotspot-area" style="top: 12.6%; left: 19.5%; width: 9%; height: 30%;"><span class="tooltip-area">DISPOSITIVO DR</span></div>
         <div id="hotspot-disjuntores-circuitos" class="hotspot-area" style="top: 12.6%; left: 28.5%; width: 11.5%; height: 28%;"><span class="tooltip-area">DISJUNTORES DOS CIRCUITOS</span></div>
         <div id="hotspot-barra-neutro" class="hotspot-area" style="top: 10%; left: 42.9%; width: 3%; height: 35%;"><span class="tooltip-area">BARRA DE NEUTRO</span></div>
-        <div id="hotspot-lampada-led" class="hotspot-area" style="top: 77.5%; left: 91%; width: 8%; height: 18%;"><span class="tooltip-area">LÂMPADA LED (Bivolt)</span></div>
-        <div id="hotspot-bocal-e27" class="hotspot-area" style="top: 68%; left: 91.9%; width: 6%; height: 10%;"><span class="tooltip-area">BOCAL E-27</span></div>
-        <div id="hotspot-interruptor-simples" class="hotspot-area" style="top: 61.5%; left: 55%; width: 10.5%; height: 34%;"><span class="tooltip-area">INTERRUPTOR SIMPLES</span></div>
         <div id="hotspot-rede-eletrica" class="hotspot-area" style="top: 58%; left: 5%; width: 5%; height: 20%;"><span class="tooltip-area">REDE ELÉTRICA</span></div>
         <div id="hotspot-caixa-passagem-1" class="hotspot-area" style="top: 59.5%; left: 34.5%; width: 12%; height: 32%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
         <div id="hotspot-caixa-passagem-2" class="hotspot-area" style="top: 4.2%; left: 52.5%; width: 12%; height: 32%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
@@ -151,28 +127,24 @@
         
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
-        <img id="comp-int" src="tec_int_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'tec_int_off.png', 'tec_int_on.png', 'audio-int')">
         
         <img id="comp-luz-tom-off" src="luz_tom_off.png" class="tecla-interativa oculto" onclick="interagirTomada()" title="Clique na luminária para plugar na tomada">
         <img id="comp-luz-tom-on" src="luz_tom_on.png" class="tecla-interativa oculto">
         <img id="comp-luz-tom-off-b" src="luz_tom_off_b.png" class="tecla-interativa oculto">
 
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
-        <img id="con-retorno-fim" src="con_derivacao.png" class="conector-der oculto">
-        <img id="con-neutro2-fim" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-neutrotom-fim" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-terratom-fim" src="con_derivacao.png" class="conector-der oculto">
 
-        <img id="img-fase-rede" class="camada oculto">
         <img id="img-neutro-rede" class="camada oculto">
+        <img id="img-fase-rede" class="camada oculto">
         <img id="img-terra-rede" class="camada oculto">
-        <img id="img-fase-circuito" class="camada oculto">
-        <img id="img-retorno" class="camada oculto">
-        <img id="img-neutro-circuito" class="camada oculto">
-        <img id="img-neutro-tom" class="camada oculto">
-        <img id="img-terra-tom" class="camada oculto">
         <img id="img-fase-tom" class="camada oculto">
-        <img id="lamp-on" src="lamp_on.png" class="camada oculto">
+        <img id="img-terra-tom" class="camada oculto">
+        <img id="img-neutro-tom" class="camada oculto">
+        <img id="img-fase-tom-1" class="camada oculto">
+        <img id="img-terra-tom-1" class="camada oculto">
+        <img id="img-neutro-tom-1" class="camada oculto">
 
         <div id="placa-concluido" class="oculto">CONCLUÍDO</div>
 
@@ -181,7 +153,6 @@
             <div class="lista-status">
                 <div class="linha-dispositivo"><span>DG</span><span id="txt-dg">[ OFF ] ❌</span></div>
                 <div class="linha-dispositivo"><span>DR</span><span id="txt-dr">[ OFF ] ❌</span></div>
-                <div class="linha-dispositivo"><span>INT.</span><span id="txt-int">[ OFF ] ❌</span></div>
             </div>
         </div>
 
@@ -192,12 +163,10 @@
         <div id="overlay-ajuda" class="oculto">
             <div class="modal-ajuda">
                 <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnico</h2>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligaint.png')">1. Ligação do interruptor simples</div>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligação_tom.png')">2. Ligação da tomada</div>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligabocal.png')">3. Ligação da lâmpada</div>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('inst_con_der.png')">4. Conexões e emendas</div>
-                <div class="item-ajuda" onclick="abrirAnimacaoConector()">5. Instalação do conector de derivação</div>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">6. Lista de material</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('ligação_tom.png')">1. Ligação da tomada</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('inst_con_der.png')">2. Conexões e emendas</div>
+                <div class="item-ajuda" onclick="abrirAnimacaoConector()">3. Instalação do conector de derivação</div>
+                <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">4. Lista de material</div>
                 <button onclick="fecharAjuda()" style="margin-top:20px; padding:20px 30px; cursor:pointer;">Fechar</button>
             </div>
         </div>
@@ -209,21 +178,20 @@
         </div>
     </main>
 
-    <audio id="audio-int" src="int.mp3"></audio>
     <audio id="audio-disj" src="disj.mp3"></audio>
     <audio id="audio-conexao" src="conexao.mp3"></audio>
 
     <script>
         const roteiro = [
-            { nome: "Fase do Circuito - Clique nos pontos indicados", pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", cor: "fase", origem: { x: 27, y: 38.5 }, destino: { x: 98.5, y: 9.5 } },
-            { nome: "Neutro do Circuito - Clique nos pontos indicados", pasta: "NEUTRO_REDE", total: 95, imgId: "img-neutro-rede", cor: "neutro", origem: { x: 44.3, y: 35.2 }, destino: { x: 98.5, y: 6 } },
-            { nome: "Terra do Circuito - Clique nos pontos indicados", pasta: "TERRA_REDE", total: 90, imgId: "img-terra-rede", cor: "terra", origem: { x: 7.9, y: 30 }, destino: { x: 98.5, y: 11.5 } },
-            { nome: "Fase do Interruptor - Clique nos pontos indicados", pasta: "FASE_2", total: 41, imgId: "img-fase-circuito", cor: "fase", origem: { x: 59, y: 11 }, destino: { x: 63.5, y: 76 } },
-            { nome: "Retorno da Lâmpada - Clique nos pontos indicados", pasta: "RETORNO", total: 71, imgId: "img-retorno", cor: "retorno", origem: { x: 64, y: 81.5 }, destino: { x: 93, y: 61.5 } },
-            { nome: "Neutro da Lâmpada - Clique nos pontos indicados", pasta: "NEUTRO_2", total: 20, imgId: "img-neutro-circuito", cor: "neutro", origem: { x: 93.2, y: 9 }, destino: { x: 94.8, y: 62 } },
-            { nome: "Neutro da Tomada - Clique nos pontos indicados", pasta: "NEUTRO_TOM", total: 35, imgId: "img-neutro-tom", cor: "neutro", origem: { x: 70, y: 9 }, destino: { x: 73.5, y: 72} },
-            { nome: "Terra da Tomada - Clique nos pontos indicados", pasta: "TERRA_TOM", total: 25, imgId: "img-terra-tom", cor: "terra", origem: { x: 75, y: 14 }, destino: { x: 76, y: 72 } },
-            { nome: "Fase da Tomada - Clique nos pontos indicados", pasta: "FASE_TOM", total: 26, imgId: "img-fase-tom", cor: "fase", origem: { x: 79, y: 11 }, destino: { x: 78, y: 72 } }
+            { nome: "Neutro da Rede - Clique nos pontos indicados", pasta: "NEUTRO_REDE", total: 95, imgId: "img-neutro-rede", cor: "neutro", origem: { x: 44.3, y: 35.2 }, destino: { x: 98.5, y: 6 } },
+            { nome: "Fase da Rede - Clique nos pontos indicados", pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", cor: "fase", origem: { x: 27, y: 38.5 }, destino: { x: 98.5, y: 9.5 } },
+            { nome: "Terra da Rede - Clique nos pontos indicados", pasta: "TERRA_REDE", total: 90, imgId: "img-terra-rede", cor: "terra", origem: { x: 7.9, y: 30 }, destino: { x: 98.5, y: 11.5 } },
+            { nome: "Fase da Tomada - Clique nos pontos indicados", pasta: "FASE_TOM", total: 43, imgId: "img-fase-tom", cor: "fase", origem: { x: 59, y: 11 }, destino: { x: 63.5, y: 76 } },
+            { nome: "Terra da Tomada - Clique nos pontos indicados", pasta: "TERRA_TOM", total: 29, imgId: "img-terra-tom", cor: "terra", origem: { x: 75, y: 14 }, destino: { x: 76, y: 72 } },
+            { nome: "Neutro da Tomada - Clique nos pontos indicados", pasta: "NEUTRO_TOM", total: 29, imgId: "img-neutro-tom", cor: "neutro", origem: { x: 70, y: 9 }, destino: { x: 73.5, y: 72 } },
+            { nome: "Fase da Tomada 1 - Clique nos pontos indicados", pasta: "FASE_TOM_1", total: 45, imgId: "img-fase-tom-1", cor: "fase", origem: { x: 79, y: 11 }, destino: { x: 78, y: 72 } },
+            { nome: "Terra da Tomada 1 - Clique nos pontos indicados", pasta: "TERRA_TOM_1", total: 29, imgId: "img-terra-tom-1", cor: "terra", origem: { x: 81, y: 14 }, destino: { x: 82, y: 72 } },
+            { nome: "Neutro da Tomada 1 - Clique nos pontos indicados", pasta: "NEUTRO_TOM_1", total: 29, imgId: "img-neutro-tom-1", cor: "neutro", origem: { x: 85, y: 9 }, destino: { x: 84, y: 72 } }
         ];
 
         let etapaAtual = 0;
@@ -238,11 +206,9 @@
         function atualizarQuadroPosicao() {
             const dgState = document.getElementById('comp-dg').getAttribute('data-state');
             const drState = document.getElementById('comp-dr').getAttribute('data-state');
-            const intState = document.getElementById('comp-int').getAttribute('data-state');
 
             document.getElementById('txt-dg').innerHTML = dgState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
             document.getElementById('txt-dr').innerHTML = drState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
-            document.getElementById('txt-int').innerHTML = intState === 'on' ? `<span class="status-on">[ ON ] ✅</span>` : `<span class="status-off">[ OFF ] ❌</span>`;
 
             const energiaOk = (dgState === 'on' && drState === 'on');
             const fiacaoConcluida = etapaAtual >= roteiro.length;
@@ -255,24 +221,17 @@
                 if (tomadaLigadaAtualmente) {
                     if (energiaOk) {
                         document.getElementById('comp-luz-tom-on').classList.remove('oculto');
+                        setTimeout(() => {
+                            document.getElementById('placa-concluido').classList.remove('oculto');
+                            setTimeout(() => { document.getElementById('placa-concluido').classList.add('oculto'); }, 4000);
+                        }, 1000);
                     } else {
                         document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
                     }
                 } else {
                     document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                 }
-            }
-
-            if (fiacaoConcluida && energiaOk && intState === 'on') {
-                if (document.getElementById('lamp-on').classList.contains('oculto')) {
-                    document.getElementById('lamp-on').classList.remove('oculto');
-                    setTimeout(() => {
-                        document.getElementById('placa-concluido').classList.remove('oculto');
-                        setTimeout(() => { document.getElementById('placa-concluido').classList.add('oculto'); }, 4000);
-                    }, 1500);
-                }
             } else {
-                document.getElementById('lamp-on').classList.add('oculto');
                 document.getElementById('placa-concluido').classList.add('oculto');
             }
         }
@@ -289,7 +248,7 @@
             if (etapaAtual < roteiro.length) return;
             tocarSom('audio-conexao');
             tomadaLigadaAtualmente = true;
-            document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE O DG, O DR E O INTERRUPTOR";
+            document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE O DG E O DR";
             atualizarQuadroPosicao();
         }
 
@@ -319,7 +278,7 @@
 
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
-                document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR";
+                document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG E O DR";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
                 const luzTomOff = document.getElementById('comp-luz-tom-off');
@@ -328,7 +287,7 @@
                     if(!tomadaLigadaAtualmente) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA"; 
                 };
                 luzTomOff.onmouseout = function() { 
-                    if(!tomadaLigadaAtualmente) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG, O DR E O INTERRUPTOR"; 
+                    if(!tomadaLigadaAtualmente) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG E O DR"; 
                 };
                 
                 atualizarQuadroPosicao();
@@ -337,8 +296,6 @@
 
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
-
-            if (dados.pasta === "FASE_2") document.getElementById('con-fase').classList.remove('oculto');
 
             preCarregarCabo(dados);
 
@@ -369,7 +326,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0;
@@ -387,24 +344,22 @@
                 } else {
                     tocarSom('audio-conexao');
                     
-                    if (dados.pasta === "FASE_REDE") { 
-                        document.getElementById('balao-fase-rede').classList.remove('oculto'); 
-                        document.getElementById('placa-dicas').classList.remove('oculto'); 
+                    if (dados.pasta === "NEUTRO_REDE") {
+                        document.getElementById('balao-neutro-rede').classList.remove('oculto');
+                        document.getElementById('placa-dicas').classList.remove('oculto');
                     }
-                    else if (dados.pasta === "NEUTRO_REDE") document.getElementById('balao-neutro-rede').classList.remove('oculto');
-                    else if (dados.pasta === "FASE_2") document.getElementById('balao-fase-2').classList.remove('oculto');
-                    else if (dados.pasta === "RETORNO") { 
-                        document.getElementById('balao-retorno').classList.remove('oculto'); 
-                        document.getElementById('balao-conector').classList.remove('oculto'); 
-                        document.getElementById('con-retorno-fim').classList.remove('oculto');
+                    else if (dados.pasta === "FASE_REDE") {
+                        document.getElementById('balao-fase-rede').classList.remove('oculto');
                     }
-                    else if (dados.pasta === "NEUTRO_2") { 
-                        document.getElementById('balao-final').classList.remove('oculto'); 
-                        document.getElementById('balao-neutro-norma').classList.remove('oculto'); 
-                        document.getElementById('con-neutro2-fim').classList.remove('oculto');
+                    else if (dados.pasta === "FASE_TOM") {
+                        document.getElementById('con-fase').classList.remove('oculto');
                     }
-                    else if (dados.pasta === "NEUTRO_TOM") document.getElementById('con-neutrotom-fim').classList.remove('oculto');
-                    else if (dados.pasta === "TERRA_TOM") document.getElementById('con-terratom-fim').classList.remove('oculto');
+                    else if (dados.pasta === "NEUTRO_TOM") {
+                        document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "TERRA_TOM") {
+                        document.getElementById('con-terratom-fim').classList.remove('oculto');
+                    }
 
                     etapaAtual++;
                     setTimeout(proximoPasso, 400);
