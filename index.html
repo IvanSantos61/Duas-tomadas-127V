@@ -296,20 +296,21 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // Ativa os conectores de derivação antes de iniciar o cabo da etapa correspondente
-            if (dados.pasta === "FASE_TOM") {
-                document.getElementById('con-fase').classList.remove('oculto');
-            }
-            else if (dados.pasta === "TERRA_TOM") {
-                document.getElementById('con-terratom-fim').classList.remove('oculto');
-            }
-            else if (dados.pasta === "NEUTRO_TOM") {
-                document.getElementById('con-neutrotom-fim').classList.remove('oculto');
-            }
-
             preCarregarCabo(dados, function() {
                 criarPonto(dados.origem, dados.cor, function() {
                     this.classList.add('sucesso');
+                    
+                    // Exibe os conectores correspondentes IMEDIATAMENTE após clicar no ponto de origem do cabo
+                    if (dados.pasta === "FASE_TOM") {
+                        document.getElementById('con-fase').classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "TERRA_TOM") {
+                        document.getElementById('con-terratom-fim').classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "NEUTRO_TOM") {
+                        document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+                    }
+
                     criarPonto(dados.destino, dados.cor, function() {
                         document.getElementById('interacao-container').innerHTML = "";
                         executarAnimacaoFluida(dados);
@@ -347,7 +348,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0;
