@@ -174,7 +174,6 @@
         <div id="visualizador-tecnico" class="oculto">
             <div id="instrucao-clique" class="oculto">CLIQUE NO CONECTOR PARA VER A INSTALAÇÃO</div>
             <img id="img-tecnica-exibida" src="" style="max-width:90%; max-height:80%;">
-            <img id="img-tecnica-exibida" src="" style="max-width:90%; max-height:80%;">
             <button onclick="voltarParaLista()" style="margin-top:20px; background:#ffcc00; padding:10px 30px; font-weight:none; cursor:pointer;">VOLTAR</button>
         </div>
     </main>
@@ -298,13 +297,9 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // Configura a exibição antecipada dos conectores nas respectivas etapas
+            // MODIFICAÇÃO EXECUTADA: O conector surge imediatamente ao carregar a interface da etapa FASE_TOM, antes dos cliques e da animação do cabo começar.
             if (dados.pasta === "FASE_TOM") {
                 document.getElementById('con-fase').classList.remove('oculto');
-            }
-            // ALTERAÇÃO SOLICITADA: O conector de terra agora surge antecipadamente aqui
-            else if (dados.pasta === "TERRA_TOM") {
-                document.getElementById('con-terratom-fim').classList.remove('oculto');
             }
 
             preCarregarCabo(dados, function() {
@@ -347,7 +342,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0;
@@ -372,10 +367,13 @@
                     else if (dados.pasta === "FASE_REDE") {
                         document.getElementById('balao-fase-rede').classList.remove('oculto');
                     }
+                    // A exibição tardia do con-fase que ocorria aqui foi totalmente removida.
                     else if (dados.pasta === "NEUTRO_TOM") {
                         document.getElementById('con-neutrotom-fim').classList.remove('oculto');
                     }
-                    // A exibição tardia do con-terratom-fim que ocorria aqui foi inteiramente removida.
+                    else if (dados.pasta === "TERRA_TOM") {
+                        document.getElementById('con-terratom-fim').classList.remove('oculto');
+                    }
 
                     etapaAtual++;
                     setTimeout(proximoPasso, 400);
