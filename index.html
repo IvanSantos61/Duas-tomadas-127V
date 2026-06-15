@@ -124,6 +124,7 @@
         <div id="hotspot-caixa-passagem-4" class="hotspot-area" style="top: 4.2%; left: 81%; width: 14.5%; height: 36%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
         <div id="hotspot-tomada-10a" class="hotspot-area" style="top: 72%; left: 63.9%; width: 10%; height: 14%;"><span class="tooltip-area">TOMADA 10A</span></div>
         <div id="hotspot-tomada-10a" class="hotspot-area" style="top: 72%; left: 87.2%; width: 10%; height: 14%;"><span class="tooltip-area">TOMADA 10A</span></div>        
+        
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
         
@@ -296,20 +297,20 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
+            // Ativa o conector correspondente ANTES do início da etapa do cabo
+            if (dados.pasta === "FASE_TOM") {
+                document.getElementById('con-fase').classList.remove('oculto');
+            }
+            else if (dados.pasta === "TERRA_TOM") {
+                document.getElementById('con-terratom-fim').classList.remove('oculto');
+            }
+            else if (dados.pasta === "NEUTRO_TOM") {
+                document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+            }
+
             preCarregarCabo(dados, function() {
                 criarPonto(dados.origem, dados.cor, function() {
                     this.classList.add('sucesso');
-                    
-                    // Exibe os conectores correspondentes IMEDIATAMENTE após clicar no ponto de origem do cabo
-                    if (dados.pasta === "FASE_TOM") {
-                        document.getElementById('con-fase').classList.remove('oculto');
-                    }
-                    else if (dados.pasta === "TERRA_TOM") {
-                        document.getElementById('con-terratom-fim').classList.remove('oculto');
-                    }
-                    else if (dados.pasta === "NEUTRO_TOM") {
-                        document.getElementById('con-neutrotom-fim').classList.remove('oculto');
-                    }
 
                     criarPonto(dados.destino, dados.cor, function() {
                         document.getElementById('interacao-container').innerHTML = "";
@@ -348,7 +349,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0;
