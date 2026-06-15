@@ -216,7 +216,6 @@
         ];
 
         let etapaAtual = 0;
-        const cacheImagens = {};
         
         let tomada1Ligada = false;
         let tomada2Ligada = false;
@@ -362,34 +361,24 @@
                 document.getElementById('con-neutrotom-1-fim').classList.remove('oculto');
             }
 
-            preCarregarCabo(dados, function() {
-                criarPonto(dados.origem, dados.cor, function() {
-                    this.classList.add('sucesso');
-                    criarPonto(dados.destino, dados.cor, function() {
-                        document.getElementById('interacao-container').innerHTML = "";
-                        executarAnimacaoFluida(dados);
-                    });
+            // Inicia o pre-carregamento assíncrono em background sem travar o render do ponto
+            preCarregarCabo(dados);
+
+            // Cria o primeiro ponto imediatamente na tela
+            criarPonto(dados.origem, dados.cor, function() {
+                this.classList.add('sucesso');
+                criarPonto(dados.destino, dados.cor, function() {
+                    document.getElementById('interacao-container').innerHTML = "";
+                    executarAnimacaoFluida(dados);
                 });
             });
         }
 
-        function preCarregarCabo(dados, callback) {
-            cacheImagens[dados.pasta] = [];
-            let carregadas = 0;
+        function preCarregarCabo(dados) {
             const totalFrames = dados.total;
-
             for (let i = 1; i <= totalFrames; i++) {
                 const img = new Image();
-                img.onload = function() {
-                    carregadas++;
-                    if (carregadas === totalFrames && callback) callback();
-                };
-                img.onerror = function() {
-                    carregadas++;
-                    if (carregadas === totalFrames && callback) callback();
-                };
                 img.src = dados.pasta + "/quadro" + String(i).padStart(4, '0') + ".png";
-                cacheImagens[dados.pasta].push(img);
             }
         }
 
@@ -402,17 +391,17 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
-            let frameIdx = 0;
-            const frames = cacheImagens[dados.pasta];
+            let frameIdx = 1;
+            const totalFrames = dados.total;
             let contador = 0;
 
             function animar() {
-                if (frameIdx < frames.length) {
+                if (frameIdx <= totalFrames) {
                     if (contador % 3 === 0) {
-                        imgElemento.src = frames[frameIdx].src;
+                        imgElemento.src = dados.pasta + "/quadro" + String(frameIdx).padStart(4, '0') + ".png";
                         frameIdx++;
                     }
                     contador++;
