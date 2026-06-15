@@ -40,7 +40,7 @@
         #con-neutrotom-fim { top: 9.85%; left: 72.9%; }
         #con-terratom-fim { top: 12%; left: 66.5%; }
 
-        /* Ajustados para ficarem posicionados perfeitamente na derivação para a Tomada 1 */
+        /* Posições dos 3 novos conectores adicionais */
         #con-novo-fase { top: 15%; left: 59%; }
         #con-novo-terra { top: 18%; left: 64%; }
         #con-novo-neutro { top: 16%; left: 71%; }
@@ -340,24 +340,18 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // GERENCIADOR CRONOLÓGICO DOS CONECTORES DE DERIVAÇÃO CORRIGIDO
+            // SINALIZAÇÃO EXCLUSIVA PARA OS NOVOS CONECTORES ADICIONADOS
             if (dados.pasta === "FASE_TOM_1") {
-                ["con-fase", "con-novo-fase"].forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.classList.remove('oculto');
-                });
+                const el = document.getElementById("con-novo-fase");
+                if(el) el.classList.remove('oculto');
             }
             else if (dados.pasta === "TERRA_TOM_1") {
-                ["con-terratom-fim", "con-novo-terra"].forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.classList.remove('oculto');
-                });
+                const el = document.getElementById("con-novo-terra");
+                if(el) el.classList.remove('oculto');
             }
             else if (dados.pasta === "NEUTRO_TOM_1") {
-                ["con-neutrotom-fim", "con-novo-neutro"].forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.classList.remove('oculto');
-                });
+                const el = document.getElementById("con-novo-neutro");
+                if(el) el.classList.remove('oculto');
             }
 
             preCarregarCabo(dados, function() {
@@ -402,7 +396,7 @@
             if(container) container.appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             if(!imgElemento) return;
             imgElemento.classList.remove('oculto');
@@ -421,7 +415,20 @@
                 } else {
                     tocarSom('audio-conexao');
                     
-                    if (dados.pasta === "NEUTRO_REDE") {
+                    // Comportamento dos conectores antigos mantido intocado pelo fluxo padrão do roteiro original
+                    if (dados.pasta === "FASE_TOM") {
+                        const el = document.getElementById("con-fase");
+                        if(el) el.classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "TERRA_TOM") {
+                        const el = document.getElementById("con-terratom-fim");
+                        if(el) el.classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "NEUTRO_TOM") {
+                        const el = document.getElementById("con-neutrotom-fim");
+                        if(el) el.classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "NEUTRO_REDE") {
                         const br = document.getElementById('balao-neutro-rede');
                         const pd = document.getElementById('placa-dicas');
                         if(br) br.classList.remove('oculto');
