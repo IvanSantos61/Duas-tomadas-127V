@@ -88,7 +88,7 @@
             <h2 class="splash-subtitulo">2 TOMADAS 127V</h2>
             <p class="splash-info">CIRCUITO MONOFÁSICO - 127V</p>
             <p class="splash-footer">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</p>
-            <button class="btn-iniciar" onclick="iniciarLaboratorio()">CLIQUE PARA INICIAR O LABORATÓRIO</button>
+            <button class="btn-iniciar" onclick="document.getElementById('splash-screen').style.display='none'">CLIQUE PARA INICIAR O LABORATÓRIO</button>
         </div>
     </div>
 
@@ -198,12 +198,6 @@
         const cacheImagens = {};
         let tomadaLigadaAtualmente = false;
 
-        function iniciarLaboratorio() {
-            document.getElementById('splash-screen').style.display = 'none';
-            // Adiciona uma folga assíncrona real de 100ms para destravar o DOM do navegador
-            setTimeout(proximoPasso, 100);
-        }
-
         function verificarEnergiaDisponivel() {
             return (document.getElementById('comp-dg').getAttribute('data-state') === 'on' && 
                     document.getElementById('comp-dr').getAttribute('data-state') === 'on');
@@ -303,17 +297,6 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // Exibe os conectores EXATAMENTE antes do início dos cabos da primeira tomada
-            if (dados.pasta === "FASE_TOM") {
-                document.getElementById('con-fase').classList.remove('oculto');
-            }
-            else if (dados.pasta === "TERRA_TOM") {
-                document.getElementById('con-terratom-fim').classList.remove('oculto');
-            }
-            else if (dados.pasta === "NEUTRO_TOM") {
-                document.getElementById('con-neutrotom-fim').classList.remove('oculto');
-            }
-
             preCarregarCabo(dados, function() {
                 criarPonto(dados.origem, dados.cor, function() {
                     this.classList.add('sucesso');
@@ -335,16 +318,11 @@
                 const img = new Image();
                 img.onload = function() {
                     carregadas++;
-                    if (carregadas === totalFrames && callback) {
-                        // Força uma quebra assíncrona fina para evitar loops síncronos imediatos por conta do cache
-                        setTimeout(callback, 5);
-                    }
+                    if (carregadas === totalFrames && callback) callback();
                 };
                 img.onerror = function() {
                     carregadas++;
-                    if (carregadas === totalFrames && callback) {
-                        setTimeout(callback, 5);
-                    }
+                    if (carregadas === totalFrames && callback) callback();
                 };
                 img.src = dados.pasta + "/quadro" + String(i).padStart(4, '0') + ".png";
                 cacheImagens[dados.pasta].push(img);
@@ -385,6 +363,17 @@
                     else if (dados.pasta === "FASE_REDE") {
                         document.getElementById('balao-fase-rede').classList.remove('oculto');
                     }
+                    
+                    // Exibe os conectores exatamente após a conclusão da animação de cada cabo
+                    if (dados.pasta === "FASE_TOM") {
+                        document.getElementById('con-fase').classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "TERRA_TOM") {
+                        document.getElementById('con-terratom-fim').classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "NEUTRO_TOM") {
+                        document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+                    }
 
                     etapaAtual++;
                     setTimeout(proximoPasso, 400);
@@ -397,9 +386,8 @@
         function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
         function tocarSom(id) { const s = document.getElementById(id); if(s) { s.currentTime=0; s.play().catch(()=>{}); } }
 
-        // O window.onload agora apenas prepara o ambiente sem disparar funções lógicas pesadas de imediato
         window.onload = function() {
-            document.getElementById('label-status').innerText = "AGUARDANDO INICIALIZAÇÃO...";
+            proximoPasso();
         };
     </script>
 </body>
