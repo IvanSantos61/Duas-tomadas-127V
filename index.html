@@ -29,8 +29,13 @@
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         
+        /* Luminária da Tomada 1 */
         #comp-luz-tom-off { width: 27%; top: 55%; left: 48%; }
         #comp-luz-tom-on, #comp-luz-tom-off-b { width: 27%; top: 45%; left: 55.2%; }
+
+        /* Luminária da Tomada 2 (Valores de top e left espelhados/ajustados para a segunda posição) */
+        #comp-luz-tom2-off { width: 27%; top: 55%; left: 71.3%; }
+        #comp-luz-tom2-on, #comp-luz-tom2-off-b { width: 27%; top: 45%; left: 78.5%; }
 
         .conector-der { position: absolute; z-index: 50; width: 4%; transform: translate(-50%, -50%); pointer-events: none; }
         #con-fase { top: 7.9%; left: 61.5%; }
@@ -122,14 +127,19 @@
         <div id="hotspot-caixa-passagem-1" class="hotspot-area" style="top: 59.5%; left: 34.5%; width: 13.6%; height: 33%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
         <div id="hotspot-caixa-passagem-2" class="hotspot-area" style="top: 4.2%; left: 57.8%; width: 14.5%; height: 36%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
         <div id="hotspot-caixa-passagem-4" class="hotspot-area" style="top: 4.2%; left: 81%; width: 14.5%; height: 36%;"><span class="tooltip-area">CAIXA DE PASSAGEM 4x2"</span></div>
-        <div id="hotspot-tomada-10a" class="hotspot-area" style="top: 72%; left: 63.9%; width: 10%; height: 14%;"><span class="tooltip-area">TOMADA 10A</span></div>
-        <div id="hotspot-tomada-10a" class="hotspot-area" style="top: 72%; left: 87.2%; width: 10%; height: 14%;"><span class="tooltip-area">TOMADA 10A</span></div>        
+        <div id="hotspot-tomada-10a-1" class="hotspot-area" style="top: 72%; left: 63.9%; width: 10%; height: 14%;"><span class="tooltip-area">TOMADA 10A (1)</span></div>
+        <div id="hotspot-tomada-10a-2" class="hotspot-area" style="top: 72%; left: 87.2%; width: 10%; height: 14%;"><span class="tooltip-area">TOMADA 10A (2)</span></div>        
+        
         <img id="comp-dg" src="al_dg_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dg_off.png', 'al_dg_on.png')">
         <img id="comp-dr" src="al_dr_off.png" data-state="off" class="tecla-interativa" onclick="toggleComp(this, 'al_dr_off.png', 'al_dr_on.png')">
         
-        <img id="comp-luz-tom-off" src="luz_tom_off.png" class="tecla-interativa oculto" onclick="interagirTomada()" title="Clique na luminária para plugar na tomada">
+        <img id="comp-luz-tom-off" src="luz_tom_off.png" class="tecla-interativa oculto" onclick="interagirTomada(1)" title="Clique na luminária para plugar na tomada 1">
         <img id="comp-luz-tom-on" src="luz_tom_on.png" class="tecla-interativa oculto">
         <img id="comp-luz-tom-off-b" src="luz_tom_off_b.png" class="tecla-interativa oculto">
+
+        <img id="comp-luz-tom2-off" src="luz_tom_off.png" class="tecla-interativa oculto" onclick="interagirTomada(2)" title="Clique na luminária para plugar na tomada 2">
+        <img id="comp-luz-tom2-on" src="luz_tom_on.png" class="tecla-interativa oculto">
+        <img id="comp-luz-tom2-off-b" src="luz_tom_off_b.png" class="tecla-interativa oculto">
 
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-neutrotom-fim" src="con_derivacao.png" class="conector-der oculto">
@@ -195,7 +205,10 @@
 
         let etapaAtual = 0;
         const cacheImagens = {};
-        let tomadaLigadaAtualmente = false;
+        
+        // Controle individual para saber se cada uma das tomadas recebeu seu plugue
+        let tomada1Ligada = false;
+        let tomada2Ligada = false;
 
         function verificarEnergiaDisponivel() {
             return (document.getElementById('comp-dg').getAttribute('data-state') === 'on' && 
@@ -213,22 +226,38 @@
             const fiacaoConcluida = etapaAtual >= roteiro.length;
 
             if (fiacaoConcluida) {
+                // Reseta visibilidade da primeira luminária
                 document.getElementById('comp-luz-tom-off').classList.add('oculto');
                 document.getElementById('comp-luz-tom-on').classList.add('oculto');
                 document.getElementById('comp-luz-tom-off-b').classList.add('oculto');
 
-                if (tomadaLigadaAtualmente) {
-                    if (energiaOk) {
-                        document.getElementById('comp-luz-tom-on').classList.remove('oculto');
-                        setTimeout(() => {
-                            document.getElementById('placa-concluido').classList.remove('oculto');
-                            setTimeout(() => { document.getElementById('placa-concluido').classList.add('oculto'); }, 4000);
-                        }, 1000);
-                    } else {
-                        document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
-                    }
+                // Reseta visibilidade da segunda luminária
+                document.getElementById('comp-luz-tom2-off').classList.add('oculto');
+                document.getElementById('comp-luz-tom2-on').classList.add('oculto');
+                document.getElementById('comp-luz-tom2-off-b').classList.add('oculto');
+
+                // Gerenciamento dos estados da Luminária 1
+                if (tomada1Ligada) {
+                    if (energiaOk) document.getElementById('comp-luz-tom-on').classList.remove('oculto');
+                    else document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
                 } else {
                     document.getElementById('comp-luz-tom-off').classList.remove('oculto');
+                }
+
+                // Gerenciamento dos estados da Luminária 2
+                if (tomada2Ligada) {
+                    if (energiaOk) document.getElementById('comp-luz-tom2-on').classList.remove('oculto');
+                    else document.getElementById('comp-luz-tom2-off-b').classList.remove('oculto');
+                } else {
+                    document.getElementById('comp-luz-tom2-off').classList.remove('oculto');
+                }
+
+                // Dispara o banner de conclusão caso ambas estejam devidamente alimentadas e ligadas
+                if (tomada1Ligada && tomada2Ligada && energiaOk) {
+                    setTimeout(() => {
+                        document.getElementById('placa-concluido').classList.remove('oculto');
+                        setTimeout(() => { document.getElementById('placa-concluido').classList.add('oculto'); }, 4000);
+                    }, 1000);
                 }
             } else {
                 document.getElementById('placa-concluido').classList.add('oculto');
@@ -243,10 +272,13 @@
             atualizarQuadroPosicao();
         }
 
-        function interagirTomada() {
+        function interagirTomada(numeroTomada) {
             if (etapaAtual < roteiro.length) return;
             tocarSom('audio-conexao');
-            tomadaLigadaAtualmente = true;
+            
+            if (numeroTomada === 1) tomada1Ligada = true;
+            if (numeroTomada === 2) tomada2Ligada = true;
+
             document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE O DG E O DR";
             atualizarQuadroPosicao();
         }
@@ -277,16 +309,27 @@
 
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
-                document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG E O DR";
+                document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
+                // Configuração de feedback para a Luminária 1
                 const luzTomOff = document.getElementById('comp-luz-tom-off');
                 luzTomOff.classList.remove('oculto');
                 luzTomOff.onmouseover = function() { 
-                    if(!tomadaLigadaAtualmente) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA"; 
+                    if(!tomada1Ligada) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA 1"; 
                 };
                 luzTomOff.onmouseout = function() { 
-                    if(!tomadaLigadaAtualmente) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE A LUMINÁRIA NA TOMADA E LIGUE O DG E O DR"; 
+                    if(!tomada1Ligada && !tomada2Ligada) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR"; 
+                };
+                
+                // Configuração de feedback para a Luminária 2
+                const luzTom2Off = document.getElementById('comp-luz-tom2-off');
+                luzTom2Off.classList.remove('oculto');
+                luzTom2Off.onmouseover = function() { 
+                    if(!tomada2Ligada) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA 2"; 
+                };
+                luzTom2Off.onmouseout = function() { 
+                    if(!tomada1Ligada && !tomada2Ligada) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR"; 
                 };
                 
                 atualizarQuadroPosicao();
@@ -296,7 +339,6 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // Ativa os conectores de derivação antes de iniciar o cabo da etapa correspondente
             if (dados.pasta === "FASE_TOM") {
                 document.getElementById('con-fase').classList.remove('oculto');
             }
