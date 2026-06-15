@@ -122,6 +122,9 @@
         <div id="balao-fase-rede" class="balao-info oculto" style="top: 94.5%; left: 45%;">💡
             <div class="texto-balao">A fase pode ser de qualquer cor <span style="color:red;">(Item 6.1.5.3.4 da NBR-5410)</span></div>
         </div>
+        <div id="balao-terra-rede" class="balao-info oculto" style="top: 94.5%; left: 50%;">💡
+            <div class="texto-balao">O fio terra deve ser de cor verde <span style="color:red;">(Item 6.1.5.3.2 da NBR-5410)</span></div>
+        </div>
               
         <div id="hotspot-aterramento" class="hotspot-area" style="top: 10%; left: 6.4%; width: 3%; height: 35%;"><span class="tooltip-area">BARRA DE ATERRAMENTO</span></div>
         <div id="hotspot-disjuntor-geral" class="hotspot-area" style="top: 13%; left: 11.8%; width: 4%; height: 27%;"><span class="tooltip-area">DISJUNTOR GERAL</span></div>
@@ -151,7 +154,6 @@
         <img id="con-neutrotom-fim" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-terratom-fim" src="con_derivacao.png" class="conector-der oculto">
 
-        <!-- Novos conectores para a segunda tomada -->
         <img id="con-fase-1" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-neutrotom-1-fim" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-terratom-1-fim" src="con_derivacao.png" class="conector-der oculto">
@@ -409,7 +411,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0;
@@ -433,6 +435,9 @@
                     }
                     else if (dados.pasta === "FASE_REDE") {
                         document.getElementById('balao-fase-rede').classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "TERRA_REDE") {
+                        document.getElementById('balao-terra-rede').classList.remove('oculto');
                     }
 
                     etapaAtual++;
