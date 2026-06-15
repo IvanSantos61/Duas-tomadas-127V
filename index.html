@@ -40,7 +40,7 @@
         #con-neutrotom-fim { top: 9.85%; left: 72.9%; }
         #con-terratom-fim { top: 12%; left: 66.5%; }
 
-        /* Posicionamento seguro dos novos conectores */
+        /* Ajustados para ficarem posicionados perfeitamente na derivação para a Tomada 1 */
         #con-novo-fase { top: 15%; left: 59%; }
         #con-novo-terra { top: 18%; left: 64%; }
         #con-novo-neutro { top: 16%; left: 71%; }
@@ -340,20 +340,20 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // GERENCIADOR DE VISIBILIDADE BLINDADO CONTRA TRAVAMENTOS DOM
-            if (dados.pasta === "FASE_TOM") {
+            // GERENCIADOR CRONOLÓGICO DOS CONECTORES DE DERIVAÇÃO CORRIGIDO
+            if (dados.pasta === "FASE_TOM_1") {
                 ["con-fase", "con-novo-fase"].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.classList.remove('oculto');
                 });
             }
-            else if (dados.pasta === "TERRA_TOM") {
+            else if (dados.pasta === "TERRA_TOM_1") {
                 ["con-terratom-fim", "con-novo-terra"].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.classList.remove('oculto');
                 });
             }
-            else if (dados.pasta === "NEUTRO_TOM") {
+            else if (dados.pasta === "NEUTRO_TOM_1") {
                 ["con-neutrotom-fim", "con-novo-neutro"].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.classList.remove('oculto');
@@ -443,7 +443,6 @@
         function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
         function tocarSom(id) { const s = document.getElementById(id); if(s) { s.currentTime=0; s.play().catch(()=>{}); } }
 
-        // Inicialização protegida contra gargalo de carregamento assíncrono
         window.onload = function() {
             setTimeout(proximoPasso, 200);
         };
