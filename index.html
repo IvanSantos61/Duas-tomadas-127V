@@ -42,6 +42,11 @@
         #con-neutrotom-fim { top: 9.85%; left: 72.9%; }
         #con-terratom-fim { top: 12%; left: 66.5%; }
 
+        /* Novos conectores para a segunda tomada */
+        #con-fase-1 { top: 8.4%; left: 86.2%; }
+        #con-neutrotom-1-fim { top: 9.85%; left: 95.8%; }
+        #con-terratom-1-fim { top: 13%; left: 89.2%; }
+
         .oculto { display: none !important; }
 
         .balao-info { position: absolute; width: 45px; height: 45px; background: #000; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 1020; font-size: 24px; }
@@ -144,6 +149,11 @@
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-neutrotom-fim" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-terratom-fim" src="con_derivacao.png" class="conector-der oculto">
+
+        <!-- Novos conectores para a segunda tomada -->
+        <img id="con-fase-1" src="con_derivacao.png" class="conector-der oculto">
+        <img id="con-neutrotom-1-fim" src="con_derivacao.png" class="conector-der oculto">
+        <img id="con-terratom-1-fim" src="con_derivacao.png" class="conector-der oculto">
 
         <img id="img-neutro-rede" class="camada oculto">
         <img id="img-fase-rede" class="camada oculto">
@@ -347,6 +357,15 @@
             }
             else if (dados.pasta === "NEUTRO_TOM") {
                 document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+            }
+            else if (dados.pasta === "FASE_TOM_1") {
+                document.getElementById('con-fase-1').classList.remove('oculto');
+            }
+            else if (dados.pasta === "TERRA_TOM_1") {
+                document.getElementById('con-terratom-1-fim').classList.remove('oculto');
+            }
+            else if (dados.pasta === "NEUTRO_TOM_1") {
+                document.getElementById('con-neutrotom-1-fim').classList.remove('oculto');
             }
 
             preCarregarCabo(dados, function() {
