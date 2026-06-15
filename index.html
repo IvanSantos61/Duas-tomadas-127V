@@ -54,7 +54,6 @@
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
 
-        /* Tamanho de 25px mantido para acessibilidade dos cliques */
         .ponto { position: absolute; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 1010; transform: translate(-50%, -50%); }
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
@@ -319,16 +318,11 @@
                 const img = new Image();
                 img.onload = function() {
                     carregadas++;
-                    if (carregadas === totalFrames && callback) {
-                        // Ajuste cirúrgico preventivo contra loops infinitos gerados pelo cache local do navegador
-                        setTimeout(callback, 10);
-                    }
+                    if (carregadas === totalFrames && callback) callback();
                 };
                 img.onerror = function() {
                     carregadas++;
-                    if (carregadas === totalFrames && callback) {
-                        setTimeout(callback, 10);
-                    }
+                    if (carregadas === totalFrames && callback) callback();
                 };
                 img.src = dados.pasta + "/quadro" + String(i).padStart(4, '0') + ".png";
                 cacheImagens[dados.pasta].push(img);
@@ -370,7 +364,6 @@
                         document.getElementById('balao-fase-rede').classList.remove('oculto');
                     }
                     
-                    // Exibe os conectores nos momentos originais exatos da sua lógica estável
                     if (dados.pasta === "FASE_TOM") {
                         document.getElementById('con-fase').classList.remove('oculto');
                     }
