@@ -127,6 +127,9 @@
         <div id="balao-fase-tom" class="balao-info oculto" style="top: 94.5%; left: 55%;">💡
             <div class="texto-balao">A seção mínima dos circuitos de tomadas é 2,5mm² <span style="color:red;">(Item 6.2.6.1.1 da NBR-5410)</span></div>
         </div>
+        <div id="balao-terra-tom" class="balao-info oculto" style="top: 94.5%; left: 60%;">💡
+            <div class="texto-balao">Desde 1997 é exigido o aterramento em todos os circuitos de tomadas <span style="color:red;">(Item 6.5.3.1 da NBR-5410)</span></div>
+        </div>
               
         <div id="hotspot-aterramento" class="hotspot-area" style="top: 10%; left: 6.4%; width: 3%; height: 35%;"><span class="tooltip-area">BARRA DE ATERRAMENTO</span></div>
         <div id="hotspot-disjuntor-geral" class="hotspot-area" style="top: 13%; left: 11.8%; width: 4%; height: 27%;"><span class="tooltip-area">DISJUNTOR GERAL</span></div>
@@ -422,6 +425,9 @@
                     }
                     else if (dados.pasta === "FASE_TOM") {
                         document.getElementById('balao-fase-tom').classList.remove('oculto');
+                    }
+                    else if (dados.pasta === "TERRA_TOM") {
+                        document.getElementById('balao-terra-tom').classList.remove('oculto');
                     }
 
                     etapaAtual++;
