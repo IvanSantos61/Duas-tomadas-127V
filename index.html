@@ -54,7 +54,8 @@
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
 
-        .ponto { position: absolute; width: 1.8%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 1010; transform: translate(-50%, -50%); }
+        /* Ajustados para garantir excelente clique e acessibilidade */
+        .ponto { position: absolute; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 1010; transform: translate(-50%, -50%); }
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
         .terra { background-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
@@ -297,16 +298,18 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // Ativa o conector correspondente ANTES do início da etapa do cabo
-            if (dados.pasta === "FASE_TOM") {
-                document.getElementById('con-fase').classList.remove('oculto');
-            }
-            else if (dados.pasta === "TERRA_TOM") {
-                document.getElementById('con-terratom-fim').classList.remove('oculto');
-            }
-            else if (dados.pasta === "NEUTRO_TOM") {
-                document.getElementById('con-neutrotom-fim').classList.remove('oculto');
-            }
+            // CORREÇÃO CONTRA TRAVAMENTO: Executa a exibição visual de forma assíncrona isolada do ciclo de carregamento interno
+            setTimeout(function() {
+                if (dados.pasta === "FASE_TOM") {
+                    document.getElementById('con-fase').classList.remove('oculto');
+                }
+                else if (dados.pasta === "TERRA_TOM") {
+                    document.getElementById('con-terratom-fim').classList.remove('oculto');
+                }
+                else if (dados.pasta === "NEUTRO_TOM") {
+                    document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+                }
+            }, 0);
 
             preCarregarCabo(dados, function() {
                 criarPonto(dados.origem, dados.cor, function() {
