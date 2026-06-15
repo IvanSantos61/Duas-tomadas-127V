@@ -303,6 +303,9 @@
             else if (dados.pasta === "TERRA_TOM") {
                 document.getElementById('con-terratom-fim').classList.remove('oculto');
             }
+            else if (dados.pasta === "NEUTRO_TOM") {
+                document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+            }
 
             preCarregarCabo(dados, function() {
                 criarPonto(dados.origem, dados.cor, function() {
@@ -368,9 +371,6 @@
                     }
                     else if (dados.pasta === "FASE_REDE") {
                         document.getElementById('balao-fase-rede').classList.remove('oculto');
-                    }
-                    else if (dados.pasta === "NEUTRO_TOM") {
-                        document.getElementById('con-neutrotom-fim').classList.remove('oculto');
                     }
 
                     etapaAtual++;
