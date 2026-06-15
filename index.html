@@ -33,7 +33,7 @@
         #comp-luz-tom-off { width: 27%; top: 55%; left: 48%; }
         #comp-luz-tom-on, #comp-luz-tom-off-b { width: 27%; top: 45%; left: 55.2%; }
 
-        /* Luminária da Tomada 2 (Valores de top e left espelhados/ajustados para a segunda posição) */
+        /* Luminária da Tomada 2 */
         #comp-luz-tom2-off { width: 27%; top: 55%; left: 71.3%; }
         #comp-luz-tom2-on, #comp-luz-tom2-off-b { width: 27%; top: 45%; left: 78.5%; }
 
@@ -114,7 +114,6 @@
         <div id="placa-dicas" class="oculto" style="position: absolute; bottom: 0.5%; left: 30%; background: #000000; border: 1px solid #00f2ff; border-radius: 6px; padding: 4px 6px; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); z-index: 1010;">
             <span style="color: #00f2ff; font-weight: 400; font-size: 1vw; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 5px rgba(0, 242, 255, 0.6);">💡 Dicas ➜ </span>
         </div>
-        
         
         <div id="balao-neutro-rede" class="balao-info oculto" style="top: 94.5%; left: 40%;">💡
             <div class="texto-balao">O fio neutro deve ser de cor azul-claro <span style="color:red;">(Item 6.1.5.3.1 da NBR-5410)</span></div>
@@ -219,7 +218,6 @@
         let etapaAtual = 0;
         const cacheImagens = {};
         
-        // Controle individual para saber se cada uma das tomadas recebeu seu plugue
         let tomada1Ligada = false;
         let tomada2Ligada = false;
 
@@ -239,17 +237,14 @@
             const fiacaoConcluida = etapaAtual >= roteiro.length;
 
             if (fiacaoConcluida) {
-                // Reseta visibilidade da primeira luminária
                 document.getElementById('comp-luz-tom-off').classList.add('oculto');
                 document.getElementById('comp-luz-tom-on').classList.add('oculto');
                 document.getElementById('comp-luz-tom-off-b').classList.add('oculto');
 
-                // Reseta visibilidade da segunda luminária
                 document.getElementById('comp-luz-tom2-off').classList.add('oculto');
                 document.getElementById('comp-luz-tom2-on').classList.add('oculto');
                 document.getElementById('comp-luz-tom2-off-b').classList.add('oculto');
 
-                // Gerenciamento dos estados da Luminária 1
                 if (tomada1Ligada) {
                     if (energiaOk) document.getElementById('comp-luz-tom-on').classList.remove('oculto');
                     else document.getElementById('comp-luz-tom-off-b').classList.remove('oculto');
@@ -257,7 +252,6 @@
                     document.getElementById('comp-luz-tom-off').classList.remove('oculto');
                 }
 
-                // Gerenciamento dos estados da Luminária 2
                 if (tomada2Ligada) {
                     if (energiaOk) document.getElementById('comp-luz-tom2-on').classList.remove('oculto');
                     else document.getElementById('comp-luz-tom2-off-b').classList.remove('oculto');
@@ -265,7 +259,6 @@
                     document.getElementById('comp-luz-tom2-off').classList.remove('oculto');
                 }
 
-                // Dispara o banner de conclusão caso ambas estejam devidamente alimentadas e ligadas
                 if (tomada1Ligada && tomada2Ligada && energiaOk) {
                     setTimeout(() => {
                         document.getElementById('placa-concluido').classList.remove('oculto');
@@ -325,7 +318,6 @@
                 document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
-                // Configuração de feedback para a Luminária 1
                 const luzTomOff = document.getElementById('comp-luz-tom-off');
                 luzTomOff.classList.remove('oculto');
                 luzTomOff.onmouseover = function() { 
@@ -335,7 +327,6 @@
                     if(!tomada1Ligada && !tomada2Ligada) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR"; 
                 };
                 
-                // Configuração de feedback para a Luminária 2
                 const luzTom2Off = document.getElementById('comp-luz-tom2-off');
                 luzTom2Off.classList.remove('oculto');
                 luzTom2Off.onmouseover = function() { 
