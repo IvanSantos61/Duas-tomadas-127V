@@ -54,7 +54,6 @@
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
 
-        /* Ajustados para garantir excelente clique e acessibilidade */
         .ponto { position: absolute; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 1010; transform: translate(-50%, -50%); }
         .fase { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .neutro { background-color: #0066ff; box-shadow: 0 0 15px #0066ff; }
@@ -89,7 +88,7 @@
             <h2 class="splash-subtitulo">2 TOMADAS 127V</h2>
             <p class="splash-info">CIRCUITO MONOFÁSICO - 127V</p>
             <p class="splash-footer">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</p>
-            <button class="btn-iniciar" onclick="document.getElementById('splash-screen').style.display='none'">CLIQUE PARA INICIAR O LABORATÓRIO</button>
+            <button class="btn-iniciar" onclick="iniciarLaboratorio()">CLIQUE PARA INICIAR O LABORATÓRIO</button>
         </div>
     </div>
 
@@ -199,6 +198,12 @@
         const cacheImagens = {};
         let tomadaLigadaAtualmente = false;
 
+        function iniciarLaboratorio() {
+            document.getElementById('splash-screen').style.display = 'none';
+            // Adiciona uma folga assíncrona real de 100ms para destravar o DOM do navegador
+            setTimeout(proximoPasso, 100);
+        }
+
         function verificarEnergiaDisponivel() {
             return (document.getElementById('comp-dg').getAttribute('data-state') === 'on' && 
                     document.getElementById('comp-dr').getAttribute('data-state') === 'on');
@@ -298,18 +303,16 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // CORREÇÃO CONTRA TRAVAMENTO: Executa a exibição visual de forma assíncrona isolada do ciclo de carregamento interno
-            setTimeout(function() {
-                if (dados.pasta === "FASE_TOM") {
-                    document.getElementById('con-fase').classList.remove('oculto');
-                }
-                else if (dados.pasta === "TERRA_TOM") {
-                    document.getElementById('con-terratom-fim').classList.remove('oculto');
-                }
-                else if (dados.pasta === "NEUTRO_TOM") {
-                    document.getElementById('con-neutrotom-fim').classList.remove('oculto');
-                }
-            }, 0);
+            // Exibe os conectores EXATAMENTE antes do início dos cabos da primeira tomada
+            if (dados.pasta === "FASE_TOM") {
+                document.getElementById('con-fase').classList.remove('oculto');
+            }
+            else if (dados.pasta === "TERRA_TOM") {
+                document.getElementById('con-terratom-fim').classList.remove('oculto');
+            }
+            else if (dados.pasta === "NEUTRO_TOM") {
+                document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+            }
 
             preCarregarCabo(dados, function() {
                 criarPonto(dados.origem, dados.cor, function() {
@@ -332,11 +335,16 @@
                 const img = new Image();
                 img.onload = function() {
                     carregadas++;
-                    if (carregadas === totalFrames && callback) callback();
+                    if (carregadas === totalFrames && callback) {
+                        // Força uma quebra assíncrona fina para evitar loops síncronos imediatos por conta do cache
+                        setTimeout(callback, 5);
+                    }
                 };
                 img.onerror = function() {
                     carregadas++;
-                    if (carregadas === totalFrames && callback) callback();
+                    if (carregadas === totalFrames && callback) {
+                        setTimeout(callback, 5);
+                    }
                 };
                 img.src = dados.pasta + "/quadro" + String(i).padStart(4, '0') + ".png";
                 cacheImagens[dados.pasta].push(img);
@@ -389,8 +397,9 @@
         function fecharAjuda() { document.getElementById('overlay-ajuda').classList.add('oculto'); }
         function tocarSom(id) { const s = document.getElementById(id); if(s) { s.currentTime=0; s.play().catch(()=>{}); } }
 
+        // O window.onload agora apenas prepara o ambiente sem disparar funções lógicas pesadas de imediato
         window.onload = function() {
-            proximoPasso();
+            document.getElementById('label-status').innerText = "AGUARDANDO INICIALIZAÇÃO...";
         };
     </script>
 </body>
