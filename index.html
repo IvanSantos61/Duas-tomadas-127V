@@ -40,11 +40,6 @@
         #con-neutrotom-fim { top: 9.85%; left: 72.9%; }
         #con-terratom-fim { top: 12%; left: 66.5%; }
 
-        /* Posições dos 3 novos conectores adicionais */
-        #con-novo-fase { top: 15%; left: 59%; }
-        #con-novo-terra { top: 18%; left: 64%; }
-        #con-novo-neutro { top: 16%; left: 71%; }
-
         .oculto { display: none !important; }
 
         .balao-info { position: absolute; width: 45px; height: 45px; background: #000; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: help; z-index: 1020; font-size: 24px; }
@@ -147,10 +142,6 @@
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-neutrotom-fim" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-terratom-fim" src="con_derivacao.png" class="conector-der oculto">
-
-        <img id="con-novo-fase" src="con_derivacao.png" class="conector-der oculto">
-        <img id="con-novo-terra" src="con_derivacao.png" class="conector-der oculto">
-        <img id="con-novo-neutro" src="con_derivacao.png" class="conector-der oculto">
 
         <img id="img-neutro-rede" class="camada oculto">
         <img id="img-fase-rede" class="camada oculto">
@@ -340,20 +331,6 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // SINALIZAÇÃO EXCLUSIVA PARA OS NOVOS CONECTORES ADICIONADOS
-            if (dados.pasta === "FASE_TOM_1") {
-                const el = document.getElementById("con-novo-fase");
-                if(el) el.classList.remove('oculto');
-            }
-            else if (dados.pasta === "TERRA_TOM_1") {
-                const el = document.getElementById("con-novo-terra");
-                if(el) el.classList.remove('oculto');
-            }
-            else if (dados.pasta === "NEUTRO_TOM_1") {
-                const el = document.getElementById("con-novo-neutro");
-                if(el) el.classList.remove('oculto');
-            }
-
             preCarregarCabo(dados, function() {
                 criarPonto(dados.origem, dados.cor, function() {
                     this.classList.add('sucesso');
@@ -415,7 +392,6 @@
                 } else {
                     tocarSom('audio-conexao');
                     
-                    // Comportamento dos conectores antigos mantido intocado pelo fluxo padrão do roteiro original
                     if (dados.pasta === "FASE_TOM") {
                         const el = document.getElementById("con-fase");
                         if(el) el.classList.remove('oculto');
