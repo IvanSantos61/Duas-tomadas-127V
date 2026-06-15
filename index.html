@@ -39,8 +39,13 @@
 
         .conector-der { position: absolute; z-index: 50; width: 4%; transform: translate(-50%, -50%); pointer-events: none; }
         #con-fase { top: 7.9%; left: 61.5%; }
-        #con-terratom-fim { top: 12%; left: 66.5%; }
         #con-neutrotom-fim { top: 9.85%; left: 72.9%; }
+        #con-terratom-fim { top: 12%; left: 66.5%; }
+
+        /* POSIÇÃO DOS 3 NOVOS CONECTORES (Ajuste o top e left se precisar mudar de lugar) */
+        #con-novo-fase { top: 15%; left: 60%; }
+        #con-novo-terra { top: 15%; left: 65%; }
+        #con-novo-neutro { top: 15%; left: 70%; }
 
         .oculto { display: none !important; }
 
@@ -142,8 +147,12 @@
         <img id="comp-luz-tom2-off-b" src="luz_tom_off_b.png" class="tecla-interativa oculto">
 
         <img id="con-fase" src="con_derivacao.png" class="conector-der oculto">
-        <img id="con-terratom-fim" src="con_derivacao.png" class="conector-der oculto">
         <img id="con-neutrotom-fim" src="con_derivacao.png" class="conector-der oculto">
+        <img id="con-terratom-fim" src="con_derivacao.png" class="conector-der oculto">
+
+        <img id="con-novo-fase" src="con_derivacao.png" class="conector-der oculto">
+        <img id="con-novo-terra" src="con_derivacao.png" class="conector-der oculto">
+        <img id="con-novo-neutro" src="con_derivacao.png" class="conector-der oculto">
 
         <img id="img-neutro-rede" class="camada oculto">
         <img id="img-fase-rede" class="camada oculto">
@@ -331,15 +340,21 @@
             const dados = roteiro[etapaAtual];
             document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
 
-            // Lógica ajustada cirurgicamente para fazer surgir cada conector antes do início de seu respectivo cabo
+            // Os conectores antigos originais mantêm suas exibições intocadas se necessário
             if (dados.pasta === "FASE_TOM") {
                 document.getElementById('con-fase').classList.remove('oculto');
+                // SUTILEZA: Exibe o NOVO conector de fase antes do cabo começar
+                document.getElementById('con-novo-fase').classList.remove('oculto');
             }
             else if (dados.pasta === "TERRA_TOM") {
                 document.getElementById('con-terratom-fim').classList.remove('oculto');
+                // SUTILEZA: Exibe o NOVO conector de terra antes do cabo começar
+                document.getElementById('con-novo-terra').classList.remove('oculto');
             }
             else if (dados.pasta === "NEUTRO_TOM") {
                 document.getElementById('con-neutrotom-fim').classList.remove('oculto');
+                // SUTILEZA: Exibe o NOVO conector de neutro antes do cabo começar
+                document.getElementById('con-novo-neutro').classList.remove('oculto');
             }
 
             preCarregarCabo(dados, function() {
@@ -382,7 +397,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function ejecutarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 0;
