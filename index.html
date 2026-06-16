@@ -364,14 +364,12 @@
 
             const dados = roteiro[etapaAtual];
             
-            let textoExibido = "CONECTE: " + dados.nome.toUpperCase();
-            if (dados.pasta === "NEUTRO_REDE") {
-                textoExibido = 'CONECTE: <span style="color: #00ff00;">NEUTRO DA REDE</span> - CLIQUE NOS PONTOS INDICADOS';
-            } else if (dados.pasta === "FASE_REDE") {
-                textoExibido = 'CONECTE: <span style="color: #00ff00;">FASE DA REDE</span> - CLIQUE NOS PONTOS INDICADOS';
-            }
+            // Separa o nome técnico da instrução de clique para injetar o HTML do neon verde
+            let partesTexto = dados.nome.split(" - ");
+            let condutorDestaque = partesTexto[0].toUpperCase();
+            let instrucaoClique = partesTexto[1].toUpperCase();
             
-            document.getElementById('label-status').innerHTML = textoExibido;
+            document.getElementById('label-status').innerHTML = 'CONECTE: <span style="color: #00ff00;">' + condutorDestaque + '</span> - ' + instrucaoClique;
 
             if (dados.pasta === "FASE_TOM") {
                 document.getElementById('con-fase').classList.remove('oculto');
