@@ -133,6 +133,9 @@
         <div id="balao-fase-tom-1" class="balao-info oculto" style="top: 94.5%; left: 65%;">💡
             <div class="texto-balao"><span style="color: red;">Equipamentos com corrente nominal superior a 10A deve ter uma tomada exclusiva</span></div>
         </div>
+        <div id="balao-terra-tom-1" class="balao-info oculto" style="top: 94.5%; left: 70%;">💡
+            <div class="texto-balao">Os circuitos de tomadas de corrente são considerados <span style="color: red;">circuitos de força</span></div>
+        </div>
               
         <div id="hotspot-aterramento" class="hotspot-area" style="top: 10%; left: 6.4%; width: 3%; height: 35%;"><span class="tooltip-area">BARRA DE ATERRAMENTO</span></div>
         <div id="hotspot-disjuntor-geral" class="hotspot-area" style="top: 13%; left: 11.8%; width: 4%; height: 27%;"><span class="tooltip-area">DISJUNTOR GERAL</span></div>
@@ -432,9 +435,12 @@
                     else if (dados.pasta === "TERRA_TOM") {
                         document.getElementById('balao-terra-tom').classList.remove('oculto');
                     }
-                    // NOVA CONDIÇÃO ADICIONADA AQUI
                     else if (dados.pasta === "FASE_TOM_1") {
                         document.getElementById('balao-fase-tom-1').classList.remove('oculto');
+                    }
+                    // NOVO BALÃO ADICIONADO AQUI
+                    else if (dados.pasta === "TERRA_TOM_1") {
+                        document.getElementById('balao-terra-tom-1').classList.remove('oculto');
                     }
 
                     etapaAtual++;
