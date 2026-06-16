@@ -207,7 +207,7 @@
 
         <div id="overlay-ajuda" class="oculto">
             <div class="modal-ajuda">
-                <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnica</h2>
+                <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnico</h2>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('ligação_tom.png')">1. Ligação da tomada</div>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('inst_con_der.png')">2. Conexões e emendas</div>
                 <div class="item-ajuda" onclick="abrirAnimacaoConector()">3. Instalação do conector de derivação</div>
@@ -363,7 +363,14 @@
             }
 
             const dados = roteiro[etapaAtual];
-            document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
+            
+            // Configuração do texto dinâmico. Se for a etapa do Neutro da Rede, injeta o HTML com a cor verde neon
+            let textoExibido = "CONECTE: " + dados.nome.toUpperCase();
+            if (dados.pasta === "NEUTRO_REDE") {
+                textoExibido = 'CONECTE: <span style="color: #00ff00;">NEUTRO DA REDE</span> - CLIQUE NOS PONTOS INDICADOS';
+            }
+            
+            document.getElementById('label-status').innerHTML = textoExibido;
 
             if (dados.pasta === "FASE_TOM") {
                 document.getElementById('con-fase').classList.remove('oculto');
