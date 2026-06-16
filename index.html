@@ -20,6 +20,7 @@
         #titulo-projeto { color: #00f2ff; font-size: clamp(24px, 5vw, 48px); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
         #linha-status { background: rgba(10, 15, 20, 0.9); border: 1px solid #1a3a5a; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; width: 100%; max-width: 1200px; text-align: center; }
         .texto-status { color: #ffcc00; font-size: clamp(16px, 2.5vw, 24px); font-weight: bold; text-transform: uppercase; }
+        .status-verde { color: #00ff00; font-weight: bold; }
         
         #quadro-simulacao { position: relative; width: 100%; max-width: 1600px; aspect-ratio: 1920 / 1080; background-color: #000; border: 2px solid #333; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .camada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
@@ -29,11 +30,9 @@
         #comp-dg { width: 4%; top: 26%; left: 12%; }
         #comp-dr { width: 5%; top: 29%; left: 23.6%; }
         
-        /* Luminária da Tomada 1 */
         #comp-luz-tom-off { width: 27%; top: 55%; left: 48%; }
         #comp-luz-tom-on, #comp-luz-tom-off-b { width: 27%; top: 45%; left: 55.2%; }
 
-        /* Luminária da Tomada 2 */
         #comp-luz-tom2-off { width: 27%; top: 55%; left: 71.3%; }
         #comp-luz-tom2-on, #comp-luz-tom2-off-b { width: 27%; top: 45%; left: 78.5%; }
 
@@ -42,7 +41,6 @@
         #con-neutrotom-fim { top: 9.85%; left: 72.9%; }
         #con-terratom-fim { top: 12%; left: 66.5%; }
 
-        /* Novos conectores para a segunda tomada */
         #con-fase-1 { top: 8.4%; left: 86.2%; }
         #con-neutrotom-1-fim { top: 9.85%; left: 95.8%; }
         #con-terratom-1-fim { top: 12%; left: 90%; }
@@ -64,17 +62,7 @@
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
 
-        .ponto { 
-            position: absolute; 
-            width: 1.8%; 
-            aspect-ratio: 1/1; 
-            border-radius: 50%; 
-            border: 2px solid #fff; 
-            cursor: pointer; 
-            z-index: 1010; 
-            transform: translate(-50%, -50%); 
-            transition: transform 0.2s, border 0.2s; 
-        }
+        .ponto { position: absolute; width: 1.8%; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid #fff; cursor: pointer; z-index: 1010; transform: translate(-50%, -50%); transition: transform 0.2s, border 0.2s; }
         .fase { background-color: #ff0000 !important; box-shadow: 0 0 15px #ff0000 !important; }
         .neutro { background-color: #0066ff !important; box-shadow: 0 0 15px #0066ff !important; }
         .terra { background-color: #00ff00 !important; box-shadow: 0 0 15px #00ff00 !important; }
@@ -148,7 +136,7 @@
         <div id="balao-neutro-tom-1" class="balao-info oculto" style="top: 94.5%; left: 75%;">💡
             <div class="texto-balao">A proteção adicional por DR de alta sensibilidade se aplica às tomadas com <span style="color: red;">corrente nominal de até 32 A</span></div>
         </div>
-              
+            
         <div id="hotspot-aterramento" class="hotspot-area" style="top: 10%; left: 6.4%; width: 3%; height: 35%;"><span class="tooltip-area">BARRA DE ATERRAMENTO</span></div>
         <div id="hotspot-disjuntor-geral" class="hotspot-area" style="top: 13%; left: 11.8%; width: 4%; height: 27%;"><span class="tooltip-area">DISJUNTOR GERAL</span></div>
         <div id="hotspot-dps" class="hotspot-area" style="top: 13%; left: 15.6%; width: 4%; height: 27%;"><span class="tooltip-area">DPS</span></div>
@@ -228,15 +216,15 @@
 
     <script>
         const roteiro = [
-            { nome: "Neutro da Rede - Clique nos pontos indicados", pasta: "NEUTRO_REDE", total: 95, imgId: "img-neutro-rede", cor: "neutro", origem: { x: 44.3, y: 35.2 }, destino: { x: 98.5, y: 6 } },
-            { nome: "Fase da Rede - Clique nos pontos indicados", pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", cor: "fase", origem: { x: 27, y: 38.5 }, destino: { x: 98.5, y: 9.5 } },
-            { nome: "Terra da Rede - Clique nos pontos indicados", pasta: "TERRA_REDE", total: 90, imgId: "img-terra-rede", cor: "terra", origem: { x: 7.9, y: 30 }, destino: { x: 98.5, y: 11.5 } },
-            { nome: "Fase da Tomada - Clique nos pontos indicados", pasta: "FASE_TOM", total: 43, imgId: "img-fase-tom", cor: "neutro", origem: { x: 62.3, y: 9 }, destino: { x: 67, y: 72 } },
-            { nome: "Terra da Tomada - Clique nos pontos indicados", pasta: "TERRA_TOM", total: 29, imgId: "img-terra-tom", cor: "terra", origem: { x: 67.5, y: 13 }, destino: { x: 69.3, y: 72 } },
-            { nome: "Neutro da Tomada - Clique nos pontos indicados", pasta: "NEUTRO_TOM", total: 29, imgId: "img-neutro-tom", cor: "fase", origem: { x: 72, y: 11 }, destino: { x: 71, y: 72 } },
-            { nome: "Fase da Tomada 1 - Clique nos pontos indicados", pasta: "FASE_TOM_1", total: 45, imgId: "img-fase-tom-1", cor: "neutro", origem: { x: 87, y: 9.5 }, destino: { x: 90, y: 72 } },
-            { nome: "Terra da Tomada 1 - Clique nos pontos indicados", pasta: "TERRA_TOM_1", total: 29, imgId: "img-terra-tom-1", cor: "terra", origem: { x: 90, y: 14 }, destino: { x: 92.5, y: 72 } },
-            { nome: "Neutro da Tomada 1 - Clique nos pontos indicados", pasta: "NEUTRO_TOM_1", total: 29, imgId: "img-neutro-tom-1", cor: "fase", origem: { x: 95, y: 11 }, destino: { x: 94, y: 72 } }
+            { nome: "NEUTRO DA REDE", pasta: "NEUTRO_REDE", total: 95, imgId: "img-neutro-rede", cor: "neutro", origem: { x: 44.3, y: 35.2 }, destino: { x: 98.5, y: 6 } },
+            { nome: "FASE DA REDE", pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", cor: "fase", origem: { x: 27, y: 38.5 }, destino: { x: 98.5, y: 9.5 } },
+            { nome: "TERRA DA REDE", pasta: "TERRA_REDE", total: 90, imgId: "img-terra-rede", cor: "terra", origem: { x: 7.9, y: 30 }, destino: { x: 98.5, y: 11.5 } },
+            { nome: "FASE DA TOMADA", pasta: "FASE_TOM", total: 43, imgId: "img-fase-tom", cor: "neutro", origem: { x: 62.3, y: 9 }, destino: { x: 67, y: 72 } },
+            { nome: "TERRA DA TOMADA", pasta: "TERRA_TOM", total: 29, imgId: "img-terra-tom", cor: "terra", origem: { x: 67.5, y: 13 }, destino: { x: 69.3, y: 72 } },
+            { nome: "NEUTRO DA TOMADA", pasta: "NEUTRO_TOM", total: 29, imgId: "img-neutro-tom", cor: "fase", origem: { x: 72, y: 11 }, destino: { x: 71, y: 72 } },
+            { nome: "FASE DA TOMADA 1", pasta: "FASE_TOM_1", total: 45, imgId: "img-fase-tom-1", cor: "neutro", origem: { x: 87, y: 9.5 }, destino: { x: 90, y: 72 } },
+            { nome: "TERRA DA TOMADA 1", pasta: "TERRA_TOM_1", total: 29, imgId: "img-terra-tom-1", cor: "terra", origem: { x: 90, y: 14 }, destino: { x: 92.5, y: 72 } },
+            { nome: "NEUTRO DA TOMADA 1", pasta: "NEUTRO_TOM_1", total: 29, imgId: "img-neutro-tom-1", cor: "fase", origem: { x: 95, y: 11 }, destino: { x: 94, y: 72 } }
         ];
 
         let etapaAtual = 0;
@@ -307,7 +295,7 @@
             if (numeroTomada === 1) tomada1Ligada = true;
             if (numeroTomada === 2) tomada2Ligada = true;
 
-            document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! LIGUE O DG E O DR, PARA TESTAR";
+            document.getElementById('label-status').innerHTML = "<span class='status-verde'>FIAÇÃO CONCLUÍDA!</span> LIGUE O DG E O DR, PARA TESTAR";
             atualizarQuadroPosicao();
         }
 
@@ -337,25 +325,19 @@
 
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
-                document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR";
+                document.getElementById('label-status').innerHTML = "FIAÇÃO CONCLUÍDA! <span class='status-verde'>PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR</span>";
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
                 const luzTomOff = document.getElementById('comp-luz-tom-off');
                 luzTomOff.classList.remove('oculto');
                 luzTomOff.onmouseover = function() { 
-                    if(!tomada1Ligada) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA 1"; 
-                };
-                luzTomOff.onmouseout = function() { 
-                    if(!tomada1Ligada && !tomada2Ligada) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR"; 
+                    if(!tomada1Ligada) document.getElementById('label-status').innerHTML = "PLUGUE A LUMINÁRIA NA <span class='status-verde'>TOMADA 1</span>"; 
                 };
                 
                 const luzTom2Off = document.getElementById('comp-luz-tom2-off');
                 luzTom2Off.classList.remove('oculto');
                 luzTom2Off.onmouseover = function() { 
-                    if(!tomada2Ligada) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA 2"; 
-                };
-                luzTom2Off.onmouseout = function() { 
-                    if(!tomada1Ligada && !tomada2Ligada) document.getElementById('label-status').innerText = "FIAÇÃO CONCLUÍDA! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR"; 
+                    if(!tomada2Ligada) document.getElementById('label-status').innerHTML = "PLUGUE A LUMINÁRIA NA <span class='status-verde'>TOMADA 2</span>"; 
                 };
                 
                 atualizarQuadroPosicao();
@@ -363,7 +345,7 @@
             }
 
             const dados = roteiro[etapaAtual];
-            document.getElementById('label-status').innerText = "CONECTE: " + dados.nome.toUpperCase();
+            document.getElementById('label-status').innerHTML = "CONECTE: <span class='status-verde'>" + dados.nome.toUpperCase() + "</span>";
 
             if (dados.pasta === "FASE_TOM") {
                 document.getElementById('con-fase').classList.remove('oculto');
