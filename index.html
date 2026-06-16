@@ -209,7 +209,7 @@
             <div class="modal-ajuda">
                 <h2 style="color:#ffcc00; margin-bottom:20px;">Ajuda Técnico</h2>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('ligação_tom.png')">1. Ligação da tomada</div>
-                <div class="item-ajuda" onclick="mostrarImagemTecnica('inst_con_der.png')">2. Conexões e emendas</div>
+                <div class="item-ajuda" onclick="inst_con_der.png">2. Conexões e emendas</div>
                 <div class="item-ajuda" onclick="abrirAnimacaoConector()">3. Instalação do conector de derivação</div>
                 <div class="item-ajuda" onclick="mostrarImagemTecnica('listamatcp.png')">4. Lista de material</div>
                 <button onclick="fecharAjuda()" style="margin-top:20px; padding:20px 30px; cursor:pointer;">Fechar</button>
@@ -364,10 +364,12 @@
 
             const dados = roteiro[etapaAtual];
             
-            // Configuração do texto dinâmico. Se for a etapa do Neutro da Rede, injeta o HTML com a cor verde neon
+            // Configuração do texto dinâmico com tratamento de cor para Neutro e Fase da Rede
             let textoExibido = "CONECTE: " + dados.nome.toUpperCase();
             if (dados.pasta === "NEUTRO_REDE") {
                 textoExibido = 'CONECTE: <span style="color: #00ff00;">NEUTRO DA REDE</span> - CLIQUE NOS PONTOS INDICADOS';
+            } else if (dados.pasta === "FASE_REDE") {
+                textoExibido = 'CONECTE: <span style="color: #00ff00;">FASE DA REDE</span> - CLIQUE NOS PONTOS INDICADOS';
             }
             
             document.getElementById('label-status').innerHTML = textoExibido;
@@ -419,7 +421,7 @@
             document.getElementById('interacao-container').appendChild(ponto);
         }
 
-        function executarAnimacaoFluida(dados) {
+        function executingAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 1;
