@@ -64,7 +64,6 @@
         .status-on { color: #00ff00; }
         .status-off { color: #ff3333; }
 
-        /* --- CORREÇÃO DAS BOLINHAS AQUI --- */
         .ponto { 
             position: absolute; 
             width: 1.8%; 
@@ -80,7 +79,6 @@
         .neutro { background-color: #0066ff !important; box-shadow: 0 0 15px #0066ff !important; }
         .terra { background-color: #00ff00 !important; box-shadow: 0 0 15px #00ff00 !important; }
         .sucesso { border: 3px solid #ffffff !important; transform: translate(-50%, -50%) scale(1.3) !important; }
-        /* ---------------------------------- */
 
         #placa-concluido { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #001100; border: 3px solid #00ff00; padding: 40px 100px; font-size: 3.5vw; color: #00ff00; z-index: 2000; text-align: center; border-radius: 8px; overflow: hidden; box-shadow: 0 0 30px rgba(0, 255, 0, 0.4); text-transform: uppercase; font-weight: bold; letter-spacing: 2px; }
         #placa-concluido::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 2px; background: #00ff00; box-shadow: 0 0 15px #00ff00; animation: scanner 2s linear 2; }
@@ -233,12 +231,12 @@
             { nome: "Neutro da Rede - Clique nos pontos indicados", pasta: "NEUTRO_REDE", total: 95, imgId: "img-neutro-rede", cor: "neutro", origem: { x: 44.3, y: 35.2 }, destino: { x: 98.5, y: 6 } },
             { nome: "Fase da Rede - Clique nos pontos indicados", pasta: "FASE_REDE", total: 64, imgId: "img-fase-rede", cor: "fase", origem: { x: 27, y: 38.5 }, destino: { x: 98.5, y: 9.5 } },
             { nome: "Terra da Rede - Clique nos pontos indicados", pasta: "TERRA_REDE", total: 90, imgId: "img-terra-rede", cor: "terra", origem: { x: 7.9, y: 30 }, destino: { x: 98.5, y: 11.5 } },
-            { nome: "Fase da Tomada - Clique nos pontos indicados", pasta: "FASE_TOM", total: 43, imgId: "img-fase-tom", cor: "fase", origem: { x: 62.3, y: 9 }, destino: { x: 67, y: 72 } },
+            { nome: "Fase da Tomada - Clique nos pontos indicados", pasta: "FASE_TOM", total: 43, imgId: "img-fase-tom", cor: "neutro", origem: { x: 62.3, y: 9 }, destino: { x: 67, y: 72 } },
             { nome: "Terra da Tomada - Clique nos pontos indicados", pasta: "TERRA_TOM", total: 29, imgId: "img-terra-tom", cor: "terra", origem: { x: 67.5, y: 13 }, destino: { x: 69.3, y: 72 } },
             { nome: "Neutro da Tomada - Clique nos pontos indicados", pasta: "NEUTRO_TOM", total: 29, imgId: "img-neutro-tom", cor: "neutro", origem: { x: 72, y: 11 }, destino: { x: 71, y: 72 } },
-            { nome: "Fase da Tomada 1 - Clique nos pontos indicados", pasta: "FASE_TOM_1", total: 45, imgId: "img-fase-tom-1", cor: "fase", origem: { x: 87, y: 9.5 }, destino: { x: 90, y: 72 } },
+            { nome: "Fase da Tomada 1 - Clique nos pontos indicados", pasta: "FASE_TOM_1", total: 45, imgId: "img-fase-tom-1", cor: "neutro", origem: { x: 87, y: 9.5 }, destino: { x: 90, y: 72 } },
             { nome: "Terra da Tomada 1 - Clique nos pontos indicados", pasta: "TERRA_TOM_1", total: 29, imgId: "img-terra-tom-1", cor: "terra", origem: { x: 90, y: 14 }, destino: { x: 92.5, y: 72 } },
-            { nome: "Neutro da Tomada 1 - Clique nos pontos indicados", pasta: "NEUTRO_TOM_1", total: 29, imgId: "img-neutro-tom-1", cor: "neutro", origem: { x: 95, y: 11 }, destino: { x: 94, y: 72 } }
+            { nome: "Neutro da Tomada 1 - Clique nos pontos indicados", pasta: "NEUTRO_TOM_1", total: 29, imgId: "img-neutro-tom-1", cor: "fase", origem: { x: 95, y: 11 }, destino: { x: 94, y: 72 } }
         ];
 
         let etapaAtual = 0;
