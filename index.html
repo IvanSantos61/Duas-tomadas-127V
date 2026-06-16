@@ -349,6 +349,16 @@
             document.getElementById('instrucao-clique').classList.add('oculto');
         }
 
+        function criarPonto(pos, cor, callback) {
+            const container = document.getElementById('interacao-container');
+            const p = document.createElement('div');
+            p.className = `ponto ${cor}`;
+            p.style.left = pos.x + '%';
+            p.style.top = pos.y + '%';
+            p.onclick = callback;
+            container.appendChild(p);
+        }
+
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
@@ -421,16 +431,12 @@
             }
         }
 
-        function criarPonto(pos, corClasse, cliqueFn) {
-            const ponto = document.createElement('div');
-            ponto.className = "ponto " + corClasse;
-            ponto.style.left = pos.x + "%";
-            ponto.style.top = pos.y + "%";
-            ponto.onclick = function(e) { e.stopPropagation(); cliqueFn.call(this); };
-            document.getElementById('interacao-container').appendChild(ponto);
+        function ejecutarAnimacaoFluida(dados) {
+            // Mantida compatibilidade caso referenciado externamente de forma estática
+            executarAnimacaoFluida(dados);
         }
 
-        function ejecutarAnimacaoFluida(dados) {
+        function executarAnimacaoFluida(dados) {
             const imgElemento = document.getElementById(dados.imgId);
             imgElemento.classList.remove('oculto');
             let frameIdx = 1;
