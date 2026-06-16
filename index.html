@@ -248,6 +248,20 @@
                     document.getElementById('comp-dr').getAttribute('data-state') === 'on');
         }
 
+        function atualizarTextoStatus() {
+            if (etapaAtual < roteiro.length) return;
+            
+            if (tomada1Ligada && tomada2Ligada) {
+                if (verificarEnergiaDisponivel()) {
+                    document.getElementById('label-status').innerHTML = '<span style="color: #00ff00;">SISTEMA EM FUNCIONAMENTO!</span>';
+                } else {
+                    document.getElementById('label-status').innerHTML = '<span style="color: #00ff00;">FIAÇÃO CONCLUÍDA</span>! LIGUE O DG E O DR';
+                }
+            } else {
+                document.getElementById('label-status').innerHTML = '<span style="color: #00ff00;">FIAÇÃO CONCLUÍDA</span>! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR';
+            }
+        }
+
         function atualizarQuadroPosicao() {
             const dgState = document.getElementById('comp-dg').getAttribute('data-state');
             const drState = document.getElementById('comp-dr').getAttribute('data-state');
@@ -287,6 +301,7 @@
                         setTimeout(() => { document.getElementById('placa-concluido').classList.add('oculto'); }, 4000);
                     }, 1000);
                 }
+                atualizarTextoStatus();
             } else {
                 document.getElementById('placa-concluido').classList.add('oculto');
             }
@@ -307,7 +322,6 @@
             if (numeroTomada === 1) tomada1Ligada = true;
             if (numeroTomada === 2) tomada2Ligada = true;
 
-            document.getElementById('label-status').innerHTML = '<span style="color: #00ff00;">FIAÇÃO CONCLUÍDA</span>! LIGUE O DG E O DR';
             atualizarQuadroPosicao();
         }
 
@@ -337,7 +351,6 @@
 
         function proximoPasso() {
             if (etapaAtual >= roteiro.length) {
-                document.getElementById('label-status').innerHTML = '<span style="color: #00ff00;">FIAÇÃO CONCLUÍDA</span>! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR';
                 document.getElementById('painel-dispositivos').classList.remove('oculto');
                 
                 const luzTomOff = document.getElementById('comp-luz-tom-off');
@@ -346,7 +359,7 @@
                     if(!tomada1Ligada) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA 1"; 
                 };
                 luzTomOff.onmouseout = function() { 
-                    if(!tomada1Ligada && !tomada2Ligada) document.getElementById('label-status').innerHTML = '<span style="color: #00ff00;">FIAÇÃO CONCLUÍDA</span>! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR'; 
+                    atualizarTextoStatus();
                 };
                 
                 const luzTom2Off = document.getElementById('comp-luz-tom2-off');
@@ -355,7 +368,7 @@
                     if(!tomada2Ligada) document.getElementById('label-status').innerText = "PLUGUE A LUMINÁRIA NA TOMADA 2"; 
                 };
                 luzTom2Off.onmouseout = function() { 
-                    if(!tomada1Ligada && !tomada2Ligada) document.getElementById('label-status').innerHTML = '<span style="color: #00ff00;">FIAÇÃO CONCLUÍDA</span>! PLUGUE AS LUMINÁRIAS NAS TOMADAS E LIGUE O DG E O DR'; 
+                    atualizarTextoStatus();
                 };
                 
                 atualizarQuadroPosicao();
